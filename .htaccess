@@ -1,0 +1,12 @@
+Options -MultiViews
+
+RewriteEngine On
+RewriteBase /
+
+RewriteRule /\.|^\. - [F]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]
+
+AddType application/x-httpd-php .php .phtml
