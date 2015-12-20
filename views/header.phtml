@@ -1,0 +1,23 @@
+<nav class="navbar navbar-inverse navigation">
+    <div class="container-fluid col-md-offset-1 col-md-10">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle menu" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>                        
+            </button>
+            <a href="/"><img src="../includes/images/logo-dofe.png" title="DofE logo" alt="DofE logo"></a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav navigation">
+                <li <?php $class = $data['active'] == 'landing' ? 'class = active' : ''; echo $class; ?> ><a class="border" href="/">HLAVNÍ STRÁNKA</a></li>
+                <li <?php $class = $data['active'] == 'gallery' ? 'class = active' : ''; echo $class; ?> ><a class="border" href="/galerie">GALERIE</a></li>
+                <li <?php $class = $data['active'] == 'blog' ? 'class = active' : ''; echo $class; ?> ><a class="border" href="/clanky">BLOG</a></li>
+            </ul>
+            <ul class="nav navbar-nav navigation pull-right">
+                <li class="hidden-xs hidden-sm"><a class="border" id="login_modal_button">PŘIHLÁSIT SE</a></li>
+                <li class="visible-sm"><a class="borderless" id="login_modal_button"><span class="login glyphicon glyphicon-user"></span></a></li>
+            </ul>
+        </div>
+    </div>
+</nav>

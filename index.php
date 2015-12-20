@@ -3,8 +3,8 @@ mb_internal_encoding("UTF-8");
 
 session_start();
 
-//Includes Aura.Router
-require_once 'vendor/aura/router/autoload.php';
+//Includes Composer stuffs
+require_once 'vendor/autoload.php';
 
 //use Propel\Runtime\Propel;
 use Aura\Router\RouterFactory;

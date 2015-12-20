@@ -104,7 +104,7 @@
             },
             "autoload": {
                 "psr-0": {
-                    "Propel": "src/"
+                    "Propel/": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",

@@ -8,17 +8,23 @@
         <meta name="keywords" content="">
 		<meta name="author" content="OneTimeCZ">
 		<title>DofE</title>
-		<link rel="stylesheet" type="text/css" href="includes/css/bootstrap.min.css" />
 		<script src="includes/scripts/jquery-1.11.3.js"></script>
 		<script src="includes/scripts/bootstrap.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="includes/css/style.css" />
 		<link rel="shortcut icon" type="image/png" href="/includes/images/favicon.png"/>
+		<link rel="stylesheet" type="text/css" href="includes/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="includes/css/bootstrap.min.css" />
 	</head>
 	<body>
-        <a href="/">Hlavní stránka</a> <a href="/clanky">Seznam článků</a> <a href="/clanek/1-testovaci-clanek">Článek-detail</a>
-
-        <?php require_once 'views/' . $view . '.phtml'; ?>
-        
-        footer
+        <div class="page-container">
+            <header>
+                <?php require_once 'views/header.phtml'; ?>
+            </header>
+            <div class="main-content">
+                <?php require_once 'views/' . $view . '.phtml'; ?>
+            </div>    
+            <footer>
+                <?php require_once 'views/footer.phtml'; ?>
+            </footer>
+        </div>
 	</body>
 </html>
