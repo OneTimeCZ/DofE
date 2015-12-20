@@ -1,1 +1,2 @@
-/vendor
+vendor
+generated-conf/config.php

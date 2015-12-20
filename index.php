@@ -1,13 +1,15 @@
 <?php
 mb_internal_encoding("UTF-8");
 
-//Initializes core files
-require_once 'init.php';
+session_start();
 
 //Includes Aura.Router
-require_once 'vendor/autoload.php';
+require_once 'vendor/aura/router/autoload.php';
 
+//use Propel\Runtime\Propel;
 use Aura\Router\RouterFactory;
+
+include("generated-conf/config.php");
 
 //GET or POST
 if($_SERVER['REQUEST_METHOD'] == "GET"){
@@ -41,7 +43,6 @@ if (isset($route->params['action'])){
 	$params = $route->params;
 	$parts = explode('.', $params['action']);
     
-    $controller = $parts[0]."Controller";
     $method = $parts[1];
     
     $controller = "controllers\\".$parts[0]."Controller";

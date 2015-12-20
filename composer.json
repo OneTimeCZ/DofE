@@ -1,6 +1,6 @@
 {
     "require": {
-        //"propel/propel": "~2.0@dev",
+        "propel/propel": "~2.0@dev",
         "aura/router": "2.3.0"
     }
 }
