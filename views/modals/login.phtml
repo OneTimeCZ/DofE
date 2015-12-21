@@ -1,0 +1,24 @@
+<div id="login_modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Přihlášení</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-signin" method="post" action="/registrovat">
+                    <h3 class="form-signin-heading">Prosíme, přihlašte se...</h3>
+                    <label for="inputName" class="sr-only">Uživatelské jméno</label>
+                    <input type="text" id="inputName" name="username" class="form-control" placeholder="Uživatelské jméno" required autofocus>
+                    <label for="inputPassword" class="sr-only">Heslo</label>
+                    <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Heslo" required>
+                    <input class="btn btn-lg btn-primary btn-block" type="submit" value="Login">
+                </form>
+                <p class="text-center">Ještě nemáte účet? Registrujte se <a href="/registrace">zde</a>...</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Zavřít</button>
+            </div>
+        </div>
+    </div>
+</div>

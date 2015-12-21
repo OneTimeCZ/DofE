@@ -16,6 +16,7 @@ class ArticleController extends Controller{
         //SQL s $id
         
         $this->view('Article/single', [
+            'active' => 'blog',
             'name' => $name
         ]);
     }

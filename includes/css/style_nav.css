@@ -1,0 +1,125 @@
+@media (max-width: 767px) {
+
+    div.container-fluid {
+        margin-left: 5%;
+        width: 90%;
+    }
+    
+    nav.navigation {
+        font-weight: bold;
+    }
+    
+    nav.navigation img[alt="DofE logo"] {
+        padding:5px;
+        padding-bottom: 15px;
+    }
+    
+    nav.navigation button.menu,
+    nav.navigation button.menu:hover,
+    nav.navigation button.menu:focus {
+        background: white;
+        height: 35px;
+        margin-top: 35px;
+    }
+    
+    nav.navigation button.menu span.icon-bar {
+        background: #2c3e50;
+    }
+    
+    nav.navigation ul.navigation li.active,
+    nav.navigation ul.navigation li.active a:hover,
+    nav.navigation ul.navigation li.active a:focus,
+    nav.navigation ul.navigation li.active a {
+        background: #08b5bc;
+    }
+    
+    nav.navigation ul.navigation:nth-of-type(1) {
+        margin-bottom: 0;
+    }
+    
+    nav.navigation ul.navigation:nth-of-type(2) {
+        margin-top: 0;
+    }
+}
+@media (min-width: 768px) {    
+
+    nav.navigation img[alt="DofE logo"] {
+        padding: 10px;
+    }
+
+    nav.navigation ul.navigation {
+        height: 103px;
+        line-height: 103px;
+    }
+
+    nav.navigation ul.navigation li {
+        height: 103px;
+        line-height: 103px;
+        font-weight: bold;
+    }
+
+    nav.navigation ul.navigation li.active,
+    nav.navigation ul.navigation li.active:focus {
+        background: #2c3e50;
+    }
+
+    nav.navigation ul.navigation li.active a,
+    nav.navigation ul.navigation li.active a:focus {
+        background: #2c3e50;
+    }
+
+    nav.navigation ul.navigation li a {
+        line-height: 23px;
+        font-size: 1.1em;
+        padding: 0;
+        margin: 10px;
+        margin-top: 40px;
+        margin-bottom: 40px;
+        color: #828282;
+    }
+
+    nav.navigation ul.navigation li a.border {
+        border-bottom: 2px solid #828282;
+    }
+    
+    nav.navigation ul.navigation li.active a.border {
+        border-bottom: 2px solid white;
+    }
+    
+    nav.navigation ul.navigation li a.border:hover,
+    nav.navigation ul.navigation li a.border:focus,
+    nav.navigation ul.navigation li.active a.border:hover {
+        border-bottom: 2px solid white;
+    }
+    
+    nav.navigation ul.navigation li a:hover {
+        background: #2c3e50;
+    }
+
+    nav.navigation ul.navigation li.active a:hover {
+        background: #2c3e50;
+    }
+}
+
+nav.navigation {
+    margin-bottom: 0;
+    border-radius: 0;
+    background: #2c3e50;
+    border: 1px solid #2c3e50;
+}
+
+a.borderless[data-target = "#login_modal"] {
+    height: 23px;
+    margin-top: 40px;
+}
+
+a.borderless[data-target = "#login_modal"] span.login {
+    font-size: 23px;
+    padding-bottom: 0;
+}
+
+a[data-target = "#login_modal"],
+a.border.login_modal_button,
+a.borderless.login_modal_button {
+    cursor: pointer;
+}

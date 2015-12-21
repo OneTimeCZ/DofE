@@ -1,0 +1,39 @@
+<database name="dofe" defaultIdMethod="native"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://xsd.propelorm.org/1.6/database.xsd"
+          namespace="Models"
+        >
+
+    <!-- Users -->
+    <table name="users" phpName="User">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="username" type="varchar" size="50" required="true"/>
+        <column name="email" type="varchar" size="100" required="true"/>
+        <column name="email_confirmed_at" type="timestamp"/>
+        <column name="email_confirm_token" type="varchar" size="50"/>
+        <column name="password" type="varchar" size="50" required="true"/>
+        <column name="password_reset_token" type="varchar" size="50"/>
+        <column name="permissions" type="integer"/>
+        <column name="signin_count" type="integer"/>
+        <column name="id_image" type="integer"/>
+        <column name="last_signin_at" type="timestamp"/>
+
+        <behavior name="timestampable" />
+    </table>
+    
+    <!-- Articles -->
+    <table name="articles" phpName="Article">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="id_user" type="integer" required="true"/>
+        <column name="id_image" type="integer"/>
+        <column name="title" type="varchar" size="100" required="true"/>
+        <column name="keywords" type="varchar" size="200" required="true"/>
+        <column name="content" type="longvarchar" required="true"/>
+        
+        <behavior name="timestampable" />
+        
+        <foreign-key foreignTable="users">
+            <reference local="id_user" foreign="id"/>
+        </foreign-key>
+    </table>
+</database>

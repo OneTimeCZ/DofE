@@ -1,2 +1,4 @@
 vendor
 generated-conf/config.php
+schemas/propel.yml
+TODO.md

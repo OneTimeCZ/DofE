@@ -19,7 +19,7 @@ else{
 	$params = var_export($_POST, true);
 }
 
-//Autoload - require files with namespace
+//Autoload - require files
 spl_autoload_register(function ($class) {
     $base_dir = __DIR__ ;
     $file = $base_dir . '/' . str_replace('\\', '/', $class) . '.php';
@@ -27,6 +27,8 @@ spl_autoload_register(function ($class) {
         require_once($file);
     }
 });
+
+require_once 'helpers/helper.php';
 
 //Instantiate AuraRouter as $router
 $router_factory = new RouterFactory;
