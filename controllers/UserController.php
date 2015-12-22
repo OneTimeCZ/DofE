@@ -2,21 +2,61 @@
 
 namespace controllers;
 
+use Controllers\ApplicationController;
+use Models\User;
+use Models\UserQuery;
+
+require_once '/helpers/helper.php';
+
 class UserController extends Controller{
 
     public function login(){
-        //SQL
+        $user = UserQuery::create()->filterByUsername($_POST['inputUsername'])->filterByPassword(sha1($_POST['inputPassword']))->findOne();
         
-        $this->view('Landing/index', [
-            'active' => 'landing'
-        ]);
+        if ($user == NULL) {
+            $_SESSION['user'] = NULL;
+            //Add popup for failed login
+        } else {
+            $_SESSION['user'] = $user->getId();
+        }
+        
+        //Add popup for successful login
+        redirectTo('/');
     }
     
     public function logout(){
+        $_SESSION['user'] = NULL;
+        
+        redirectTo('/');
+    }
+    
+    public function profile(){
         //SQL
         
-        $this->view('Landing/index', [
-            'active' => 'landing'
+        $this->view('Profile/index', [
+            'active' => 'profile'
         ]);
+    }
+    
+    public function create(){        
+		if($_POST['regPassword'] != $_POST['regPassword2']){
+            
+			//Add popup for passwords don't match
+			redirectTo("/registrace");
+		}
+        
+		$user = new User();
+        $user->setUsername($_POST['regUsername']);
+        $user->setPassword(sha1($_POST['regPassword']));
+        $user->setEmail($_POST['regEmail']);
+        $user->setEmailConfirmToken(token(50));
+        $user->setPasswordResetToken(token(50));
+        $user->setPermissions(1);
+        $user->setSigninCount(1);
+        
+		$user->save();
+        
+		//Add popup for successful registration
+		redirectTo("/");
     }
 }

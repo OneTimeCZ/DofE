@@ -1,0 +1,148 @@
+$break: 768px;
+$blue: #2c3e50;
+$lightblue: #08b5bc;
+$lightgray: #828282;
+
+@media (max-width: $break - 1px) {
+    div.container-fluid {
+        margin-left: 5%;
+        width: 90%;
+    }
+    
+    nav.navigation {  
+        font-weight: bold;
+        
+        button.menu {
+            &, &:hover, &:focus {
+                background: white;
+                height: 35px;
+                margin-top: 35px;
+            }   
+        
+            span.icon-bar {
+                background: $blue;
+            }
+        }
+        
+        img[alt="DofE logo"] {
+            padding:5px;
+            padding-bottom: 15px;    
+        }
+        
+        ul.navigation {
+            li.active {
+                background: $lightblue;
+                
+                a {
+                    &, &:hover, &:focus {
+                        background: $lightblue;
+                    }
+                }
+            }
+            
+            &:nth-of-type(1) {
+                margin-bottom: 0;
+            }
+            
+            &:nth-of-type(2) {
+                margin-top: 0;
+            }
+        }
+        
+        ul.login-box {
+            li {
+                a.borderless {
+                    margin-top: 3px;
+                    margin-bottom: 3px;
+                    padding: 0;
+                    padding-left: 15px;
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: $break) {
+    nav.navigation {
+        img[alt="DofE logo"] {
+            padding: 10px;
+        }
+        
+        ul.navigation {
+            height: 103px;
+            line-height: 103px;
+            
+            li {
+                height: 103px;
+                line-height: 103px;
+                font-weight: bold;
+                
+                a {
+                    line-height: 23px;
+                    font-size: 1.1em;
+                    padding: 0;
+                    margin: 10px;
+                    margin-top: 40px;
+                    margin-bottom: 40px;
+                    color: $lightgray;
+                }
+                
+                a.border {
+                    border-bottom: 2px solid $lightgray; 
+                    
+                    &:hover, &:focus {
+                        border-bottom: 2px solid white;
+                    }
+                }
+            }
+
+            li.active {
+                &, &:hover, &:focus {
+                    background: $blue;
+                }   
+                
+                a {
+                    &, &:hover, &:focus {
+                        background: $blue;
+                    }    
+                }
+                
+                a.border {
+                    border-bottom: 2px solid white; 
+                    
+                    &:hover, &:focus {
+                        border-bottom: 2px solid white;
+                    }
+                }
+            }    
+        }
+    }   
+}
+
+nav.navigation {
+    margin-bottom: 0;
+    border-radius: 0;
+    background: $blue;
+    border: 1px solid $blue;
+    
+    ul.login-box {
+        a.borderless {
+            height: 32px;
+            line-height: 32px;
+            margin-top: 35px;
+            margin-bottom: 35px;
+            margin-right: 0px;
+        }
+        
+        p,
+        img {
+            height: 32px;
+            display: inline;
+            float: left;
+        }
+        
+        p {
+            line-height: 32px;
+        }
+    }
+}

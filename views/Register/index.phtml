@@ -1,1 +1,10 @@
 <h2>Registrační formulář</h2>
+
+<form role="form" action="/registrovat" method="post">
+    <input type="text" name="regUsername" placeholder="username" required autofocus />
+    <input type="password" name="regPassword" placeholder="password" required />
+    <input type="password" name="regPassword2" placeholder="password again" required />
+    <input type="email" name="regEmail" placeholder="email" required />
+
+    <input type="submit" name="register" value="register" >
+</form>

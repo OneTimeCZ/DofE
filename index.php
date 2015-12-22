@@ -6,8 +6,9 @@ session_start();
 //Includes Composer stuffs
 require_once 'vendor/autoload.php';
 
-//use Propel\Runtime\Propel;
 use Aura\Router\RouterFactory;
+use Helpers\LogHelper;
+use Propel\Runtime\Propel;
 
 include("generated-conf/config.php");
 

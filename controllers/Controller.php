@@ -2,6 +2,9 @@
 
 namespace controllers;
 
+use Models\User;
+use Models\UserQuery;
+
 class Controller{
     
     //Renders a view, passing $data within

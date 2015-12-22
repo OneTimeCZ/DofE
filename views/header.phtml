@@ -10,18 +10,22 @@
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav navigation">
-                <li <?php $class = $data['active'] == 'landing' ? 'class = active' : ''; echo $class; ?> ><a class="border" href="/">HLAVNÍ STRÁNKA</a></li>
-                <li <?php $class = $data['active'] == 'gallery' ? 'class = active' : ''; echo $class; ?> ><a class="border" href="/galerie">GALERIE</a></li>
-                <li <?php $class = $data['active'] == 'blog' ? 'class = active' : ''; echo $class; ?> ><a class="border" href="/clanky">BLOG</a></li>
+                <li <?php $class = $data['active'] == 'gallery' ? 'class = active' : ''; echo $class; ?> >
+                    <a class="border" href="/galerie">GALERIE</a>
+                </li>
+                <li <?php $class = $data['active'] == 'blog' ? 'class = active' : ''; echo $class; ?> >
+                    <a class="border" href="/clanky">BLOG</a>    
+                </li>
             </ul>
-            <ul class="nav navbar-nav navigation navbar-right">
-                <?php if (!isset($_SESSION['username'])): ?>
-                    <!-- User bar in navigation/REMAKE -->
-                    <li class="hidden-sm"><a data-toggle="modal" data-target="#login_modal" class="border login_modal_button">PŘIHLÁSIT SE</a></li>
-                    <li class="visible-sm"><a data-toggle="modal" data-target="#login_modal" class="borderless login_modal_button"><span class="login glyphicon glyphicon-log-in"></span></a></li>
-                <?php else: ?>
-                    <!-- <!-- User bar in navigation/ADD --> -->
-                <?php endif; ?>    
+            <ul class="nav navbar-nav navigation login-box navbar-right">
+                <li>
+                    <?php if (!isset($_SESSION['user'])): ?>
+                        <a class="border" data-toggle="modal" data-target="#login_modal" href="#">PŘIHLÁSIT SE</a>
+                    <?php else: ?>
+                        <!-- SQL profile picture -->
+                        <a class="borderless" href="/profil"><img alt="profilepic" class="img img-responsive" src="../includes/images/32x32/profilepic.png"><p>&nbsp;&nbsp;USERNAME</p></a>
+                    <?php endif; ?>
+                </li>        
             </ul>
         </div>
     </div>

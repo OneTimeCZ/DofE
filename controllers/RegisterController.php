@@ -11,13 +11,4 @@ class RegisterController extends Controller{
             'active' => 'register'
         ]);
     }
-    
-    public function create(){
-        //SQL
-        
-        //Přidat popup při vytvoření uživatele/chybě
-        $this->view('Landing/index', [
-            'active' => 'landing'
-        ]);
-    }
 }
