@@ -1,0 +1,73 @@
+aside {
+  background: #e9eaed;
+  padding-top: 30px; }
+  aside div.content {
+    background: #e9eaed; }
+    aside div.content div.section {
+      background: white;
+      border-radius: 5px;
+      box-shadow: 0px 0px 8px lightgray;
+      margin-bottom: 30px; }
+      aside div.content div.section div.section-header {
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        background: #2c3e50;
+        color: white;
+        font-size: 1.2em;
+        font-weight: bold; }
+      aside div.content div.section div.section-content {
+        width: 100%;
+        border-radius: 0;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px; }
+        aside div.content div.section div.section-content ul.article-recent {
+          list-style-type: none;
+          padding: 0;
+          margin: 0; }
+          aside div.content div.section div.section-content ul.article-recent li.article {
+            height: 81px;
+            padding: 15px;
+            width: 100%;
+            border-bottom: 1px solid lightgray; }
+            aside div.content div.section div.section-content ul.article-recent li.article:nth-of-type(5) {
+              border-bottom-left-radius: 5px;
+              border-bottom-right-radius: 5px; }
+            aside div.content div.section div.section-content ul.article-recent li.article a.thumbnail {
+              height: 50px;
+              width: 50px;
+              margin: 0;
+              margin-right: 10px;
+              padding: 0;
+              border: 0;
+              float: left; }
+              aside div.content div.section div.section-content ul.article-recent li.article a.thumbnail img {
+                height: 50px;
+                width: 50px; }
+            aside div.content div.section div.section-content ul.article-recent li.article div.info {
+              height: 22px;
+              margin-bottom: 2px;
+              margin-top: 5px; }
+              aside div.content div.section div.section-content ul.article-recent li.article div.info a.title {
+                height: 18px;
+                line-height: 18px;
+                padding-top: 3px;
+                padding-bottom: 3px;
+                text-decoration: none;
+                color: #2c3e50;
+                font-weight: bold; }
+              aside div.content div.section div.section-content ul.article-recent li.article div.info div.meta {
+                margin-top: 3px;
+                height: 15px; }
+                aside div.content div.section div.section-content ul.article-recent li.article div.info div.meta p {
+                  color: gray; }
+                  aside div.content div.section div.section-content ul.article-recent li.article div.info div.meta p a {
+                    text-decoration: none;
+                    color: gray; }
+                    aside div.content div.section div.section-content ul.article-recent li.article div.info div.meta p a:hover, aside div.content div.section div.section-content ul.article-recent li.article div.info div.meta p a:focus {
+                      color: #2c3e50;
+                      text-decoration: none; }
+
+/*# sourceMappingURL=style_aside.css.map */

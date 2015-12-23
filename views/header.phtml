@@ -9,6 +9,18 @@
             <a href="/"><img src="../includes/images/logo-dofe-gray.png" title="DofE logo" alt="DofE logo"></a>
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav navigation search visible-xs">
+                <li>
+                    <div class="input-group search col-md-12">
+                        <input type="text" class="  search-query form-control" placeholder="Vyhledávání" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">
+                                <span class=" glyphicon glyphicon-search"></span>
+                            </button>
+                        </span>
+                    </div>
+                </li>
+            </ul>
             <ul class="nav navbar-nav navigation">
                 <li <?php $class = $data['active'] == 'gallery' ? 'class = active' : ''; echo $class; ?> >
                     <a class="border" href="/galerie">GALERIE</a>
@@ -18,12 +30,12 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navigation login-box navbar-right">
-                <li>
+                <li <?php $class = $data['active'] == 'profile' ? 'class = active' : ''; echo $class; ?> >
                     <?php if (!isset($_SESSION['user'])): ?>
                         <a class="border" data-toggle="modal" data-target="#login_modal" href="#">PŘIHLÁSIT SE</a>
                     <?php else: ?>
                         <!-- SQL profile picture -->
-                        <a class="borderless" href="/profil"><img alt="profilepic" class="img img-responsive" src="../includes/images/32x32/profilepic.png"><p>&nbsp;&nbsp;USERNAME</p></a>
+                        <a class="borderless" href="/profil"><img alt="profilepic" class="img img-responsive" src="../includes/images/50x50/profilepic.png"><p><?= $_SESSION['user'] ?></p></a>
                     <?php endif; ?>
                 </li>        
             </ul>

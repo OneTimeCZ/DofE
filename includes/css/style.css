@@ -1,8 +1,8 @@
 body {
-    background: #ecf0f5;
-}
+  background: #e9eaed;
+  font-family: calibri; }
 
-aside,
-div.main {
-    background: white;
-}
+footer {
+  background: gray; }
+
+/*# sourceMappingURL=style.css.map */

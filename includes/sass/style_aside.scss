@@ -1,0 +1,105 @@
+//Definitely Not White
+$dnw: #e9eaed;
+$blue: #2c3e50;
+
+aside {
+    background: $dnw;
+    padding-top: 30px;
+    
+    div.content {
+        background: $dnw;
+        
+        div.section {
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0px 0px 8px lightgray;
+            margin-bottom: 30px;
+            
+            div.section-header {
+                border-top-left-radius: 5px;
+                border-top-right-radius: 5px;
+                height: 30px;
+                line-height: 30px;
+                text-align: center;
+                background: $blue;
+                color: white;
+                font-size: 1.2em;
+                font-weight: bold;
+            }
+            
+            div.section-content {
+                width: 100%;
+                border-radius: 0;
+                border-bottom-left-radius: 5px;
+                border-bottom-right-radius: 5px;
+                
+                ul.article-recent {
+                    list-style-type: none;
+                    padding: 0;
+                    margin: 0;
+                    
+                    li.article {
+                        height: 81px;
+                        padding: 15px;
+                        width: 100%;
+                        border-bottom: 1px solid lightgray;
+                        &:nth-of-type(5) {
+                            border-bottom-left-radius: 5px;
+                            border-bottom-right-radius: 5px;
+                        }
+                        
+                        a.thumbnail {
+                            height: 50px;
+                            width: 50px;
+                            margin: 0;
+                            margin-right: 10px;
+                            padding: 0;
+                            border: 0;
+                            float: left;
+                            
+                            img {
+                                height: 50px;
+                                width: 50px;
+                            }
+                        }
+                        
+                        div.info {
+                            height: 22px;
+                            margin-bottom: 2px;
+                            margin-top: 5px;
+                            
+                            a.title {
+                                height: 18px;
+                                line-height: 18px;
+                                padding-top: 3px;
+                                padding-bottom: 3px;
+                                text-decoration: none;
+                                color: $blue;
+                                font-weight: bold;
+                            }
+                            
+                            div.meta {
+                                margin-top: 3px;
+                                height: 15px;
+                                
+                                p {
+                                    color: gray;
+                                    
+                                    a {                                        
+                                        text-decoration: none;
+                                        color: gray;
+                                        
+                                        &:hover, &:focus {
+                                            color: $blue;
+                                            text-decoration: none;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }    
+            }
+        }
+    }
+} 

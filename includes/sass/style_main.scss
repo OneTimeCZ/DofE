@@ -1,0 +1,87 @@
+//Definitely Not White
+$dnw: #e9eaed;
+$blue: #2c3e50;
+
+//DofE colors
+$volunteering: #e40046;
+$physical: #e1c72c;
+$skills: #009edc;
+$expedition: #71a100;
+$residential: #882581;
+$dofebronze: #ba8748;
+$dofesilver: #a7a9ac;
+$dofegold: #b4975a;
+
+div.main {
+    background: $dnw;
+    padding-top: 30px;
+
+    div.content {
+        background: $dnw;
+        
+        div.section {
+            background: $dnw;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            
+            div.column {
+                @media (max-width: 991px){
+                    padding-left: 0;
+                    padding-right: 0;
+                }
+            
+                @media (min-width: 992px){
+                    &:nth-of-type(1) {
+                    padding-left: 0;
+                    }
+
+                    &:nth-of-type(2) {
+                        padding-right: 0;
+                    }
+                }
+
+                background: $dnw;
+
+                &:nth-of-type(1) {
+                    margin-bottom: 30px;
+                }
+                
+                div.content-box {
+                    box-shadow: 0px 0px 8px lightgray;   
+                }
+            }
+            
+            div.section-header {
+                height: 50px;
+                background: $blue;
+                border-top-right-radius: 5px;
+                border-top-left-radius: 5px;
+                line-height: 45px;
+                font-weight: bold;
+                text-align: center;
+                color: white;
+                font-size: 1.2em;
+            
+                div.color-stripe {
+                    height: 5px;
+                    width: 100%;
+                    border-top-right-radius: 5px;
+                    border-top-left-radius: 5px;
+                    
+                    &.volunteering {
+                        background: $volunteering;
+                    }
+                    
+                    &.expedition {
+                        background: $expedition;
+                    }
+                }
+            }
+            
+            div.section-content {
+                padding: 5px;
+                background: white;
+            }
+        }
+    }
+}

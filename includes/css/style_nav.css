@@ -14,22 +14,42 @@
     nav.navigation img[alt="DofE logo"] {
       padding: 5px;
       padding-bottom: 15px; }
-    nav.navigation ul.navigation li.active {
-      background: #08b5bc; }
-      nav.navigation ul.navigation li.active a, nav.navigation ul.navigation li.active a:hover, nav.navigation ul.navigation li.active a:focus {
-        background: #08b5bc; }
-    nav.navigation ul.navigation:nth-of-type(1) {
+    nav.navigation ul.navigation {
       margin-bottom: 0; }
-    nav.navigation ul.navigation:nth-of-type(2) {
+      nav.navigation ul.navigation li.active {
+        background: #08b5bc; }
+        nav.navigation ul.navigation li.active a, nav.navigation ul.navigation li.active a:hover, nav.navigation ul.navigation li.active a:focus {
+          background: #08b5bc; }
+      nav.navigation ul.navigation:nth-of-type(1) {
+        margin-bottom: 0; }
+      nav.navigation ul.navigation:nth-of-type(2) {
+        margin-top: 0; }
+    nav.navigation ul.login-box {
+      height: 40px;
       margin-top: 0; }
-    nav.navigation ul.login-box li a.borderless {
-      margin-top: 3px;
-      margin-bottom: 3px;
-      padding: 0;
-      padding-left: 15px; } }
+      nav.navigation ul.login-box li,
+      nav.navigation ul.login-box li.active {
+        margin: 0;
+        padding-left: 15px; }
+        nav.navigation ul.login-box li a.borderless,
+        nav.navigation ul.login-box li.active a.borderless {
+          height: 40px;
+          margin: 0;
+          padding: 0; }
+          nav.navigation ul.login-box li a.borderless img,
+          nav.navigation ul.login-box li.active a.borderless img {
+            height: 34px;
+            width: 34px;
+            margin-top: 3px;
+            margin-right: 10px; }
+          nav.navigation ul.login-box li a.borderless p,
+          nav.navigation ul.login-box li.active a.borderless p {
+            height: 32px;
+            margin-top: 4px; } }
 @media (min-width: 768px) {
   nav.navigation img[alt="DofE logo"] {
-    padding: 10px; }
+    padding: 10px;
+    padding-left: 15px; }
   nav.navigation ul.navigation {
     height: 103px;
     line-height: 103px; }
@@ -39,7 +59,7 @@
       font-weight: bold; }
       nav.navigation ul.navigation li a {
         line-height: 23px;
-        font-size: 1.1em;
+        font-size: 1.2em;
         padding: 0;
         margin: 10px;
         margin-top: 40px;
@@ -56,24 +76,34 @@
     nav.navigation ul.navigation li.active a.border {
       border-bottom: 2px solid white; }
       nav.navigation ul.navigation li.active a.border:hover, nav.navigation ul.navigation li.active a.border:focus {
-        border-bottom: 2px solid white; } }
+        border-bottom: 2px solid white; }
+  nav.navigation ul.login-box {
+    margin-right: 0; }
+    nav.navigation ul.login-box li a.borderless img,
+    nav.navigation ul.login-box li.active a.borderless img {
+      margin-right: 10px; } }
 nav.navigation {
   margin-bottom: 0;
   border-radius: 0;
   background: #2c3e50;
   border: 1px solid #2c3e50; }
   nav.navigation ul.login-box a.borderless {
-    height: 32px;
-    line-height: 32px;
-    margin-top: 35px;
-    margin-bottom: 35px;
+    height: 50px;
+    line-height: 50px;
+    margin-top: 26px;
+    margin-bottom: 26px;
     margin-right: 0px; }
   nav.navigation ul.login-box p,
   nav.navigation ul.login-box img {
-    height: 32px;
     display: inline;
     float: left; }
   nav.navigation ul.login-box p {
-    line-height: 32px; }
+    height: 32px; }
+    @media (max-width: 767px) {
+      nav.navigation ul.login-box p {
+        line-height: 32px; } }
+  nav.navigation ul.login-box img {
+    height: 50px;
+    border-radius: 5px; }
 
 /*# sourceMappingURL=style_nav.css.map */

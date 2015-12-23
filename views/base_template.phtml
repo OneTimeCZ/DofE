@@ -12,6 +12,8 @@
 		<script src="includes/scripts/bootstrap.min.js"></script>
 		<link rel="shortcut icon" type="image/png" href="/includes/images/favicon.png"/>
 		<link rel="stylesheet" type="text/css" href="includes/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="includes/css/style_main.css" />
+        <link rel="stylesheet" type="text/css" href="includes/css/style_aside.css" />
         <link rel="stylesheet" type="text/css" href="includes/css/style_nav.css" />
 		<link rel="stylesheet" type="text/css" href="includes/css/login.css" />
 		<link rel="stylesheet" type="text/css" href="includes/css/style.css" />
@@ -21,9 +23,16 @@
             <header>
                 <?php require_once 'views/header.phtml'; ?>
             </header>
-            <div class="main-content">
-                <?php require_once 'views/' . $view . '.phtml'; ?>
-            </div>    
+            <div class="container-fluid col-lg-offset-1 col-lg-10">
+                <div class="main-content">       
+                    <aside class="col-sm-4 col-sm-push-8 hidden-xs">
+                        <?php require_once 'views/aside.phtml'; ?> 
+                    </aside>
+                    <div class="main col-sm-8 col-sm-pull-4">
+                        <?php require_once 'views/' . $view . '.phtml'; ?>
+                    </div> 
+                </div>
+            </div>
             <footer>
                 <?php require_once 'views/footer.phtml'; ?>
             </footer>
