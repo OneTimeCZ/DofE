@@ -1,6 +1,338 @@
 body {
   background: #e9eaed;
   font-family: calibri; }
+  body div.page-container {
+    overflow: hidden; }
+    @media (max-width: 767px) {
+      body div.page-container div.container-fluid {
+        margin-left: 5%;
+        width: 90%; } }
+    body div.page-container div.container-fluid div.main-content {
+      overflow: hidden; }
+      body div.page-container div.container-fluid div.main-content aside {
+        background: #e9eaed;
+        padding-top: 30px; }
+        body div.page-container div.container-fluid div.main-content aside div.content {
+          background: #e9eaed; }
+          body div.page-container div.container-fluid div.main-content aside div.content div.section {
+            background: white;
+            margin-bottom: 30px;
+            box-shadow: 0px 0px 8px lightgray;
+            border-radius: 5px; }
+            body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-header {
+              border-top-left-radius: 5px;
+              border-top-right-radius: 5px;
+              height: 30px;
+              line-height: 30px;
+              text-align: center;
+              background: #2c3e50;
+              color: white;
+              font-size: 1.2em;
+              font-weight: bold; }
+            body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content {
+              width: 100%;
+              border-radius: 0;
+              border-bottom-left-radius: 5px;
+              border-bottom-right-radius: 5px; }
+              body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content div.search input.search-query {
+                padding-left: 15px;
+                border-top-right-radius: 0;
+                border-top-left-radius: 0;
+                border: 0; }
+              body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content div.search span.input-group-btn button {
+                border: 0;
+                border-top-right-radius: 0;
+                height: 34px;
+                padding: 6px 13px 6px 12px; }
+                body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content div.search span.input-group-btn button span.glyphicon-search {
+                  height: 20px;
+                  line-height: 20px; }
+              body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.article-recent {
+                list-style-type: none;
+                padding: 0;
+                margin: 0; }
+                body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.article-recent li.article {
+                  height: 81px;
+                  padding: 15px;
+                  width: 100%;
+                  border-bottom: 1px solid lightgray; }
+                  body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.article-recent li.article:nth-of-type(5) {
+                    border-bottom-left-radius: 5px;
+                    border-bottom-right-radius: 5px; }
+                  body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.article-recent li.article:last-of-type {
+                    border: 0; }
+                  body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.article-recent li.article a.thumbnail {
+                    height: 50px;
+                    width: 50px;
+                    margin: 0;
+                    margin-right: 10px;
+                    padding: 0;
+                    border: 0;
+                    float: left; }
+                    body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.article-recent li.article a.thumbnail img {
+                      height: 50px;
+                      width: 50px; }
+                  body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.article-recent li.article div.info {
+                    height: 22px;
+                    margin-bottom: 2px;
+                    margin-top: 5px; }
+                    body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.article-recent li.article div.info a.title {
+                      height: 18px;
+                      line-height: 18px;
+                      padding-top: 3px;
+                      padding-bottom: 3px;
+                      text-decoration: none;
+                      color: #2c3e50;
+                      font-weight: bold; }
+                    body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.article-recent li.article div.info div.meta {
+                      margin-top: 3px;
+                      height: 15px; }
+                      body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.article-recent li.article div.info div.meta p {
+                        color: gray; }
+                        body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.article-recent li.article div.info div.meta p a {
+                          text-decoration: none;
+                          color: gray; }
+                          body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.article-recent li.article div.info div.meta p a:hover, body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.article-recent li.article div.info div.meta p a:focus {
+                            color: #2c3e50;
+                            text-decoration: none; }
+      body div.page-container div.container-fluid div.main-content div.main {
+        background: #e9eaed;
+        margin-top: 30px; }
+        body div.page-container div.container-fluid div.main-content div.main.nomargin {
+          margin-top: 0; }
+        body div.page-container div.container-fluid div.main-content div.main div.content {
+          background: #e9eaed;
+          overflow: hidden; }
+          body div.page-container div.container-fluid div.main-content div.main div.content div.section {
+            background: #e9eaed;
+            border-radius: 5px;
+            overflow: hidden; }
+            body div.page-container div.container-fluid div.main-content div.main div.content div.section div.page-heading h1 {
+              margin: 0; }
+            body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column {
+              float: left;
+              margin-bottom: 30px;
+              background: #e9eaed; }
+              @media (max-width: 991px) {
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column {
+                  padding-left: 0;
+                  padding-right: 0;
+                  width: 100%; } }
+              @media (min-width: 992px) {
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column:nth-of-type(2n+1) {
+                  padding-left: 0; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column:nth-of-type(2n) {
+                  padding-right: 0; } }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column:nth-of-type(1) {
+                margin-bottom: 30px; }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column div.content-box {
+                box-shadow: 0px 0px 8px lightgray;
+                border-radius: 5px; }
+            body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header {
+              height: 50px;
+              background: #2c3e50;
+              border-top-right-radius: 5px;
+              border-top-left-radius: 5px;
+              line-height: 50px;
+              font-weight: bold;
+              text-align: center;
+              color: white;
+              font-size: 1.2em; }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header.striped {
+                line-height: 45px; }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header.image {
+                height: auto;
+                background: white;
+                padding: 15px;
+                padding-bottom: 5px; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header.image div.thumbnail {
+                  margin-bottom: 0;
+                  border-bottom-left-radius: 0;
+                  border-bottom-right-radius: 0; }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header div.color-stripe {
+                height: 5px;
+                width: 100%;
+                border-top-right-radius: 5px;
+                border-top-left-radius: 5px; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header div.color-stripe.volunteering {
+                  background: #e40046; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header div.color-stripe.expedition {
+                  background: #71a100; }
+            body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content {
+              padding: 5px;
+              background: white; }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.post {
+                color: gray;
+                padding: 20px;
+                padding-bottom: 15px;
+                padding-top: 0px; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.post h2.title {
+                  color: #2c3e50;
+                  margin: 0;
+                  margin-bottom: 5px;
+                  font-weight: bold;
+                  font-size: 1.4em; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.post div.meta {
+                  margin-bottom: 5px;
+                  font-size: 0.9em; }
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.post div.meta p {
+                    margin: 0; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.post div.meta p a {
+                      text-decoration: none;
+                      color: gray; }
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.post div.meta p a:hover, body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.post div.meta p a:focus {
+                        color: #2c3e50; }
+    @media (max-width: 767px) {
+      body div.page-container header div.container-fluid {
+        margin-left: 5%;
+        width: 90%; }
+      body div.page-container header nav.navigation {
+        font-weight: bold; }
+        body div.page-container header nav.navigation button.menu, body div.page-container header nav.navigation button.menu:hover, body div.page-container header nav.navigation button.menu:focus {
+          background: white;
+          height: 35px;
+          margin-top: 35px; }
+        body div.page-container header nav.navigation button.menu span.icon-bar {
+          background: #2c3e50; }
+        body div.page-container header nav.navigation img[alt="DofE logo"] {
+          padding: 5px;
+          padding-bottom: 15px; }
+        body div.page-container header nav.navigation ul.navigation {
+          margin-bottom: 0; }
+          body div.page-container header nav.navigation ul.navigation li.active {
+            background: #08b5bc; }
+            body div.page-container header nav.navigation ul.navigation li.active a, body div.page-container header nav.navigation ul.navigation li.active a:hover, body div.page-container header nav.navigation ul.navigation li.active a:focus {
+              background: #08b5bc; }
+          body div.page-container header nav.navigation ul.navigation:nth-of-type(1) {
+            margin-bottom: 0; }
+          body div.page-container header nav.navigation ul.navigation:nth-of-type(2) {
+            margin-top: 0; }
+        body div.page-container header nav.navigation ul.login-box {
+          height: 40px;
+          margin-top: 0; }
+          body div.page-container header nav.navigation ul.login-box li,
+          body div.page-container header nav.navigation ul.login-box li.active {
+            margin: 0; }
+            body div.page-container header nav.navigation ul.login-box li a.borderless,
+            body div.page-container header nav.navigation ul.login-box li.active a.borderless {
+              height: 40px;
+              margin: 0;
+              padding: 0;
+              padding-left: 15px;
+              margin-top: 0; }
+              body div.page-container header nav.navigation ul.login-box li a.borderless img,
+              body div.page-container header nav.navigation ul.login-box li.active a.borderless img {
+                height: 34px;
+                width: 34px;
+                margin-top: 3px;
+                margin-left: 10px; }
+              body div.page-container header nav.navigation ul.login-box li a.borderless p,
+              body div.page-container header nav.navigation ul.login-box li.active a.borderless p {
+                height: 32px;
+                margin-top: 4px; } }
+    @media (min-width: 768px) {
+      body div.page-container header nav.navigation img[alt="DofE logo"] {
+        padding: 10px;
+        padding-left: 15px; }
+      body div.page-container header nav.navigation ul.navigation {
+        height: 103px;
+        line-height: 103px; }
+        body div.page-container header nav.navigation ul.navigation li {
+          height: 103px;
+          line-height: 103px;
+          font-weight: bold; }
+          body div.page-container header nav.navigation ul.navigation li a {
+            line-height: 23px;
+            font-size: 1.2em;
+            padding: 0;
+            margin-left: 20px;
+            margin-top: 40px;
+            margin-bottom: 40px;
+            color: #828282; }
+          body div.page-container header nav.navigation ul.navigation li a.border {
+            border-bottom: 2px solid #828282; }
+            body div.page-container header nav.navigation ul.navigation li a.border:hover, body div.page-container header nav.navigation ul.navigation li a.border:focus {
+              border-bottom: 2px solid white;
+              color: white; }
+        body div.page-container header nav.navigation ul.navigation li.active, body div.page-container header nav.navigation ul.navigation li.active:hover, body div.page-container header nav.navigation ul.navigation li.active:focus {
+          background: #2c3e50; }
+        body div.page-container header nav.navigation ul.navigation li.active a, body div.page-container header nav.navigation ul.navigation li.active a:hover, body div.page-container header nav.navigation ul.navigation li.active a:focus {
+          background: #2c3e50;
+          color: white; }
+        body div.page-container header nav.navigation ul.navigation li.active a.border {
+          border-bottom: 2px solid white; }
+          body div.page-container header nav.navigation ul.navigation li.active a.border:hover, body div.page-container header nav.navigation ul.navigation li.active a.border:focus {
+            border-bottom: 2px solid white; }
+      body div.page-container header nav.navigation ul.login-box {
+        margin-right: 0; }
+        body div.page-container header nav.navigation ul.login-box li a.borderless,
+        body div.page-container header nav.navigation ul.login-box li.active a.borderless {
+          height: 50px;
+          margin-top: 26px;
+          margin-bottom: 26px;
+          line-height: 50px; }
+          body div.page-container header nav.navigation ul.login-box li a.borderless img,
+          body div.page-container header nav.navigation ul.login-box li.active a.borderless img {
+            margin-left: 10px; } }
+    body div.page-container header nav.navigation {
+      margin-bottom: 0;
+      border-radius: 0;
+      background: #2c3e50;
+      border: 1px solid #2c3e50; }
+      @media (max-width: 767px) {
+        body div.page-container header nav.navigation {
+          font-weight: bold; } }
+      body div.page-container header nav.navigation ul.login-box li a.borderless,
+      body div.page-container header nav.navigation ul.login-box li.active a.borderless {
+        margin-right: 0px; }
+      body div.page-container header nav.navigation ul.login-box li p,
+      body div.page-container header nav.navigation ul.login-box li img,
+      body div.page-container header nav.navigation ul.login-box li.active p,
+      body div.page-container header nav.navigation ul.login-box li.active img {
+        display: inline;
+        float: left; }
+      body div.page-container header nav.navigation ul.login-box li p,
+      body div.page-container header nav.navigation ul.login-box li.active p {
+        height: 32px; }
+        @media (max-width: 767px) {
+          body div.page-container header nav.navigation ul.login-box li p,
+          body div.page-container header nav.navigation ul.login-box li.active p {
+            line-height: 32px; } }
+      body div.page-container header nav.navigation ul.login-box li img,
+      body div.page-container header nav.navigation ul.login-box li.active img {
+        height: 50px;
+        border-radius: 5px; }
+      body div.page-container header nav.navigation ul.login-box li a.borderless:hover, body div.page-container header nav.navigation ul.login-box li a.borderless:focus {
+        color: white; }
+      body div.page-container header nav.navigation ul.login-box li.active a.borderless {
+        color: white; }
+      body div.page-container header nav.navigation ul.search li div.search input.search-query {
+        padding-left: 15px; }
+
+div#login_modal div.modal-dialog div.modal-content div.modal-body form.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto; }
+  div#login_modal div.modal-dialog div.modal-content div.modal-body form.form-signin h3.form-signin-heading {
+    margin-bottom: 10px; }
+  div#login_modal div.modal-dialog div.modal-content div.modal-body form.form-signin input.form-control {
+    position: relative;
+    height: auto;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 16px; }
+  div#login_modal div.modal-dialog div.modal-content div.modal-body form.form-signin input.form-control:focus {
+    z-index: 2; }
+  div#login_modal div.modal-dialog div.modal-content div.modal-body form.form-signin input[type="text"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0; }
+  div#login_modal div.modal-dialog div.modal-content div.modal-body form.form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0; }
 
 footer {
   background: gray; }

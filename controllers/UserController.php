@@ -30,11 +30,12 @@ class UserController extends Controller{
         redirectTo('/');
     }
     
-    public function profile(){
-        //SQL
+    public function profile($name){
+        //SQL /w $name
         
-        $this->view('Profile/index', [
-            'active' => 'profile'
+        $this->view('Profile/index', 'base_template', [
+            'active' => 'profile',
+            'name' => $name
         ]);
     }
     

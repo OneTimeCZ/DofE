@@ -7,7 +7,7 @@ class GalleryController extends Controller{
     public function index(){
         //SQL
         
-        $this->view('Gallery/index', [
+        $this->view('Gallery/index', 'base_template', [
             'active' => 'gallery'
         ]);
     }

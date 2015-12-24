@@ -7,7 +7,7 @@ class RegisterController extends Controller{
     public function index(){
         //SQL
         
-        $this->view('Register/index', [
+        $this->view('Register/index', 'base_template', [
             'active' => 'register'
         ]);
     }
