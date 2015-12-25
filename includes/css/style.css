@@ -107,24 +107,70 @@ body {
             background: #e9eaed;
             border-radius: 5px;
             overflow: hidden; }
-            body div.page-container div.container-fluid div.main-content div.main div.content div.section div.page-heading h1 {
-              margin: 0; }
+            body div.page-container div.container-fluid div.main-content div.main div.content div.section div.page-heading {
+              height: 64px;
+              background: white;
+              margin-bottom: 30px;
+              border-radius: 5px;
+              box-shadow: 0px 0px 8px lightgray; }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.page-heading h1 {
+                line-height: 64px;
+                margin: 0;
+                padding-left: 20px; }
             body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column {
               float: left;
               margin-bottom: 30px;
               background: #e9eaed; }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.single {
+                width: 100%; }
               @media (max-width: 991px) {
-                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column {
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.double {
                   padding-left: 0;
                   padding-right: 0;
                   width: 100%; } }
               @media (min-width: 992px) {
-                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column:nth-of-type(2n+1) {
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.double:nth-of-type(2n+1) {
                   padding-left: 0; }
-                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column:nth-of-type(2n) {
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.double:nth-of-type(2n) {
                   padding-right: 0; } }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column:nth-of-type(1) {
                 margin-bottom: 30px; }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.image div.content-box div.section-content img {
+                display: block;
+                margin: auto; }
+              @media (max-width: 767px) {
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.gallery {
+                  padding: 0;
+                  width: 100%; } }
+              @media (min-width: 768px) {
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.gallery:nth-of-type(2n) {
+                  padding-right: 0;
+                  padding-left: 15px; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.gallery:nth-of-type(2n-1) {
+                  padding-right: 15px;
+                  padding-left: 0; } }
+              @media (min-width: 992px) {
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.gallery:nth-of-type(4n-3) {
+                  padding-left: 0px;
+                  padding-right: 22.5px; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.gallery:nth-of-type(4n-2) {
+                  padding-right: 15px;
+                  padding-left: 7.5px; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.gallery:nth-of-type(4n-1) {
+                  padding-left: 15px;
+                  padding-right: 7.5px; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.gallery:nth-of-type(4n) {
+                  padding-left: 22.5px;
+                  padding-right: 0px; } }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.gallery div.content-box {
+                border-radius: 5px; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.gallery div.content-box div.gallery {
+                  border-radius: 5px; }
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.gallery div.content-box div.gallery a {
+                    overflow: hidden; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.gallery div.content-box div.gallery a img {
+                      display: block;
+                      margin: auto; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column div.content-box {
                 box-shadow: 0px 0px 8px lightgray;
                 border-radius: 5px; }
@@ -140,6 +186,10 @@ body {
               font-size: 1.2em; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header.striped {
                 line-height: 45px; }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header.comments {
+                height: 35px;
+                line-height: 35px;
+                font-size: 1.4em; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header.image {
                 height: auto;
                 background: white;
@@ -160,12 +210,104 @@ body {
                   background: #71a100; }
             body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content {
               padding: 5px;
-              background: white; }
+              background: white;
+              border-bottom-right-radius: 5px;
+              border-bottom-left-radius: 5px; }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.pagination {
+                margin: 0;
+                width: 100%; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.pagination ul {
+                  margin: 0;
+                  padding-left: 5px;
+                  padding-right: 5px;
+                  overflow: hidden; }
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.pagination ul li {
+                    overflow: hidden;
+                    width: auto; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.pagination ul li:first-of-type {
+                      float: left; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.pagination ul li:last-of-type {
+                      float: right; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.pagination ul li a {
+                      text-decoration: none;
+                      color: gray; }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments {
+                padding: 0;
+                border-bottom-left-radius: 5px;
+                border-bottom-right-radius: 5px; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments {
+                  list-style-type: none;
+                  padding: 0;
+                  margin: 0; }
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment {
+                    padding: 10px;
+                    border-bottom: 1px solid lightgray; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.avatar {
+                      width: 50px;
+                      float: left; }
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.avatar img {
+                        height: 50px;
+                        width: 50px; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info {
+                      margin-left: 60px;
+                      margin-bottom: 5px;
+                      height: 25px; }
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info a {
+                        color: #2c3e50;
+                        text-decoration: none;
+                        margin-right: 5px; }
+                        body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info a:hover, body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info a:focus {
+                          color: black; }
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info h4,
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info p {
+                        display: inline;
+                        line-height: 25px; }
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info h4 {
+                        font-size: 1.4em; }
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info p {
+                        color: gray; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.content_area {
+                      margin-left: 60px; }
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.content_area p.comment {
+                        color: gray;
+                        margin-bottom: 0; }
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment_form {
+                    padding: 10px;
+                    border-bottom-right-radius: 5px;
+                    border-bottom-left-radius: 5px; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment_form div.comment_form h3.heading {
+                      margin-top: 10px;
+                      margin-bottom: 0;
+                      margin-left: 60px;
+                      font-size: 1.4em;
+                      color: #2c3e50; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment_form div.comment_form form.comment_form {
+                      margin-left: 60px;
+                      margin-right: 60px;
+                      margin-bottom: 15px; }
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment_form div.comment_form form.comment_form textarea {
+                        resize: none;
+                        height: 120px;
+                        width: 100%;
+                        background: lightgray;
+                        border: 1px solid lightgray;
+                        font-size: 1.2em;
+                        padding: 5px 5px; }
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment_form div.comment_form form.comment_form input.comment_submit {
+                        border: 1px solid lightgray;
+                        background: lightgray;
+                        color: #2c3e50;
+                        height: 30px;
+                        line-height: 26px;
+                        font-size: 1.2em;
+                        width: 120px; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.post {
                 color: gray;
                 padding: 20px;
                 padding-bottom: 15px;
-                padding-top: 0px; }
+                padding-top: 0px;
+                border-bottom-left-radius: 5px;
+                border-bottom-right-radius: 5px; }
                 body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.post h2.title {
                   color: #2c3e50;
                   margin: 0;
@@ -182,6 +324,12 @@ body {
                       color: gray; }
                       body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.post div.meta p a:hover, body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.post div.meta p a:focus {
                         color: #2c3e50; }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.article {
+                border-radius: 5px; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.article div.meta {
+                  margin-bottom: 10px; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.article div.text p.text {
+                  margin-bottom: 0; }
     @media (max-width: 767px) {
       body div.page-container header div.container-fluid {
         margin-left: 5%;
@@ -335,6 +483,23 @@ div#login_modal div.modal-dialog div.modal-content div.modal-body form.form-sign
     border-top-right-radius: 0; }
 
 footer {
-  background: gray; }
+  background: #232323; }
+  footer div.container-fluid div.content {
+    overflow: hidden; }
+    footer div.container-fluid div.content div.section.footer-list {
+      margin-top: 5px;
+      margin-bottom: 5px;
+      padding: 0; }
+      footer div.container-fluid div.content div.section.footer-list h4 {
+        margin: 0;
+        margin-top: 10px;
+        margin-bottom: 5px;
+        text-align: center;
+        color: white; }
+      footer div.container-fluid div.content div.section.footer-list ul.footer-list {
+        color: gray;
+        list-style-type: none;
+        margin-bottom: 0;
+        padding-left: 0; }
 
 /*# sourceMappingURL=style.css.map */

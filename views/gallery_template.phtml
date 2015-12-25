@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="/">
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="">
+        <meta name="keywords" content="">
+		<meta name="author" content="OneTimeCZ">
+		<title>DofE</title>
+		<script src="includes/scripts/jquery-1.11.3.js"></script>
+		<script src="includes/scripts/bootstrap.min.js"></script>
+		<link rel="shortcut icon" type="image/png" href="/includes/images/favicon.png"/>
+		<link rel="stylesheet" type="text/css" href="includes/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="includes/css/style.css" />
+	</head>
+	<body>
+        <div class="page-container">
+            <header>
+                <?php require_once 'views/header.phtml'; ?>
+            </header>
+            <div class="container-fluid col-lg-offset-1 col-lg-10">
+                <div class="main-content">
+                    <div class="main">
+                        <?php require_once 'views/' . $view . '.phtml'; ?>
+                    </div> 
+                </div>
+            </div>
+            <footer>
+                <?php require_once 'views/footer.phtml'; ?>
+            </footer>
+        </div>
+	</body>
+    <?php require_once 'views/modals/login.phtml' ?>
+</html>

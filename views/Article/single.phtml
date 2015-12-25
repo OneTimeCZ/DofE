@@ -1,1 +1,131 @@
-<h2>Článek: <i><?= $data['name'] ?></i></h2>
+<div class="content">    
+    <div class="section">
+        <div class="page-heading">
+            <h1>Blog - článek</h1>
+        </div>
+    </div>
+    
+    <div class="section">
+        <div class="column">
+            <div class="section-header image">
+                <div class="thumbnail">
+                    <img src="../../includes/images/960x540/hlavy.png" alt="" title="" />
+                </div>
+            </div>
+            <div class="section-content post article">
+                <div class="meta">
+                    <p>
+                        Autor:
+                        <a href="/profil/Username" rel="author" title="Profil uživatele Insert a username">Insert a username</a>
+                        | 24.12.2015 |
+                        <a href="/clanky/kategorie">Kategorie</a>      
+                    </p>
+                </div>
+                <div class="text">
+                    <p class="text">
+                        <?php echo $data["article"]->getContent(); ?><br><br>
+                        Bacon ipsum dolor amet landjaeger jerky venison, leberkas ground round beef ribs chicken corned beef turkey jowl pork chop frankfurter strip steak pancetta boudin. Swine salami biltong tenderloin short loin ball tip capicola pancetta strip steak frankfurter shankle venison rump. Prosciutto sirloin cow tri-tip jowl swine tenderloin cupim. Landjaeger flank meatloaf, meatball doner shoulder tail drumstick. Pork belly beef ribs t-bone bacon cow frankfurter. Turkey sirloin tri-tip pork, corned beef pork belly leberkas doner prosciutto short loin pork chop strip steak ground round drumstick beef ribs.<br><br>
+                        Pork flank cow, pork belly sirloin pastrami frankfurter swine venison ham hock t-bone. Pork leberkas turducken ground round, pastrami shoulder hamburger jowl sirloin kevin sausage salami biltong frankfurter. Short loin shoulder jowl pig boudin biltong shank meatball ribeye pancetta capicola porchetta bacon andouille. Kielbasa rump beef ham.<br><br>
+                        Cupim ribeye capicola spare ribs turkey jowl tail meatball tongue short loin brisket shank. Tenderloin bresaola landjaeger venison pork belly rump sirloin andouille shank sausage ham hock chuck filet mignon. Short ribs filet mignon pork loin kielbasa turducken pork sausage pancetta porchetta strip steak salami venison landjaeger leberkas. Pork loin ham salami beef leberkas jerky venison sausage pork belly pork chop biltong t-bone andouille meatball. Bresaola turkey rump kevin short loin, chuck spare ribs meatball ball tip. Pastrami jerky shank hamburger ham hock tri-tip salami short loin ground round pork kielbasa andouille capicola. Sausage boudin bresaola strip steak brisket.<br><br>
+                        Hamburger pork belly ground round beef ribs venison chuck. Capicola frankfurter shankle t-bone turducken. Ball tip biltong capicola salami. Shank pork belly picanha kevin shoulder capicola swine cow meatball drumstick. Andouille tri-tip ribeye brisket short loin. Meatball brisket beef ribs doner, sausage bresaola pancetta jerky porchetta filet mignon sirloin drumstick shankle cupim. Pork rump salami drumstick andouille.<br><br>
+                        Flank ball tip leberkas, t-bone tongue turducken meatloaf bresaola salami tenderloin chuck pork chop fatback sausage porchetta. Shank bacon short ribs tail strip steak frankfurter alcatra landjaeger. Picanha prosciutto ribeye drumstick, beef ribs filet mignon meatball chicken t-bone beef tenderloin corned beef andouille. Bacon ham salami, leberkas andouille kevin biltong fatback landjaeger t-bone picanha swine pork bresaola.
+                    </p>
+                </div>
+            </div>    
+        </div>
+    </div>
+    
+    <div class="section">
+        <div class="column single">
+            <div class="section-header comments">
+                Komentáře
+            </div>
+            <div class="section-content comments" id="komentare">
+                <ul class="comments">
+                    <li class="comment">
+                        <div class="avatar">
+                            <a href="/profil/Username">
+                                <img src="../../includes/images/50x50/profilepic.png" alt="profilepic" title="Uživatel Insert a username" />
+                            </a>    
+                        </div>
+                        <div class="info">
+                            <a href="/profil/Username">
+                                <h4>Insert a username</h4>
+                            </a>    
+                            <p>dne 24.12.2015 v 21:24</p>
+                        </div>
+                        <div class="content_area">
+                            <p class="comment">
+                                Bacon ipsum dolor amet meatloaf pork landjaeger tongue prosciutto pork loin pork chop pig. Strip steak shankle pastrami t-bone, tri-tip pork chop sausage salami leberkas meatball pork belly hamburger corned beef filet mignon boudin. Jerky porchetta boudin, tail ground round ball tip pig capicola pork bresaola drumstick chicken leberkas ham.
+                            </p>
+                        </div>
+                    </li>
+                    <li class="comment">
+                        <div class="avatar">
+                            <a href="/profil/Username">
+                                <img src="../../includes/images/50x50/profilepic2.png" alt="profilepic" title="Uživatel Insert a username" />
+                            </a>    
+                        </div>
+                        <div class="info">
+                            <a href="/profil/Username">
+                                <h4>Insert a username</h4>
+                            </a>    
+                            <p>dne 24.12.2015 v 21:28</p>
+                        </div>
+                        <div class="content_area">
+                            <p class="comment">
+                                Jerky porchetta boudin, tail ground round ball tip pig capicola pork bresaola drumstick chicken leberkas ham.
+                            </p>
+                        </div>
+                    </li>
+                    <li class="comment">
+                        <div class="avatar">
+                            <a href="/profil/Username">
+                                <img src="../../includes/images/50x50/profilepic4.png" alt="profilepic" title="Uživatel Insert a username" />
+                            </a>    
+                        </div>
+                        <div class="info">
+                            <a href="/profil/Username">
+                                <h4>Insert a username</h4>
+                            </a>    
+                            <p>dne 24.12.2015 v 21:33</p>
+                        </div>
+                        <div class="content_area">
+                            <p class="comment">
+                                Bacon ipsum dolor amet meatloaf pork landjaeger tongue prosciutto pork loin pork chop pig. Pork belly ground round doner, pork chop jerky kevin leberkas shank fatback tail tri-tip pancetta. Strip steak shankle pastrami t-bone, tri-tip pork chop sausage salami leberkas meatball pork belly hamburger corned beef filet mignon boudin. Jerky porchetta boudin, tail ground round ball tip pig capicola pork bresaola drumstick chicken leberkas ham.
+                            </p>
+                        </div>
+                    </li>
+                    <li class="comment">
+                        <div class="avatar">
+                            <a href="/profil/Username">
+                                <img src="../../includes/images/50x50/profilepic3.png" alt="profilepic" title="Uživatel Insert a username" />
+                            </a>    
+                        </div>
+                        <div class="info">
+                            <a href="/profil/Username">
+                                <h4>Insert a username</h4>
+                            </a>    
+                            <p>dne 24.12.2015 v 21:44</p>
+                        </div>
+                        <div class="content_area">
+                            <p class="comment">
+                                Strip steak shankle pastrami t-bone, tri-tip pork chop sausage salami leberkas meatball pork belly hamburger corned beef filet mignon boudin.
+                            </p>
+                        </div>
+                    </li>
+                    <li class="comment_form">
+                        <div class="comment_form">
+                        <h3 class="heading">Sdílejte svůj názor</h3>
+                            <form class="comment_form" role="form" action="/clanek/1-nazev-clanku/komentovat" method="post">
+                                <label for="comtxt"></label>
+                                <textarea placeholder="Text komentáře" name="comment_text" id="comtxt" required ></textarea>
+                                <input type="submit" value="Okomentovat" class="comment_submit" name="comment_submit" />
+                            </form>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

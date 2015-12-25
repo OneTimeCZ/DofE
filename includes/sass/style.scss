@@ -3,6 +3,7 @@ $dnw: #e9eaed;
 $blue: #2c3e50;
 $lightblue: #08b5bc;
 $lightgray: #828282;
+$darkgray: #232323;
 
 //DofE colors
 $volunteering: #e40046;
@@ -182,8 +183,16 @@ body {
                             overflow: hidden;
                             
                             div.page-heading {
+                                height: 64px;
+                                background: white;
+                                margin-bottom: 30px;
+                                border-radius: 5px;
+                                box-shadow: 0px 0px 8px lightgray;
+                                
                                 h1 {
+                                    line-height: 64px;
                                     margin: 0;
+                                    padding-left: 20px;
                                 }
                             }
 
@@ -191,19 +200,25 @@ body {
                                 float: left;
                                 margin-bottom: 30px;
                                 
-                                @media (max-width: 991px){
-                                    padding-left: 0;
-                                    padding-right: 0;
+                                &.single {
                                     width: 100%;
                                 }
-
-                                @media (min-width: 992px){
-                                    &:nth-of-type(2n+1) {
+                                
+                                &.double {
+                                    @media (max-width: 991px){
                                         padding-left: 0;
+                                        padding-right: 0;
+                                        width: 100%;
                                     }
 
-                                    &:nth-of-type(2n) {
-                                        padding-right: 0;
+                                    @media (min-width: 992px){
+                                        &:nth-of-type(2n+1) {
+                                            padding-left: 0;
+                                        }
+
+                                        &:nth-of-type(2n) {
+                                            padding-right: 0;
+                                        }
                                     }
                                 }
 
@@ -211,6 +226,75 @@ body {
 
                                 &:nth-of-type(1) {
                                     margin-bottom: 30px;
+                                }
+                                
+                                &.image {
+                                    div.content-box {
+                                        div.section-content {
+                                            img {
+                                                display: block;
+                                                margin: auto;
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                &.gallery {
+                                    @media (max-width: $break - 1px) {
+                                        padding: 0;
+                                        width: 100%;
+                                    }
+                                    
+                                    @media (min-width: $break) {
+                                        &:nth-of-type(2n) {
+                                            padding-right: 0;
+                                            padding-left: 15px;
+                                        }
+                                        
+                                        &:nth-of-type(2n-1) {
+                                            padding-right: 15px;
+                                            padding-left: 0;
+                                        }
+                                    }
+                                    
+                                    @media (min-width: 992px) {                                        
+                                        &:nth-of-type(4n-3) {
+                                            padding-left: 0px;
+                                            padding-right: 22.5px; 
+                                        }
+                                        
+                                        &:nth-of-type(4n-2) {
+                                            padding-right: 15px;
+                                            padding-left: 7.5px;
+                                        }
+
+                                        &:nth-of-type(4n-1) {
+                                            padding-left: 15px;
+                                            padding-right: 7.5px;
+                                        }
+                                        
+                                        &:nth-of-type(4n) {
+                                            padding-left: 22.5px;
+                                            padding-right: 0px;
+                                        }
+                                    }
+                                    
+                                    div.content-box {
+                                        border-radius: 5px;
+                                        
+                                        div.gallery {
+                                            border-radius: 5px;
+                                            
+                                            a {
+                                                overflow: hidden;
+                                                
+                                                img {
+                                                    display: block;
+                                                    margin: auto;
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
 
                                 div.content-box {
@@ -232,6 +316,12 @@ body {
                                 
                                 &.striped {
                                     line-height: 45px;    
+                                }
+                                
+                                &.comments {
+                                    height: 35px;
+                                    line-height: 35px;
+                                    font-size: 1.4em;
                                 }
                                 
                                 &.image {
@@ -266,12 +356,154 @@ body {
                             div.section-content {
                                 padding: 5px;
                                 background: white;
+                                border-bottom-right-radius: 5px;
+                                border-bottom-left-radius: 5px;
+                                
+                                &.pagination {
+                                    margin: 0;
+                                    width: 100%;
+                                    
+                                    ul {
+                                        margin: 0;
+                                        padding-left: 5px;
+                                        padding-right: 5px;
+                                        overflow: hidden;
+                                        
+                                        li {
+                                            overflow: hidden;
+                                            width: auto;
+                                            
+                                            &:first-of-type {
+                                                float: left;
+                                            }
+                                            
+                                            &:last-of-type {
+                                                float: right;
+                                            }
+                                            
+                                            a {
+                                                text-decoration: none;
+                                                color: gray;
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                &.comments {
+                                    padding: 0;
+                                    border-bottom-left-radius: 5px;
+                                    border-bottom-right-radius: 5px;
+                                    
+                                    ul.comments {
+                                        list-style-type: none;
+                                        padding: 0;
+                                        margin: 0;
+                                        
+                                        li.comment {
+                                            padding: 10px;
+                                            border-bottom: 1px solid lightgray;
+                                            
+                                            div.avatar {
+                                                width: 50px;
+                                                float: left;
+                                                
+                                                img {
+                                                    height: 50px;
+                                                    width: 50px;
+                                                }
+                                            }
+                                            
+                                            div.info {
+                                                margin-left: 60px;
+                                                margin-bottom: 5px;
+                                                height: 25px;
+                                                
+                                                a {
+                                                    color: $blue;
+                                                    text-decoration: none;
+                                                    margin-right: 5px;
+                                                    
+                                                    &:hover, &:focus {
+                                                        color: black;
+                                                    }
+                                                }
+                                                
+                                                h4,
+                                                p {
+                                                    display: inline;
+                                                    line-height: 25px;
+                                                }
+                                                
+                                                h4 {
+                                                    font-size: 1.4em;
+                                                }
+                                                
+                                                p {
+                                                    color: gray;
+                                                }
+                                            }
+                                            
+                                            div.content_area {
+                                                margin-left: 60px;
+                                                
+                                                p.comment {
+                                                    color: gray;
+                                                    margin-bottom: 0;
+                                                }
+                                            }
+                                        }
+                                        
+                                        li.comment_form {
+                                            padding: 10px;
+                                            border-bottom-right-radius: 5px;
+                                            border-bottom-left-radius: 5px;
+                                            
+                                            div.comment_form {
+                                                h3.heading {
+                                                    margin-top: 10px;
+                                                    margin-bottom: 0;
+                                                    margin-left: 60px;
+                                                    font-size: 1.4em;
+                                                    color: $blue;
+                                                }
+                                                
+                                                form.comment_form {
+                                                    margin-left: 60px;
+                                                    margin-right: 60px;
+                                                    margin-bottom: 15px;
+                                                    
+                                                    textarea {
+                                                        resize: none;
+                                                        height: 120px;
+                                                        width: 100%;
+                                                        background: lightgray;
+                                                        border: 1px solid lightgray;
+                                                        font-size: 1.2em;
+                                                        padding: 5px 5px;
+                                                    }
+                                                    
+                                                    input.comment_submit {
+                                                        border: 1px solid lightgray;
+                                                        background: lightgray;
+                                                        color: $blue;
+                                                        height: 30px;
+                                                        line-height: 26px;
+                                                        font-size: 1.2em;
+                                                        width:120px;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                                 
                                 &.post {
                                     color: gray;
                                     padding: 20px;
                                     padding-bottom: 15px;
                                     padding-top: 0px;
+                                    border-bottom-left-radius: 5px;
+                                    border-bottom-right-radius: 5px;
                                     
                                     h2.title {
                                         color: $blue;
@@ -298,13 +530,19 @@ body {
                                             }
                                         }
                                     }
+                                }
+                                
+                                &.article {
+                                    border-radius: 5px;
                                     
-                                    div.description {
-                                    
+                                    div.meta {
+                                        margin-bottom: 10px;
                                     }
                                     
-                                    a.read_more {
-                                    
+                                    div.text {
+                                        p.text {
+                                            margin-bottom: 0;
+                                        }
                                     }
                                 }
                             }
@@ -588,5 +826,38 @@ div#login_modal {
 }
 
 footer {
-    background: gray;
+    background: $darkgray;
+    
+    div.container-fluid {
+        div.content {
+            overflow: hidden;
+            
+            div.section.footer-list {
+                margin-top: 5px;
+                margin-bottom: 5px;
+                padding: 0;
+                
+                h4 {
+                    margin: 0;
+                    margin-top: 10px;
+                    margin-bottom: 5px;
+                    text-align: center;
+                    color: white;
+                }
+                
+                ul.footer-list {
+                    color: gray;
+                    list-style-type: none;
+                    margin-bottom: 0;
+                    padding-left: 0;
+                    
+                    li {
+                        a {
+                        
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

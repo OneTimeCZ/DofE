@@ -11,4 +11,12 @@ class GalleryController extends Controller{
             'active' => 'gallery'
         ]);
     }
+
+    public function single(){
+        //SQL for image route
+        
+        $this->view('Gallery/single', 'gallery_template', [
+            'active' => 'gallery'
+        ]);
+    }
 }

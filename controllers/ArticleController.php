@@ -2,6 +2,9 @@
 
 namespace controllers;
 
+use Models\Article;
+use Models\ArticleQuery;
+
 class ArticleController extends Controller{
 
     public function showAll(){
@@ -23,11 +26,13 @@ class ArticleController extends Controller{
     }
 
     public function showSingle($name){
-        //SQL w/ $name
+        $id = explode('-', $name);
+        $id = $id[0];
+        $article = ArticleQuery::create()->filterById($id)->findOne();
         
         $this->view('Article/single', 'base_template', [
             'active' => 'blog',
-            'name' => $name
+            'article' => $article
         ]);
     }
 
@@ -38,5 +43,12 @@ class ArticleController extends Controller{
             'active' => 'blog',
             'category' => $category
         ]);
+    }
+    
+    public function comment($name){
+        //SQL for comment
+        
+        //popup with comment/added or error
+        redirectTo('/clanek/'.$name."#komentare");
     }
 }
