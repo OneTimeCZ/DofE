@@ -23,7 +23,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildArticleQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildArticleQuery orderByIdUser($order = Criteria::ASC) Order by the id_user column
  * @method     ChildArticleQuery orderByIdImage($order = Criteria::ASC) Order by the id_image column
+ * @method     ChildArticleQuery orderByIdCategory($order = Criteria::ASC) Order by the id_category column
  * @method     ChildArticleQuery orderByTitle($order = Criteria::ASC) Order by the title column
+ * @method     ChildArticleQuery orderByUrl($order = Criteria::ASC) Order by the url column
  * @method     ChildArticleQuery orderByKeywords($order = Criteria::ASC) Order by the keywords column
  * @method     ChildArticleQuery orderByContent($order = Criteria::ASC) Order by the content column
  * @method     ChildArticleQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
@@ -32,7 +34,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildArticleQuery groupById() Group by the id column
  * @method     ChildArticleQuery groupByIdUser() Group by the id_user column
  * @method     ChildArticleQuery groupByIdImage() Group by the id_image column
+ * @method     ChildArticleQuery groupByIdCategory() Group by the id_category column
  * @method     ChildArticleQuery groupByTitle() Group by the title column
+ * @method     ChildArticleQuery groupByUrl() Group by the url column
  * @method     ChildArticleQuery groupByKeywords() Group by the keywords column
  * @method     ChildArticleQuery groupByContent() Group by the content column
  * @method     ChildArticleQuery groupByCreatedAt() Group by the created_at column
@@ -56,7 +60,37 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildArticleQuery rightJoinWithUser() Adds a RIGHT JOIN clause and with to the query using the User relation
  * @method     ChildArticleQuery innerJoinWithUser() Adds a INNER JOIN clause and with to the query using the User relation
  *
- * @method     \Models\UserQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     ChildArticleQuery leftJoinImage($relationAlias = null) Adds a LEFT JOIN clause to the query using the Image relation
+ * @method     ChildArticleQuery rightJoinImage($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Image relation
+ * @method     ChildArticleQuery innerJoinImage($relationAlias = null) Adds a INNER JOIN clause to the query using the Image relation
+ *
+ * @method     ChildArticleQuery joinWithImage($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Image relation
+ *
+ * @method     ChildArticleQuery leftJoinWithImage() Adds a LEFT JOIN clause and with to the query using the Image relation
+ * @method     ChildArticleQuery rightJoinWithImage() Adds a RIGHT JOIN clause and with to the query using the Image relation
+ * @method     ChildArticleQuery innerJoinWithImage() Adds a INNER JOIN clause and with to the query using the Image relation
+ *
+ * @method     ChildArticleQuery leftJoinCategory($relationAlias = null) Adds a LEFT JOIN clause to the query using the Category relation
+ * @method     ChildArticleQuery rightJoinCategory($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Category relation
+ * @method     ChildArticleQuery innerJoinCategory($relationAlias = null) Adds a INNER JOIN clause to the query using the Category relation
+ *
+ * @method     ChildArticleQuery joinWithCategory($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Category relation
+ *
+ * @method     ChildArticleQuery leftJoinWithCategory() Adds a LEFT JOIN clause and with to the query using the Category relation
+ * @method     ChildArticleQuery rightJoinWithCategory() Adds a RIGHT JOIN clause and with to the query using the Category relation
+ * @method     ChildArticleQuery innerJoinWithCategory() Adds a INNER JOIN clause and with to the query using the Category relation
+ *
+ * @method     ChildArticleQuery leftJoinComment($relationAlias = null) Adds a LEFT JOIN clause to the query using the Comment relation
+ * @method     ChildArticleQuery rightJoinComment($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Comment relation
+ * @method     ChildArticleQuery innerJoinComment($relationAlias = null) Adds a INNER JOIN clause to the query using the Comment relation
+ *
+ * @method     ChildArticleQuery joinWithComment($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Comment relation
+ *
+ * @method     ChildArticleQuery leftJoinWithComment() Adds a LEFT JOIN clause and with to the query using the Comment relation
+ * @method     ChildArticleQuery rightJoinWithComment() Adds a RIGHT JOIN clause and with to the query using the Comment relation
+ * @method     ChildArticleQuery innerJoinWithComment() Adds a INNER JOIN clause and with to the query using the Comment relation
+ *
+ * @method     \Models\UserQuery|\Models\ImageQuery|\Models\CategoryQuery|\Models\CommentQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildArticle findOne(ConnectionInterface $con = null) Return the first ChildArticle matching the query
  * @method     ChildArticle findOneOrCreate(ConnectionInterface $con = null) Return the first ChildArticle matching the query, or a new ChildArticle object populated from the query conditions when no match is found
@@ -64,7 +98,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildArticle findOneById(int $id) Return the first ChildArticle filtered by the id column
  * @method     ChildArticle findOneByIdUser(int $id_user) Return the first ChildArticle filtered by the id_user column
  * @method     ChildArticle findOneByIdImage(int $id_image) Return the first ChildArticle filtered by the id_image column
+ * @method     ChildArticle findOneByIdCategory(int $id_category) Return the first ChildArticle filtered by the id_category column
  * @method     ChildArticle findOneByTitle(string $title) Return the first ChildArticle filtered by the title column
+ * @method     ChildArticle findOneByUrl(string $url) Return the first ChildArticle filtered by the url column
  * @method     ChildArticle findOneByKeywords(string $keywords) Return the first ChildArticle filtered by the keywords column
  * @method     ChildArticle findOneByContent(string $content) Return the first ChildArticle filtered by the content column
  * @method     ChildArticle findOneByCreatedAt(string $created_at) Return the first ChildArticle filtered by the created_at column
@@ -76,7 +112,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildArticle requireOneById(int $id) Return the first ChildArticle filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildArticle requireOneByIdUser(int $id_user) Return the first ChildArticle filtered by the id_user column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildArticle requireOneByIdImage(int $id_image) Return the first ChildArticle filtered by the id_image column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildArticle requireOneByIdCategory(int $id_category) Return the first ChildArticle filtered by the id_category column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildArticle requireOneByTitle(string $title) Return the first ChildArticle filtered by the title column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildArticle requireOneByUrl(string $url) Return the first ChildArticle filtered by the url column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildArticle requireOneByKeywords(string $keywords) Return the first ChildArticle filtered by the keywords column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildArticle requireOneByContent(string $content) Return the first ChildArticle filtered by the content column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildArticle requireOneByCreatedAt(string $created_at) Return the first ChildArticle filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -86,7 +124,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildArticle[]|ObjectCollection findById(int $id) Return ChildArticle objects filtered by the id column
  * @method     ChildArticle[]|ObjectCollection findByIdUser(int $id_user) Return ChildArticle objects filtered by the id_user column
  * @method     ChildArticle[]|ObjectCollection findByIdImage(int $id_image) Return ChildArticle objects filtered by the id_image column
+ * @method     ChildArticle[]|ObjectCollection findByIdCategory(int $id_category) Return ChildArticle objects filtered by the id_category column
  * @method     ChildArticle[]|ObjectCollection findByTitle(string $title) Return ChildArticle objects filtered by the title column
+ * @method     ChildArticle[]|ObjectCollection findByUrl(string $url) Return ChildArticle objects filtered by the url column
  * @method     ChildArticle[]|ObjectCollection findByKeywords(string $keywords) Return ChildArticle objects filtered by the keywords column
  * @method     ChildArticle[]|ObjectCollection findByContent(string $content) Return ChildArticle objects filtered by the content column
  * @method     ChildArticle[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildArticle objects filtered by the created_at column
@@ -183,7 +223,7 @@ abstract class ArticleQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, id_user, id_image, title, keywords, content, created_at, updated_at FROM articles WHERE id = :p0';
+        $sql = 'SELECT id, id_user, id_image, id_category, title, url, keywords, content, created_at, updated_at FROM articles WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -367,6 +407,8 @@ abstract class ArticleQuery extends ModelCriteria
      * $query->filterByIdImage(array('min' => 12)); // WHERE id_image > 12
      * </code>
      *
+     * @see       filterByImage()
+     *
      * @param     mixed $idImage The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
@@ -399,6 +441,49 @@ abstract class ArticleQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the id_category column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByIdCategory(1234); // WHERE id_category = 1234
+     * $query->filterByIdCategory(array(12, 34)); // WHERE id_category IN (12, 34)
+     * $query->filterByIdCategory(array('min' => 12)); // WHERE id_category > 12
+     * </code>
+     *
+     * @see       filterByCategory()
+     *
+     * @param     mixed $idCategory The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildArticleQuery The current query, for fluid interface
+     */
+    public function filterByIdCategory($idCategory = null, $comparison = null)
+    {
+        if (is_array($idCategory)) {
+            $useMinMax = false;
+            if (isset($idCategory['min'])) {
+                $this->addUsingAlias(ArticleTableMap::COL_ID_CATEGORY, $idCategory['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($idCategory['max'])) {
+                $this->addUsingAlias(ArticleTableMap::COL_ID_CATEGORY, $idCategory['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(ArticleTableMap::COL_ID_CATEGORY, $idCategory, $comparison);
+    }
+
+    /**
      * Filter the query on the title column
      *
      * Example usage:
@@ -425,6 +510,35 @@ abstract class ArticleQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(ArticleTableMap::COL_TITLE, $title, $comparison);
+    }
+
+    /**
+     * Filter the query on the url column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByUrl('fooValue');   // WHERE url = 'fooValue'
+     * $query->filterByUrl('%fooValue%'); // WHERE url LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $url The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildArticleQuery The current query, for fluid interface
+     */
+    public function filterByUrl($url = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($url)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $url)) {
+                $url = str_replace('*', '%', $url);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(ArticleTableMap::COL_URL, $url, $comparison);
     }
 
     /**
@@ -646,6 +760,233 @@ abstract class ArticleQuery extends ModelCriteria
         return $this
             ->joinUser($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'User', '\Models\UserQuery');
+    }
+
+    /**
+     * Filter the query by a related \Models\Image object
+     *
+     * @param \Models\Image|ObjectCollection $image The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildArticleQuery The current query, for fluid interface
+     */
+    public function filterByImage($image, $comparison = null)
+    {
+        if ($image instanceof \Models\Image) {
+            return $this
+                ->addUsingAlias(ArticleTableMap::COL_ID_IMAGE, $image->getId(), $comparison);
+        } elseif ($image instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(ArticleTableMap::COL_ID_IMAGE, $image->toKeyValue('PrimaryKey', 'Id'), $comparison);
+        } else {
+            throw new PropelException('filterByImage() only accepts arguments of type \Models\Image or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Image relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildArticleQuery The current query, for fluid interface
+     */
+    public function joinImage($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Image');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Image');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Image relation Image object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Models\ImageQuery A secondary query class using the current class as primary query
+     */
+    public function useImageQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinImage($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Image', '\Models\ImageQuery');
+    }
+
+    /**
+     * Filter the query by a related \Models\Category object
+     *
+     * @param \Models\Category|ObjectCollection $category The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildArticleQuery The current query, for fluid interface
+     */
+    public function filterByCategory($category, $comparison = null)
+    {
+        if ($category instanceof \Models\Category) {
+            return $this
+                ->addUsingAlias(ArticleTableMap::COL_ID_CATEGORY, $category->getId(), $comparison);
+        } elseif ($category instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(ArticleTableMap::COL_ID_CATEGORY, $category->toKeyValue('PrimaryKey', 'Id'), $comparison);
+        } else {
+            throw new PropelException('filterByCategory() only accepts arguments of type \Models\Category or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Category relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildArticleQuery The current query, for fluid interface
+     */
+    public function joinCategory($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Category');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Category');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Category relation Category object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Models\CategoryQuery A secondary query class using the current class as primary query
+     */
+    public function useCategoryQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinCategory($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Category', '\Models\CategoryQuery');
+    }
+
+    /**
+     * Filter the query by a related \Models\Comment object
+     *
+     * @param \Models\Comment|ObjectCollection $comment the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildArticleQuery The current query, for fluid interface
+     */
+    public function filterByComment($comment, $comparison = null)
+    {
+        if ($comment instanceof \Models\Comment) {
+            return $this
+                ->addUsingAlias(ArticleTableMap::COL_ID, $comment->getIdArticle(), $comparison);
+        } elseif ($comment instanceof ObjectCollection) {
+            return $this
+                ->useCommentQuery()
+                ->filterByPrimaryKeys($comment->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByComment() only accepts arguments of type \Models\Comment or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Comment relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildArticleQuery The current query, for fluid interface
+     */
+    public function joinComment($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Comment');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Comment');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Comment relation Comment object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Models\CommentQuery A secondary query class using the current class as primary query
+     */
+    public function useCommentQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinComment($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Comment', '\Models\CommentQuery');
     }
 
     /**

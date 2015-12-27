@@ -1,7 +1,7 @@
 <div class="content">    
     <div class="section">
         <div class="page-heading">
-            <h1>Blog - článek</h1>
+            <h1><?php echo $data["article"]->getTitle(); ?></h1>
         </div>
     </div>
     
@@ -9,26 +9,23 @@
         <div class="column">
             <div class="section-header image">
                 <div class="thumbnail">
-                    <img src="../../includes/images/960x540/hlavy.png" alt="" title="" />
+                    <img src="../../includes/images/fullsize/<?= $data["imgurl"]; ?>" alt="" title="" />
                 </div>
             </div>
             <div class="section-content post article">
                 <div class="meta">
                     <p>
                         Autor:
-                        <a href="/profil/Username" rel="author" title="Profil uživatele Insert a username">Insert a username</a>
+                        <a href="/profil/<?= $data["author"] ?>" rel="author" title="Profil uživatele <?= $data["author"] ?>"><?= $data["author"] ?></a>
                         | 24.12.2015 |
-                        <a href="/clanky/kategorie">Kategorie</a>      
+                        <a href="/clanky/<?php echo $data["category"]->getUrl(); ?>"><?php echo ucfirst($data["category"]->getName()); ?></a>      
                     </p>
                 </div>
                 <div class="text">
                     <p class="text">
-                        <?php echo $data["article"]->getContent(); ?><br><br>
-                        Bacon ipsum dolor amet landjaeger jerky venison, leberkas ground round beef ribs chicken corned beef turkey jowl pork chop frankfurter strip steak pancetta boudin. Swine salami biltong tenderloin short loin ball tip capicola pancetta strip steak frankfurter shankle venison rump. Prosciutto sirloin cow tri-tip jowl swine tenderloin cupim. Landjaeger flank meatloaf, meatball doner shoulder tail drumstick. Pork belly beef ribs t-bone bacon cow frankfurter. Turkey sirloin tri-tip pork, corned beef pork belly leberkas doner prosciutto short loin pork chop strip steak ground round drumstick beef ribs.<br><br>
-                        Pork flank cow, pork belly sirloin pastrami frankfurter swine venison ham hock t-bone. Pork leberkas turducken ground round, pastrami shoulder hamburger jowl sirloin kevin sausage salami biltong frankfurter. Short loin shoulder jowl pig boudin biltong shank meatball ribeye pancetta capicola porchetta bacon andouille. Kielbasa rump beef ham.<br><br>
-                        Cupim ribeye capicola spare ribs turkey jowl tail meatball tongue short loin brisket shank. Tenderloin bresaola landjaeger venison pork belly rump sirloin andouille shank sausage ham hock chuck filet mignon. Short ribs filet mignon pork loin kielbasa turducken pork sausage pancetta porchetta strip steak salami venison landjaeger leberkas. Pork loin ham salami beef leberkas jerky venison sausage pork belly pork chop biltong t-bone andouille meatball. Bresaola turkey rump kevin short loin, chuck spare ribs meatball ball tip. Pastrami jerky shank hamburger ham hock tri-tip salami short loin ground round pork kielbasa andouille capicola. Sausage boudin bresaola strip steak brisket.<br><br>
-                        Hamburger pork belly ground round beef ribs venison chuck. Capicola frankfurter shankle t-bone turducken. Ball tip biltong capicola salami. Shank pork belly picanha kevin shoulder capicola swine cow meatball drumstick. Andouille tri-tip ribeye brisket short loin. Meatball brisket beef ribs doner, sausage bresaola pancetta jerky porchetta filet mignon sirloin drumstick shankle cupim. Pork rump salami drumstick andouille.<br><br>
-                        Flank ball tip leberkas, t-bone tongue turducken meatloaf bresaola salami tenderloin chuck pork chop fatback sausage porchetta. Shank bacon short ribs tail strip steak frankfurter alcatra landjaeger. Picanha prosciutto ribeye drumstick, beef ribs filet mignon meatball chicken t-bone beef tenderloin corned beef andouille. Bacon ham salami, leberkas andouille kevin biltong fatback landjaeger t-bone picanha swine pork bresaola.
+                        <?php echo $data["article"]->getContent();
+                            echo $data["comment_author"];
+                        ?>
                     </p>
                 </div>
             </div>    
@@ -59,7 +56,7 @@
                                 Bacon ipsum dolor amet meatloaf pork landjaeger tongue prosciutto pork loin pork chop pig. Strip steak shankle pastrami t-bone, tri-tip pork chop sausage salami leberkas meatball pork belly hamburger corned beef filet mignon boudin. Jerky porchetta boudin, tail ground round ball tip pig capicola pork bresaola drumstick chicken leberkas ham.
                             </p>
                         </div>
-                    </li>
+                    </li>   
                     <li class="comment">
                         <div class="avatar">
                             <a href="/profil/Username">

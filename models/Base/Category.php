@@ -2,20 +2,13 @@
 
 namespace Models\Base;
 
-use \DateTime;
 use \Exception;
 use \PDO;
 use Models\Article as ChildArticle;
 use Models\ArticleQuery as ChildArticleQuery;
 use Models\Category as ChildCategory;
 use Models\CategoryQuery as ChildCategoryQuery;
-use Models\Comment as ChildComment;
-use Models\CommentQuery as ChildCommentQuery;
-use Models\Image as ChildImage;
-use Models\ImageQuery as ChildImageQuery;
-use Models\User as ChildUser;
-use Models\UserQuery as ChildUserQuery;
-use Models\Map\ArticleTableMap;
+use Models\Map\CategoryTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -28,21 +21,20 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
-use Propel\Runtime\Util\PropelDateTime;
 
 /**
- * Base class that represents a row from the 'articles' table.
+ * Base class that represents a row from the 'categories' table.
  *
  *
  *
 * @package    propel.generator.Models.Base
 */
-abstract class Article implements ActiveRecordInterface
+abstract class Category implements ActiveRecordInterface
 {
     /**
      * TableMap class name
      */
-    const TABLE_MAP = '\\Models\\Map\\ArticleTableMap';
+    const TABLE_MAP = '\\Models\\Map\\CategoryTableMap';
 
 
     /**
@@ -79,32 +71,11 @@ abstract class Article implements ActiveRecordInterface
     protected $id;
 
     /**
-     * The value for the id_user field.
-     *
-     * @var        int
-     */
-    protected $id_user;
-
-    /**
-     * The value for the id_image field.
-     *
-     * @var        int
-     */
-    protected $id_image;
-
-    /**
-     * The value for the id_category field.
-     *
-     * @var        int
-     */
-    protected $id_category;
-
-    /**
-     * The value for the title field.
+     * The value for the name field.
      *
      * @var        string
      */
-    protected $title;
+    protected $name;
 
     /**
      * The value for the url field.
@@ -114,53 +85,17 @@ abstract class Article implements ActiveRecordInterface
     protected $url;
 
     /**
-     * The value for the keywords field.
+     * The value for the color field.
      *
      * @var        string
      */
-    protected $keywords;
+    protected $color;
 
     /**
-     * The value for the content field.
-     *
-     * @var        string
+     * @var        ObjectCollection|ChildArticle[] Collection to store aggregation of ChildArticle objects.
      */
-    protected $content;
-
-    /**
-     * The value for the created_at field.
-     *
-     * @var        \DateTime
-     */
-    protected $created_at;
-
-    /**
-     * The value for the updated_at field.
-     *
-     * @var        \DateTime
-     */
-    protected $updated_at;
-
-    /**
-     * @var        ChildUser
-     */
-    protected $aUser;
-
-    /**
-     * @var        ChildImage
-     */
-    protected $aImage;
-
-    /**
-     * @var        ChildCategory
-     */
-    protected $aCategory;
-
-    /**
-     * @var        ObjectCollection|ChildComment[] Collection to store aggregation of ChildComment objects.
-     */
-    protected $collComments;
-    protected $collCommentsPartial;
+    protected $collArticles;
+    protected $collArticlesPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -172,12 +107,12 @@ abstract class Article implements ActiveRecordInterface
 
     /**
      * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildComment[]
+     * @var ObjectCollection|ChildArticle[]
      */
-    protected $commentsScheduledForDeletion = null;
+    protected $articlesScheduledForDeletion = null;
 
     /**
-     * Initializes internal state of Models\Base\Article object.
+     * Initializes internal state of Models\Base\Category object.
      */
     public function __construct()
     {
@@ -272,9 +207,9 @@ abstract class Article implements ActiveRecordInterface
     }
 
     /**
-     * Compares this with another <code>Article</code> instance.  If
-     * <code>obj</code> is an instance of <code>Article</code>, delegates to
-     * <code>equals(Article)</code>.  Otherwise, returns <code>false</code>.
+     * Compares this with another <code>Category</code> instance.  If
+     * <code>obj</code> is an instance of <code>Category</code>, delegates to
+     * <code>equals(Category)</code>.  Otherwise, returns <code>false</code>.
      *
      * @param  mixed   $obj The object to compare to.
      * @return boolean Whether equal to the object specified.
@@ -340,7 +275,7 @@ abstract class Article implements ActiveRecordInterface
      * @param string $name  The virtual column name
      * @param mixed  $value The value to give to the virtual column
      *
-     * @return $this|Article The current object, for fluid interface
+     * @return $this|Category The current object, for fluid interface
      */
     public function setVirtualColumn($name, $value)
     {
@@ -412,43 +347,13 @@ abstract class Article implements ActiveRecordInterface
     }
 
     /**
-     * Get the [id_user] column value.
-     *
-     * @return int
-     */
-    public function getIdUser()
-    {
-        return $this->id_user;
-    }
-
-    /**
-     * Get the [id_image] column value.
-     *
-     * @return int
-     */
-    public function getIdImage()
-    {
-        return $this->id_image;
-    }
-
-    /**
-     * Get the [id_category] column value.
-     *
-     * @return int
-     */
-    public function getIdCategory()
-    {
-        return $this->id_category;
-    }
-
-    /**
-     * Get the [title] column value.
+     * Get the [name] column value.
      *
      * @return string
      */
-    public function getTitle()
+    public function getName()
     {
-        return $this->title;
+        return $this->name;
     }
 
     /**
@@ -462,70 +367,20 @@ abstract class Article implements ActiveRecordInterface
     }
 
     /**
-     * Get the [keywords] column value.
+     * Get the [color] column value.
      *
      * @return string
      */
-    public function getKeywords()
+    public function getColor()
     {
-        return $this->keywords;
-    }
-
-    /**
-     * Get the [content] column value.
-     *
-     * @return string
-     */
-    public function getContent()
-    {
-        return $this->content;
-    }
-
-    /**
-     * Get the [optionally formatted] temporal [created_at] column value.
-     *
-     *
-     * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw DateTime object will be returned.
-     *
-     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
-     *
-     * @throws PropelException - if unable to parse/validate the date/time value.
-     */
-    public function getCreatedAt($format = NULL)
-    {
-        if ($format === null) {
-            return $this->created_at;
-        } else {
-            return $this->created_at instanceof \DateTime ? $this->created_at->format($format) : null;
-        }
-    }
-
-    /**
-     * Get the [optionally formatted] temporal [updated_at] column value.
-     *
-     *
-     * @param      string $format The date/time format string (either date()-style or strftime()-style).
-     *                            If format is NULL, then the raw DateTime object will be returned.
-     *
-     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
-     *
-     * @throws PropelException - if unable to parse/validate the date/time value.
-     */
-    public function getUpdatedAt($format = NULL)
-    {
-        if ($format === null) {
-            return $this->updated_at;
-        } else {
-            return $this->updated_at instanceof \DateTime ? $this->updated_at->format($format) : null;
-        }
+        return $this->color;
     }
 
     /**
      * Set the value of [id] column.
      *
      * @param int $v new value
-     * @return $this|\Models\Article The current object (for fluent API support)
+     * @return $this|\Models\Category The current object (for fluent API support)
      */
     public function setId($v)
     {
@@ -535,109 +390,37 @@ abstract class Article implements ActiveRecordInterface
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[ArticleTableMap::COL_ID] = true;
+            $this->modifiedColumns[CategoryTableMap::COL_ID] = true;
         }
 
         return $this;
     } // setId()
 
     /**
-     * Set the value of [id_user] column.
-     *
-     * @param int $v new value
-     * @return $this|\Models\Article The current object (for fluent API support)
-     */
-    public function setIdUser($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->id_user !== $v) {
-            $this->id_user = $v;
-            $this->modifiedColumns[ArticleTableMap::COL_ID_USER] = true;
-        }
-
-        if ($this->aUser !== null && $this->aUser->getId() !== $v) {
-            $this->aUser = null;
-        }
-
-        return $this;
-    } // setIdUser()
-
-    /**
-     * Set the value of [id_image] column.
-     *
-     * @param int $v new value
-     * @return $this|\Models\Article The current object (for fluent API support)
-     */
-    public function setIdImage($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->id_image !== $v) {
-            $this->id_image = $v;
-            $this->modifiedColumns[ArticleTableMap::COL_ID_IMAGE] = true;
-        }
-
-        if ($this->aImage !== null && $this->aImage->getId() !== $v) {
-            $this->aImage = null;
-        }
-
-        return $this;
-    } // setIdImage()
-
-    /**
-     * Set the value of [id_category] column.
-     *
-     * @param int $v new value
-     * @return $this|\Models\Article The current object (for fluent API support)
-     */
-    public function setIdCategory($v)
-    {
-        if ($v !== null) {
-            $v = (int) $v;
-        }
-
-        if ($this->id_category !== $v) {
-            $this->id_category = $v;
-            $this->modifiedColumns[ArticleTableMap::COL_ID_CATEGORY] = true;
-        }
-
-        if ($this->aCategory !== null && $this->aCategory->getId() !== $v) {
-            $this->aCategory = null;
-        }
-
-        return $this;
-    } // setIdCategory()
-
-    /**
-     * Set the value of [title] column.
+     * Set the value of [name] column.
      *
      * @param string $v new value
-     * @return $this|\Models\Article The current object (for fluent API support)
+     * @return $this|\Models\Category The current object (for fluent API support)
      */
-    public function setTitle($v)
+    public function setName($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->title !== $v) {
-            $this->title = $v;
-            $this->modifiedColumns[ArticleTableMap::COL_TITLE] = true;
+        if ($this->name !== $v) {
+            $this->name = $v;
+            $this->modifiedColumns[CategoryTableMap::COL_NAME] = true;
         }
 
         return $this;
-    } // setTitle()
+    } // setName()
 
     /**
      * Set the value of [url] column.
      *
      * @param string $v new value
-     * @return $this|\Models\Article The current object (for fluent API support)
+     * @return $this|\Models\Category The current object (for fluent API support)
      */
     public function setUrl($v)
     {
@@ -647,91 +430,31 @@ abstract class Article implements ActiveRecordInterface
 
         if ($this->url !== $v) {
             $this->url = $v;
-            $this->modifiedColumns[ArticleTableMap::COL_URL] = true;
+            $this->modifiedColumns[CategoryTableMap::COL_URL] = true;
         }
 
         return $this;
     } // setUrl()
 
     /**
-     * Set the value of [keywords] column.
+     * Set the value of [color] column.
      *
      * @param string $v new value
-     * @return $this|\Models\Article The current object (for fluent API support)
+     * @return $this|\Models\Category The current object (for fluent API support)
      */
-    public function setKeywords($v)
+    public function setColor($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->keywords !== $v) {
-            $this->keywords = $v;
-            $this->modifiedColumns[ArticleTableMap::COL_KEYWORDS] = true;
+        if ($this->color !== $v) {
+            $this->color = $v;
+            $this->modifiedColumns[CategoryTableMap::COL_COLOR] = true;
         }
 
         return $this;
-    } // setKeywords()
-
-    /**
-     * Set the value of [content] column.
-     *
-     * @param string $v new value
-     * @return $this|\Models\Article The current object (for fluent API support)
-     */
-    public function setContent($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->content !== $v) {
-            $this->content = $v;
-            $this->modifiedColumns[ArticleTableMap::COL_CONTENT] = true;
-        }
-
-        return $this;
-    } // setContent()
-
-    /**
-     * Sets the value of [created_at] column to a normalized version of the date/time value specified.
-     *
-     * @param  mixed $v string, integer (timestamp), or \DateTime value.
-     *               Empty strings are treated as NULL.
-     * @return $this|\Models\Article The current object (for fluent API support)
-     */
-    public function setCreatedAt($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->created_at !== null || $dt !== null) {
-            if ($this->created_at === null || $dt === null || $dt->format("Y-m-d H:i:s") !== $this->created_at->format("Y-m-d H:i:s")) {
-                $this->created_at = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[ArticleTableMap::COL_CREATED_AT] = true;
-            }
-        } // if either are not null
-
-        return $this;
-    } // setCreatedAt()
-
-    /**
-     * Sets the value of [updated_at] column to a normalized version of the date/time value specified.
-     *
-     * @param  mixed $v string, integer (timestamp), or \DateTime value.
-     *               Empty strings are treated as NULL.
-     * @return $this|\Models\Article The current object (for fluent API support)
-     */
-    public function setUpdatedAt($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->updated_at !== null || $dt !== null) {
-            if ($this->updated_at === null || $dt === null || $dt->format("Y-m-d H:i:s") !== $this->updated_at->format("Y-m-d H:i:s")) {
-                $this->updated_at = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[ArticleTableMap::COL_UPDATED_AT] = true;
-            }
-        } // if either are not null
-
-        return $this;
-    } // setUpdatedAt()
+    } // setColor()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -769,41 +492,17 @@ abstract class Article implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : ArticleTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : CategoryTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : ArticleTableMap::translateFieldName('IdUser', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->id_user = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : CategoryTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->name = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ArticleTableMap::translateFieldName('IdImage', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->id_image = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : ArticleTableMap::translateFieldName('IdCategory', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->id_category = (null !== $col) ? (int) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : ArticleTableMap::translateFieldName('Title', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->title = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : ArticleTableMap::translateFieldName('Url', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : CategoryTableMap::translateFieldName('Url', TableMap::TYPE_PHPNAME, $indexType)];
             $this->url = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : ArticleTableMap::translateFieldName('Keywords', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->keywords = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : ArticleTableMap::translateFieldName('Content', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->content = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : ArticleTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
-            if ($col === '0000-00-00 00:00:00') {
-                $col = null;
-            }
-            $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : ArticleTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
-            if ($col === '0000-00-00 00:00:00') {
-                $col = null;
-            }
-            $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : CategoryTableMap::translateFieldName('Color', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->color = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -812,10 +511,10 @@ abstract class Article implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 10; // 10 = ArticleTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 4; // 4 = CategoryTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\Models\\Article'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\Models\\Category'), 0, $e);
         }
     }
 
@@ -834,15 +533,6 @@ abstract class Article implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
-        if ($this->aUser !== null && $this->id_user !== $this->aUser->getId()) {
-            $this->aUser = null;
-        }
-        if ($this->aImage !== null && $this->id_image !== $this->aImage->getId()) {
-            $this->aImage = null;
-        }
-        if ($this->aCategory !== null && $this->id_category !== $this->aCategory->getId()) {
-            $this->aCategory = null;
-        }
     } // ensureConsistency
 
     /**
@@ -866,13 +556,13 @@ abstract class Article implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(ArticleTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(CategoryTableMap::DATABASE_NAME);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $dataFetcher = ChildArticleQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
+        $dataFetcher = ChildCategoryQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
         $row = $dataFetcher->fetch();
         $dataFetcher->close();
         if (!$row) {
@@ -882,10 +572,7 @@ abstract class Article implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aUser = null;
-            $this->aImage = null;
-            $this->aCategory = null;
-            $this->collComments = null;
+            $this->collArticles = null;
 
         } // if (deep)
     }
@@ -896,8 +583,8 @@ abstract class Article implements ActiveRecordInterface
      * @param      ConnectionInterface $con
      * @return void
      * @throws PropelException
-     * @see Article::setDeleted()
-     * @see Article::isDeleted()
+     * @see Category::setDeleted()
+     * @see Category::isDeleted()
      */
     public function delete(ConnectionInterface $con = null)
     {
@@ -906,11 +593,11 @@ abstract class Article implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(ArticleTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(CategoryTableMap::DATABASE_NAME);
         }
 
         $con->transaction(function () use ($con) {
-            $deleteQuery = ChildArticleQuery::create()
+            $deleteQuery = ChildCategoryQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -941,7 +628,7 @@ abstract class Article implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(ArticleTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(CategoryTableMap::DATABASE_NAME);
         }
 
         return $con->transaction(function () use ($con) {
@@ -949,20 +636,8 @@ abstract class Article implements ActiveRecordInterface
             $ret = $this->preSave($con);
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
-                // timestampable behavior
-
-                if (!$this->isColumnModified(ArticleTableMap::COL_CREATED_AT)) {
-                    $this->setCreatedAt(time());
-                }
-                if (!$this->isColumnModified(ArticleTableMap::COL_UPDATED_AT)) {
-                    $this->setUpdatedAt(time());
-                }
             } else {
                 $ret = $ret && $this->preUpdate($con);
-                // timestampable behavior
-                if ($this->isModified() && !$this->isColumnModified(ArticleTableMap::COL_UPDATED_AT)) {
-                    $this->setUpdatedAt(time());
-                }
             }
             if ($ret) {
                 $affectedRows = $this->doSave($con);
@@ -972,7 +647,7 @@ abstract class Article implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                ArticleTableMap::addInstanceToPool($this);
+                CategoryTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -998,32 +673,6 @@ abstract class Article implements ActiveRecordInterface
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
 
-            // We call the save method on the following object(s) if they
-            // were passed to this object by their corresponding set
-            // method.  This object relates to these object(s) by a
-            // foreign key reference.
-
-            if ($this->aUser !== null) {
-                if ($this->aUser->isModified() || $this->aUser->isNew()) {
-                    $affectedRows += $this->aUser->save($con);
-                }
-                $this->setUser($this->aUser);
-            }
-
-            if ($this->aImage !== null) {
-                if ($this->aImage->isModified() || $this->aImage->isNew()) {
-                    $affectedRows += $this->aImage->save($con);
-                }
-                $this->setImage($this->aImage);
-            }
-
-            if ($this->aCategory !== null) {
-                if ($this->aCategory->isModified() || $this->aCategory->isNew()) {
-                    $affectedRows += $this->aCategory->save($con);
-                }
-                $this->setCategory($this->aCategory);
-            }
-
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -1035,17 +684,17 @@ abstract class Article implements ActiveRecordInterface
                 $this->resetModified();
             }
 
-            if ($this->commentsScheduledForDeletion !== null) {
-                if (!$this->commentsScheduledForDeletion->isEmpty()) {
-                    \Models\CommentQuery::create()
-                        ->filterByPrimaryKeys($this->commentsScheduledForDeletion->getPrimaryKeys(false))
+            if ($this->articlesScheduledForDeletion !== null) {
+                if (!$this->articlesScheduledForDeletion->isEmpty()) {
+                    \Models\ArticleQuery::create()
+                        ->filterByPrimaryKeys($this->articlesScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->commentsScheduledForDeletion = null;
+                    $this->articlesScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collComments !== null) {
-                foreach ($this->collComments as $referrerFK) {
+            if ($this->collArticles !== null) {
+                foreach ($this->collArticles as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1072,45 +721,27 @@ abstract class Article implements ActiveRecordInterface
         $modifiedColumns = array();
         $index = 0;
 
-        $this->modifiedColumns[ArticleTableMap::COL_ID] = true;
+        $this->modifiedColumns[CategoryTableMap::COL_ID] = true;
         if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . ArticleTableMap::COL_ID . ')');
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . CategoryTableMap::COL_ID . ')');
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(ArticleTableMap::COL_ID)) {
+        if ($this->isColumnModified(CategoryTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
-        if ($this->isColumnModified(ArticleTableMap::COL_ID_USER)) {
-            $modifiedColumns[':p' . $index++]  = 'id_user';
+        if ($this->isColumnModified(CategoryTableMap::COL_NAME)) {
+            $modifiedColumns[':p' . $index++]  = 'name';
         }
-        if ($this->isColumnModified(ArticleTableMap::COL_ID_IMAGE)) {
-            $modifiedColumns[':p' . $index++]  = 'id_image';
-        }
-        if ($this->isColumnModified(ArticleTableMap::COL_ID_CATEGORY)) {
-            $modifiedColumns[':p' . $index++]  = 'id_category';
-        }
-        if ($this->isColumnModified(ArticleTableMap::COL_TITLE)) {
-            $modifiedColumns[':p' . $index++]  = 'title';
-        }
-        if ($this->isColumnModified(ArticleTableMap::COL_URL)) {
+        if ($this->isColumnModified(CategoryTableMap::COL_URL)) {
             $modifiedColumns[':p' . $index++]  = 'url';
         }
-        if ($this->isColumnModified(ArticleTableMap::COL_KEYWORDS)) {
-            $modifiedColumns[':p' . $index++]  = 'keywords';
-        }
-        if ($this->isColumnModified(ArticleTableMap::COL_CONTENT)) {
-            $modifiedColumns[':p' . $index++]  = 'content';
-        }
-        if ($this->isColumnModified(ArticleTableMap::COL_CREATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'created_at';
-        }
-        if ($this->isColumnModified(ArticleTableMap::COL_UPDATED_AT)) {
-            $modifiedColumns[':p' . $index++]  = 'updated_at';
+        if ($this->isColumnModified(CategoryTableMap::COL_COLOR)) {
+            $modifiedColumns[':p' . $index++]  = 'color';
         }
 
         $sql = sprintf(
-            'INSERT INTO articles (%s) VALUES (%s)',
+            'INSERT INTO categories (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -1122,32 +753,14 @@ abstract class Article implements ActiveRecordInterface
                     case 'id':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case 'id_user':
-                        $stmt->bindValue($identifier, $this->id_user, PDO::PARAM_INT);
-                        break;
-                    case 'id_image':
-                        $stmt->bindValue($identifier, $this->id_image, PDO::PARAM_INT);
-                        break;
-                    case 'id_category':
-                        $stmt->bindValue($identifier, $this->id_category, PDO::PARAM_INT);
-                        break;
-                    case 'title':
-                        $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
+                    case 'name':
+                        $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
                         break;
                     case 'url':
                         $stmt->bindValue($identifier, $this->url, PDO::PARAM_STR);
                         break;
-                    case 'keywords':
-                        $stmt->bindValue($identifier, $this->keywords, PDO::PARAM_STR);
-                        break;
-                    case 'content':
-                        $stmt->bindValue($identifier, $this->content, PDO::PARAM_STR);
-                        break;
-                    case 'created_at':
-                        $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
-                        break;
-                    case 'updated_at':
-                        $stmt->bindValue($identifier, $this->updated_at ? $this->updated_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
+                    case 'color':
+                        $stmt->bindValue($identifier, $this->color, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -1195,7 +808,7 @@ abstract class Article implements ActiveRecordInterface
      */
     public function getByName($name, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = ArticleTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = CategoryTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -1215,31 +828,13 @@ abstract class Article implements ActiveRecordInterface
                 return $this->getId();
                 break;
             case 1:
-                return $this->getIdUser();
+                return $this->getName();
                 break;
             case 2:
-                return $this->getIdImage();
-                break;
-            case 3:
-                return $this->getIdCategory();
-                break;
-            case 4:
-                return $this->getTitle();
-                break;
-            case 5:
                 return $this->getUrl();
                 break;
-            case 6:
-                return $this->getKeywords();
-                break;
-            case 7:
-                return $this->getContent();
-                break;
-            case 8:
-                return $this->getCreatedAt();
-                break;
-            case 9:
-                return $this->getUpdatedAt();
+            case 3:
+                return $this->getColor();
                 break;
             default:
                 return null;
@@ -1265,96 +860,37 @@ abstract class Article implements ActiveRecordInterface
     public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
-        if (isset($alreadyDumpedObjects['Article'][$this->hashCode()])) {
+        if (isset($alreadyDumpedObjects['Category'][$this->hashCode()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['Article'][$this->hashCode()] = true;
-        $keys = ArticleTableMap::getFieldNames($keyType);
+        $alreadyDumpedObjects['Category'][$this->hashCode()] = true;
+        $keys = CategoryTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getIdUser(),
-            $keys[2] => $this->getIdImage(),
-            $keys[3] => $this->getIdCategory(),
-            $keys[4] => $this->getTitle(),
-            $keys[5] => $this->getUrl(),
-            $keys[6] => $this->getKeywords(),
-            $keys[7] => $this->getContent(),
-            $keys[8] => $this->getCreatedAt(),
-            $keys[9] => $this->getUpdatedAt(),
+            $keys[1] => $this->getName(),
+            $keys[2] => $this->getUrl(),
+            $keys[3] => $this->getColor(),
         );
-        if ($result[$keys[8]] instanceof \DateTime) {
-            $result[$keys[8]] = $result[$keys[8]]->format('c');
-        }
-
-        if ($result[$keys[9]] instanceof \DateTime) {
-            $result[$keys[9]] = $result[$keys[9]]->format('c');
-        }
-
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aUser) {
+            if (null !== $this->collArticles) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'user';
+                        $key = 'articles';
                         break;
                     case TableMap::TYPE_FIELDNAME:
-                        $key = 'users';
+                        $key = 'articless';
                         break;
                     default:
-                        $key = 'User';
+                        $key = 'Articles';
                 }
 
-                $result[$key] = $this->aUser->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->aImage) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'image';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'images';
-                        break;
-                    default:
-                        $key = 'Image';
-                }
-
-                $result[$key] = $this->aImage->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->aCategory) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'category';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'categories';
-                        break;
-                    default:
-                        $key = 'Category';
-                }
-
-                $result[$key] = $this->aCategory->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->collComments) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'comments';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'commentss';
-                        break;
-                    default:
-                        $key = 'Comments';
-                }
-
-                $result[$key] = $this->collComments->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->collArticles->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1370,11 +906,11 @@ abstract class Article implements ActiveRecordInterface
      *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                Defaults to TableMap::TYPE_PHPNAME.
-     * @return $this|\Models\Article
+     * @return $this|\Models\Category
      */
     public function setByName($name, $value, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = ArticleTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = CategoryTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
         return $this->setByPosition($pos, $value);
     }
@@ -1385,7 +921,7 @@ abstract class Article implements ActiveRecordInterface
      *
      * @param  int $pos position in xml schema
      * @param  mixed $value field value
-     * @return $this|\Models\Article
+     * @return $this|\Models\Category
      */
     public function setByPosition($pos, $value)
     {
@@ -1394,31 +930,13 @@ abstract class Article implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setIdUser($value);
+                $this->setName($value);
                 break;
             case 2:
-                $this->setIdImage($value);
-                break;
-            case 3:
-                $this->setIdCategory($value);
-                break;
-            case 4:
-                $this->setTitle($value);
-                break;
-            case 5:
                 $this->setUrl($value);
                 break;
-            case 6:
-                $this->setKeywords($value);
-                break;
-            case 7:
-                $this->setContent($value);
-                break;
-            case 8:
-                $this->setCreatedAt($value);
-                break;
-            case 9:
-                $this->setUpdatedAt($value);
+            case 3:
+                $this->setColor($value);
                 break;
         } // switch()
 
@@ -1444,37 +962,19 @@ abstract class Article implements ActiveRecordInterface
      */
     public function fromArray($arr, $keyType = TableMap::TYPE_PHPNAME)
     {
-        $keys = ArticleTableMap::getFieldNames($keyType);
+        $keys = CategoryTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setIdUser($arr[$keys[1]]);
+            $this->setName($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setIdImage($arr[$keys[2]]);
+            $this->setUrl($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setIdCategory($arr[$keys[3]]);
-        }
-        if (array_key_exists($keys[4], $arr)) {
-            $this->setTitle($arr[$keys[4]]);
-        }
-        if (array_key_exists($keys[5], $arr)) {
-            $this->setUrl($arr[$keys[5]]);
-        }
-        if (array_key_exists($keys[6], $arr)) {
-            $this->setKeywords($arr[$keys[6]]);
-        }
-        if (array_key_exists($keys[7], $arr)) {
-            $this->setContent($arr[$keys[7]]);
-        }
-        if (array_key_exists($keys[8], $arr)) {
-            $this->setCreatedAt($arr[$keys[8]]);
-        }
-        if (array_key_exists($keys[9], $arr)) {
-            $this->setUpdatedAt($arr[$keys[9]]);
+            $this->setColor($arr[$keys[3]]);
         }
     }
 
@@ -1495,7 +995,7 @@ abstract class Article implements ActiveRecordInterface
      * @param string $data The source data to import from
      * @param string $keyType The type of keys the array uses.
      *
-     * @return $this|\Models\Article The current object, for fluid interface
+     * @return $this|\Models\Category The current object, for fluid interface
      */
     public function importFrom($parser, $data, $keyType = TableMap::TYPE_PHPNAME)
     {
@@ -1515,37 +1015,19 @@ abstract class Article implements ActiveRecordInterface
      */
     public function buildCriteria()
     {
-        $criteria = new Criteria(ArticleTableMap::DATABASE_NAME);
+        $criteria = new Criteria(CategoryTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(ArticleTableMap::COL_ID)) {
-            $criteria->add(ArticleTableMap::COL_ID, $this->id);
+        if ($this->isColumnModified(CategoryTableMap::COL_ID)) {
+            $criteria->add(CategoryTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(ArticleTableMap::COL_ID_USER)) {
-            $criteria->add(ArticleTableMap::COL_ID_USER, $this->id_user);
+        if ($this->isColumnModified(CategoryTableMap::COL_NAME)) {
+            $criteria->add(CategoryTableMap::COL_NAME, $this->name);
         }
-        if ($this->isColumnModified(ArticleTableMap::COL_ID_IMAGE)) {
-            $criteria->add(ArticleTableMap::COL_ID_IMAGE, $this->id_image);
+        if ($this->isColumnModified(CategoryTableMap::COL_URL)) {
+            $criteria->add(CategoryTableMap::COL_URL, $this->url);
         }
-        if ($this->isColumnModified(ArticleTableMap::COL_ID_CATEGORY)) {
-            $criteria->add(ArticleTableMap::COL_ID_CATEGORY, $this->id_category);
-        }
-        if ($this->isColumnModified(ArticleTableMap::COL_TITLE)) {
-            $criteria->add(ArticleTableMap::COL_TITLE, $this->title);
-        }
-        if ($this->isColumnModified(ArticleTableMap::COL_URL)) {
-            $criteria->add(ArticleTableMap::COL_URL, $this->url);
-        }
-        if ($this->isColumnModified(ArticleTableMap::COL_KEYWORDS)) {
-            $criteria->add(ArticleTableMap::COL_KEYWORDS, $this->keywords);
-        }
-        if ($this->isColumnModified(ArticleTableMap::COL_CONTENT)) {
-            $criteria->add(ArticleTableMap::COL_CONTENT, $this->content);
-        }
-        if ($this->isColumnModified(ArticleTableMap::COL_CREATED_AT)) {
-            $criteria->add(ArticleTableMap::COL_CREATED_AT, $this->created_at);
-        }
-        if ($this->isColumnModified(ArticleTableMap::COL_UPDATED_AT)) {
-            $criteria->add(ArticleTableMap::COL_UPDATED_AT, $this->updated_at);
+        if ($this->isColumnModified(CategoryTableMap::COL_COLOR)) {
+            $criteria->add(CategoryTableMap::COL_COLOR, $this->color);
         }
 
         return $criteria;
@@ -1563,8 +1045,8 @@ abstract class Article implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = ChildArticleQuery::create();
-        $criteria->add(ArticleTableMap::COL_ID, $this->id);
+        $criteria = ChildCategoryQuery::create();
+        $criteria->add(CategoryTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -1626,31 +1108,25 @@ abstract class Article implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      object $copyObj An object of \Models\Article (or compatible) type.
+     * @param      object $copyObj An object of \Models\Category (or compatible) type.
      * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param      boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setIdUser($this->getIdUser());
-        $copyObj->setIdImage($this->getIdImage());
-        $copyObj->setIdCategory($this->getIdCategory());
-        $copyObj->setTitle($this->getTitle());
+        $copyObj->setName($this->getName());
         $copyObj->setUrl($this->getUrl());
-        $copyObj->setKeywords($this->getKeywords());
-        $copyObj->setContent($this->getContent());
-        $copyObj->setCreatedAt($this->getCreatedAt());
-        $copyObj->setUpdatedAt($this->getUpdatedAt());
+        $copyObj->setColor($this->getColor());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
-            foreach ($this->getComments() as $relObj) {
+            foreach ($this->getArticles() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addComment($relObj->copy($deepCopy));
+                    $copyObj->addArticle($relObj->copy($deepCopy));
                 }
             }
 
@@ -1671,7 +1147,7 @@ abstract class Article implements ActiveRecordInterface
      * objects.
      *
      * @param  boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \Models\Article Clone of current object.
+     * @return \Models\Category Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -1682,159 +1158,6 @@ abstract class Article implements ActiveRecordInterface
         $this->copyInto($copyObj, $deepCopy);
 
         return $copyObj;
-    }
-
-    /**
-     * Declares an association between this object and a ChildUser object.
-     *
-     * @param  ChildUser $v
-     * @return $this|\Models\Article The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setUser(ChildUser $v = null)
-    {
-        if ($v === null) {
-            $this->setIdUser(NULL);
-        } else {
-            $this->setIdUser($v->getId());
-        }
-
-        $this->aUser = $v;
-
-        // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildUser object, it will not be re-added.
-        if ($v !== null) {
-            $v->addArticle($this);
-        }
-
-
-        return $this;
-    }
-
-
-    /**
-     * Get the associated ChildUser object
-     *
-     * @param  ConnectionInterface $con Optional Connection object.
-     * @return ChildUser The associated ChildUser object.
-     * @throws PropelException
-     */
-    public function getUser(ConnectionInterface $con = null)
-    {
-        if ($this->aUser === null && ($this->id_user !== null)) {
-            $this->aUser = ChildUserQuery::create()->findPk($this->id_user, $con);
-            /* The following can be used additionally to
-                guarantee the related object contains a reference
-                to this object.  This level of coupling may, however, be
-                undesirable since it could result in an only partially populated collection
-                in the referenced object.
-                $this->aUser->addArticles($this);
-             */
-        }
-
-        return $this->aUser;
-    }
-
-    /**
-     * Declares an association between this object and a ChildImage object.
-     *
-     * @param  ChildImage $v
-     * @return $this|\Models\Article The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setImage(ChildImage $v = null)
-    {
-        if ($v === null) {
-            $this->setIdImage(NULL);
-        } else {
-            $this->setIdImage($v->getId());
-        }
-
-        $this->aImage = $v;
-
-        // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildImage object, it will not be re-added.
-        if ($v !== null) {
-            $v->addArticle($this);
-        }
-
-
-        return $this;
-    }
-
-
-    /**
-     * Get the associated ChildImage object
-     *
-     * @param  ConnectionInterface $con Optional Connection object.
-     * @return ChildImage The associated ChildImage object.
-     * @throws PropelException
-     */
-    public function getImage(ConnectionInterface $con = null)
-    {
-        if ($this->aImage === null && ($this->id_image !== null)) {
-            $this->aImage = ChildImageQuery::create()->findPk($this->id_image, $con);
-            /* The following can be used additionally to
-                guarantee the related object contains a reference
-                to this object.  This level of coupling may, however, be
-                undesirable since it could result in an only partially populated collection
-                in the referenced object.
-                $this->aImage->addArticles($this);
-             */
-        }
-
-        return $this->aImage;
-    }
-
-    /**
-     * Declares an association between this object and a ChildCategory object.
-     *
-     * @param  ChildCategory $v
-     * @return $this|\Models\Article The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setCategory(ChildCategory $v = null)
-    {
-        if ($v === null) {
-            $this->setIdCategory(NULL);
-        } else {
-            $this->setIdCategory($v->getId());
-        }
-
-        $this->aCategory = $v;
-
-        // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildCategory object, it will not be re-added.
-        if ($v !== null) {
-            $v->addArticle($this);
-        }
-
-
-        return $this;
-    }
-
-
-    /**
-     * Get the associated ChildCategory object
-     *
-     * @param  ConnectionInterface $con Optional Connection object.
-     * @return ChildCategory The associated ChildCategory object.
-     * @throws PropelException
-     */
-    public function getCategory(ConnectionInterface $con = null)
-    {
-        if ($this->aCategory === null && ($this->id_category !== null)) {
-            $this->aCategory = ChildCategoryQuery::create()->findPk($this->id_category, $con);
-            /* The following can be used additionally to
-                guarantee the related object contains a reference
-                to this object.  This level of coupling may, however, be
-                undesirable since it could result in an only partially populated collection
-                in the referenced object.
-                $this->aCategory->addArticles($this);
-             */
-        }
-
-        return $this->aCategory;
     }
 
 
@@ -1848,37 +1171,37 @@ abstract class Article implements ActiveRecordInterface
      */
     public function initRelation($relationName)
     {
-        if ('Comment' == $relationName) {
-            return $this->initComments();
+        if ('Article' == $relationName) {
+            return $this->initArticles();
         }
     }
 
     /**
-     * Clears out the collComments collection
+     * Clears out the collArticles collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return void
-     * @see        addComments()
+     * @see        addArticles()
      */
-    public function clearComments()
+    public function clearArticles()
     {
-        $this->collComments = null; // important to set this to NULL since that means it is uninitialized
+        $this->collArticles = null; // important to set this to NULL since that means it is uninitialized
     }
 
     /**
-     * Reset is the collComments collection loaded partially.
+     * Reset is the collArticles collection loaded partially.
      */
-    public function resetPartialComments($v = true)
+    public function resetPartialArticles($v = true)
     {
-        $this->collCommentsPartial = $v;
+        $this->collArticlesPartial = $v;
     }
 
     /**
-     * Initializes the collComments collection.
+     * Initializes the collArticles collection.
      *
-     * By default this just sets the collComments collection to an empty array (like clearcollComments());
+     * By default this just sets the collArticles collection to an empty array (like clearcollArticles());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -1887,159 +1210,159 @@ abstract class Article implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initComments($overrideExisting = true)
+    public function initArticles($overrideExisting = true)
     {
-        if (null !== $this->collComments && !$overrideExisting) {
+        if (null !== $this->collArticles && !$overrideExisting) {
             return;
         }
-        $this->collComments = new ObjectCollection();
-        $this->collComments->setModel('\Models\Comment');
+        $this->collArticles = new ObjectCollection();
+        $this->collArticles->setModel('\Models\Article');
     }
 
     /**
-     * Gets an array of ChildComment objects which contain a foreign key that references this object.
+     * Gets an array of ChildArticle objects which contain a foreign key that references this object.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
      * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildArticle is new, it will return
+     * If this ChildCategory is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildComment[] List of ChildComment objects
+     * @return ObjectCollection|ChildArticle[] List of ChildArticle objects
      * @throws PropelException
      */
-    public function getComments(Criteria $criteria = null, ConnectionInterface $con = null)
+    public function getArticles(Criteria $criteria = null, ConnectionInterface $con = null)
     {
-        $partial = $this->collCommentsPartial && !$this->isNew();
-        if (null === $this->collComments || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collComments) {
+        $partial = $this->collArticlesPartial && !$this->isNew();
+        if (null === $this->collArticles || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collArticles) {
                 // return empty collection
-                $this->initComments();
+                $this->initArticles();
             } else {
-                $collComments = ChildCommentQuery::create(null, $criteria)
-                    ->filterByArticle($this)
+                $collArticles = ChildArticleQuery::create(null, $criteria)
+                    ->filterByCategory($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collCommentsPartial && count($collComments)) {
-                        $this->initComments(false);
+                    if (false !== $this->collArticlesPartial && count($collArticles)) {
+                        $this->initArticles(false);
 
-                        foreach ($collComments as $obj) {
-                            if (false == $this->collComments->contains($obj)) {
-                                $this->collComments->append($obj);
+                        foreach ($collArticles as $obj) {
+                            if (false == $this->collArticles->contains($obj)) {
+                                $this->collArticles->append($obj);
                             }
                         }
 
-                        $this->collCommentsPartial = true;
+                        $this->collArticlesPartial = true;
                     }
 
-                    return $collComments;
+                    return $collArticles;
                 }
 
-                if ($partial && $this->collComments) {
-                    foreach ($this->collComments as $obj) {
+                if ($partial && $this->collArticles) {
+                    foreach ($this->collArticles as $obj) {
                         if ($obj->isNew()) {
-                            $collComments[] = $obj;
+                            $collArticles[] = $obj;
                         }
                     }
                 }
 
-                $this->collComments = $collComments;
-                $this->collCommentsPartial = false;
+                $this->collArticles = $collArticles;
+                $this->collArticlesPartial = false;
             }
         }
 
-        return $this->collComments;
+        return $this->collArticles;
     }
 
     /**
-     * Sets a collection of ChildComment objects related by a one-to-many relationship
+     * Sets a collection of ChildArticle objects related by a one-to-many relationship
      * to the current object.
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $comments A Propel collection.
+     * @param      Collection $articles A Propel collection.
      * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildArticle The current object (for fluent API support)
+     * @return $this|ChildCategory The current object (for fluent API support)
      */
-    public function setComments(Collection $comments, ConnectionInterface $con = null)
+    public function setArticles(Collection $articles, ConnectionInterface $con = null)
     {
-        /** @var ChildComment[] $commentsToDelete */
-        $commentsToDelete = $this->getComments(new Criteria(), $con)->diff($comments);
+        /** @var ChildArticle[] $articlesToDelete */
+        $articlesToDelete = $this->getArticles(new Criteria(), $con)->diff($articles);
 
 
-        $this->commentsScheduledForDeletion = $commentsToDelete;
+        $this->articlesScheduledForDeletion = $articlesToDelete;
 
-        foreach ($commentsToDelete as $commentRemoved) {
-            $commentRemoved->setArticle(null);
+        foreach ($articlesToDelete as $articleRemoved) {
+            $articleRemoved->setCategory(null);
         }
 
-        $this->collComments = null;
-        foreach ($comments as $comment) {
-            $this->addComment($comment);
+        $this->collArticles = null;
+        foreach ($articles as $article) {
+            $this->addArticle($article);
         }
 
-        $this->collComments = $comments;
-        $this->collCommentsPartial = false;
+        $this->collArticles = $articles;
+        $this->collArticlesPartial = false;
 
         return $this;
     }
 
     /**
-     * Returns the number of related Comment objects.
+     * Returns the number of related Article objects.
      *
      * @param      Criteria $criteria
      * @param      boolean $distinct
      * @param      ConnectionInterface $con
-     * @return int             Count of related Comment objects.
+     * @return int             Count of related Article objects.
      * @throws PropelException
      */
-    public function countComments(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    public function countArticles(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
     {
-        $partial = $this->collCommentsPartial && !$this->isNew();
-        if (null === $this->collComments || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collComments) {
+        $partial = $this->collArticlesPartial && !$this->isNew();
+        if (null === $this->collArticles || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collArticles) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getComments());
+                return count($this->getArticles());
             }
 
-            $query = ChildCommentQuery::create(null, $criteria);
+            $query = ChildArticleQuery::create(null, $criteria);
             if ($distinct) {
                 $query->distinct();
             }
 
             return $query
-                ->filterByArticle($this)
+                ->filterByCategory($this)
                 ->count($con);
         }
 
-        return count($this->collComments);
+        return count($this->collArticles);
     }
 
     /**
-     * Method called to associate a ChildComment object to this object
-     * through the ChildComment foreign key attribute.
+     * Method called to associate a ChildArticle object to this object
+     * through the ChildArticle foreign key attribute.
      *
-     * @param  ChildComment $l ChildComment
-     * @return $this|\Models\Article The current object (for fluent API support)
+     * @param  ChildArticle $l ChildArticle
+     * @return $this|\Models\Category The current object (for fluent API support)
      */
-    public function addComment(ChildComment $l)
+    public function addArticle(ChildArticle $l)
     {
-        if ($this->collComments === null) {
-            $this->initComments();
-            $this->collCommentsPartial = true;
+        if ($this->collArticles === null) {
+            $this->initArticles();
+            $this->collArticlesPartial = true;
         }
 
-        if (!$this->collComments->contains($l)) {
-            $this->doAddComment($l);
+        if (!$this->collArticles->contains($l)) {
+            $this->doAddArticle($l);
 
-            if ($this->commentsScheduledForDeletion and $this->commentsScheduledForDeletion->contains($l)) {
-                $this->commentsScheduledForDeletion->remove($this->commentsScheduledForDeletion->search($l));
+            if ($this->articlesScheduledForDeletion and $this->articlesScheduledForDeletion->contains($l)) {
+                $this->articlesScheduledForDeletion->remove($this->articlesScheduledForDeletion->search($l));
             }
         }
 
@@ -2047,29 +1370,29 @@ abstract class Article implements ActiveRecordInterface
     }
 
     /**
-     * @param ChildComment $comment The ChildComment object to add.
+     * @param ChildArticle $article The ChildArticle object to add.
      */
-    protected function doAddComment(ChildComment $comment)
+    protected function doAddArticle(ChildArticle $article)
     {
-        $this->collComments[]= $comment;
-        $comment->setArticle($this);
+        $this->collArticles[]= $article;
+        $article->setCategory($this);
     }
 
     /**
-     * @param  ChildComment $comment The ChildComment object to remove.
-     * @return $this|ChildArticle The current object (for fluent API support)
+     * @param  ChildArticle $article The ChildArticle object to remove.
+     * @return $this|ChildCategory The current object (for fluent API support)
      */
-    public function removeComment(ChildComment $comment)
+    public function removeArticle(ChildArticle $article)
     {
-        if ($this->getComments()->contains($comment)) {
-            $pos = $this->collComments->search($comment);
-            $this->collComments->remove($pos);
-            if (null === $this->commentsScheduledForDeletion) {
-                $this->commentsScheduledForDeletion = clone $this->collComments;
-                $this->commentsScheduledForDeletion->clear();
+        if ($this->getArticles()->contains($article)) {
+            $pos = $this->collArticles->search($article);
+            $this->collArticles->remove($pos);
+            if (null === $this->articlesScheduledForDeletion) {
+                $this->articlesScheduledForDeletion = clone $this->collArticles;
+                $this->articlesScheduledForDeletion->clear();
             }
-            $this->commentsScheduledForDeletion[]= clone $comment;
-            $comment->setArticle(null);
+            $this->articlesScheduledForDeletion[]= clone $article;
+            $article->setCategory(null);
         }
 
         return $this;
@@ -2079,25 +1402,50 @@ abstract class Article implements ActiveRecordInterface
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
-     * Otherwise if this Article is new, it will return
-     * an empty collection; or if this Article has previously
-     * been saved, it will retrieve related Comments from storage.
+     * Otherwise if this Category is new, it will return
+     * an empty collection; or if this Category has previously
+     * been saved, it will retrieve related Articles from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
-     * actually need in Article.
+     * actually need in Category.
      *
      * @param      Criteria $criteria optional Criteria object to narrow the query
      * @param      ConnectionInterface $con optional connection object
      * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildComment[] List of ChildComment objects
+     * @return ObjectCollection|ChildArticle[] List of ChildArticle objects
      */
-    public function getCommentsJoinUser(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getArticlesJoinUser(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
-        $query = ChildCommentQuery::create(null, $criteria);
+        $query = ChildArticleQuery::create(null, $criteria);
         $query->joinWith('User', $joinBehavior);
 
-        return $this->getComments($query, $con);
+        return $this->getArticles($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Category is new, it will return
+     * an empty collection; or if this Category has previously
+     * been saved, it will retrieve related Articles from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Category.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildArticle[] List of ChildArticle objects
+     */
+    public function getArticlesJoinImage(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildArticleQuery::create(null, $criteria);
+        $query->joinWith('Image', $joinBehavior);
+
+        return $this->getArticles($query, $con);
     }
 
     /**
@@ -2107,25 +1455,10 @@ abstract class Article implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aUser) {
-            $this->aUser->removeArticle($this);
-        }
-        if (null !== $this->aImage) {
-            $this->aImage->removeArticle($this);
-        }
-        if (null !== $this->aCategory) {
-            $this->aCategory->removeArticle($this);
-        }
         $this->id = null;
-        $this->id_user = null;
-        $this->id_image = null;
-        $this->id_category = null;
-        $this->title = null;
+        $this->name = null;
         $this->url = null;
-        $this->keywords = null;
-        $this->content = null;
-        $this->created_at = null;
-        $this->updated_at = null;
+        $this->color = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();
@@ -2144,17 +1477,14 @@ abstract class Article implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
-            if ($this->collComments) {
-                foreach ($this->collComments as $o) {
+            if ($this->collArticles) {
+                foreach ($this->collArticles as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
         } // if ($deep)
 
-        $this->collComments = null;
-        $this->aUser = null;
-        $this->aImage = null;
-        $this->aCategory = null;
+        $this->collArticles = null;
     }
 
     /**
@@ -2164,21 +1494,7 @@ abstract class Article implements ActiveRecordInterface
      */
     public function __toString()
     {
-        return (string) $this->exportTo(ArticleTableMap::DEFAULT_STRING_FORMAT);
-    }
-
-    // timestampable behavior
-
-    /**
-     * Mark the current object so that the update date doesn't get updated during next save
-     *
-     * @return     $this|ChildArticle The current object (for fluent API support)
-     */
-    public function keepUpdateDateUnchanged()
-    {
-        $this->modifiedColumns[ArticleTableMap::COL_UPDATED_AT] = true;
-
-        return $this;
+        return (string) $this->exportTo(CategoryTableMap::DEFAULT_STRING_FORMAT);
     }
 
     /**

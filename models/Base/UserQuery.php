@@ -66,7 +66,17 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoinWithArticle() Adds a RIGHT JOIN clause and with to the query using the Article relation
  * @method     ChildUserQuery innerJoinWithArticle() Adds a INNER JOIN clause and with to the query using the Article relation
  *
- * @method     \Models\ArticleQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     ChildUserQuery leftJoinComment($relationAlias = null) Adds a LEFT JOIN clause to the query using the Comment relation
+ * @method     ChildUserQuery rightJoinComment($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Comment relation
+ * @method     ChildUserQuery innerJoinComment($relationAlias = null) Adds a INNER JOIN clause to the query using the Comment relation
+ *
+ * @method     ChildUserQuery joinWithComment($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Comment relation
+ *
+ * @method     ChildUserQuery leftJoinWithComment() Adds a LEFT JOIN clause and with to the query using the Comment relation
+ * @method     ChildUserQuery rightJoinWithComment() Adds a RIGHT JOIN clause and with to the query using the Comment relation
+ * @method     ChildUserQuery innerJoinWithComment() Adds a INNER JOIN clause and with to the query using the Comment relation
+ *
+ * @method     \Models\ArticleQuery|\Models\CommentQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUser findOne(ConnectionInterface $con = null) Return the first ChildUser matching the query
  * @method     ChildUser findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUser matching the query, or a new ChildUser object populated from the query conditions when no match is found
@@ -850,6 +860,79 @@ abstract class UserQuery extends ModelCriteria
         return $this
             ->joinArticle($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Article', '\Models\ArticleQuery');
+    }
+
+    /**
+     * Filter the query by a related \Models\Comment object
+     *
+     * @param \Models\Comment|ObjectCollection $comment the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByComment($comment, $comparison = null)
+    {
+        if ($comment instanceof \Models\Comment) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $comment->getIdUser(), $comparison);
+        } elseif ($comment instanceof ObjectCollection) {
+            return $this
+                ->useCommentQuery()
+                ->filterByPrimaryKeys($comment->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByComment() only accepts arguments of type \Models\Comment or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Comment relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinComment($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Comment');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Comment');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Comment relation Comment object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Models\CommentQuery A secondary query class using the current class as primary query
+     */
+    public function useCommentQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinComment($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Comment', '\Models\CommentQuery');
     }
 
     /**

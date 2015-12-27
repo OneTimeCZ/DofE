@@ -10,6 +10,10 @@ $router->addGet('Article.showAllPage', '/clanky/{id}')
         'id' => '[1-9]\d*',
     ]);
 $router->addGet('Article.showByCategory', '/clanky/{category}');
+$router->addGet('Article.showByCategoryPage', '/clanky/{category}/{id}')
+    ->setTokens([
+        'id' => '[1-9]\d*',
+    ]);
 $router->addGet('Article.showSingle', '/clanek/{name}');
 $router->addPost('Article.comment', '/clanek/{name}/komentovat');
 

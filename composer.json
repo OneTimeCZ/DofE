@@ -2,9 +2,10 @@
     "require": {
         "propel/propel": "~2.0@dev",
         "aura/router": "2.3.0",
+        "monolog/monolog": "^1.17",
         "autoload": {
             "files": ["generated-conf/config.php"],
-            "classmap": ["generated-classes/"]
+            "classmap": ["models/"]
         }
     }
 }

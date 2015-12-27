@@ -26,7 +26,9 @@
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="id_user" type="integer" required="true"/>
         <column name="id_image" type="integer"/>
+        <column name="id_category" type="integer" required="true"/>
         <column name="title" type="varchar" size="100" required="true"/>
+        <column name="url" type="varchar" size="120" required="true"/>
         <column name="keywords" type="varchar" size="200" required="true"/>
         <column name="content" type="longvarchar" required="true"/>
         
@@ -35,5 +37,44 @@
         <foreign-key foreignTable="users">
             <reference local="id_user" foreign="id"/>
         </foreign-key>
+        
+        <foreign-key foreignTable="images">
+            <reference local="id_image" foreign="id"/>
+        </foreign-key>
+        
+        <foreign-key foreignTable="categories">
+            <reference local="id_category" foreign="id"/>
+        </foreign-key>
+    </table>
+    
+    <!-- Images -->
+    <table name="images" phpName="Image">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="description" type="varchar" size="150"/>
+        <column name="path" type="varchar" size="150"/>
+    </table>
+    
+    <!-- Comments -->
+    <table name="comments" phpName="Comment">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="id_user" type="integer" required="true"/>
+        <column name="id_article" type="integer" required="true"/>
+        <column name="content" type="varchar" size="500" required="true"/>
+        
+        <foreign-key foreignTable="users">
+            <reference local="id_user" foreign="id"/>
+        </foreign-key>
+        
+        <foreign-key foreignTable="articles">
+            <reference local="id_article" foreign="id"/>
+        </foreign-key>
+    </table>
+    
+    <!-- Categories -->
+    <table name="categories" phpName="Category">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="name" type="varchar" size="50" required="true"/>
+        <column name="url" type="varchar" size="50" required="true"/>
+        <column name="color" type="varchar" size="10"/>
     </table>
 </database>

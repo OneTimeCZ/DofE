@@ -59,7 +59,7 @@ class ArticleTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 8;
+    const NUM_COLUMNS = 10;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class ArticleTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 8;
+    const NUM_HYDRATE_COLUMNS = 10;
 
     /**
      * the column name for the id field
@@ -87,9 +87,19 @@ class ArticleTableMap extends TableMap
     const COL_ID_IMAGE = 'articles.id_image';
 
     /**
+     * the column name for the id_category field
+     */
+    const COL_ID_CATEGORY = 'articles.id_category';
+
+    /**
      * the column name for the title field
      */
     const COL_TITLE = 'articles.title';
+
+    /**
+     * the column name for the url field
+     */
+    const COL_URL = 'articles.url';
 
     /**
      * the column name for the keywords field
@@ -123,11 +133,11 @@ class ArticleTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'IdUser', 'IdImage', 'Title', 'Keywords', 'Content', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_CAMELNAME     => array('id', 'idUser', 'idImage', 'title', 'keywords', 'content', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(ArticleTableMap::COL_ID, ArticleTableMap::COL_ID_USER, ArticleTableMap::COL_ID_IMAGE, ArticleTableMap::COL_TITLE, ArticleTableMap::COL_KEYWORDS, ArticleTableMap::COL_CONTENT, ArticleTableMap::COL_CREATED_AT, ArticleTableMap::COL_UPDATED_AT, ),
-        self::TYPE_FIELDNAME     => array('id', 'id_user', 'id_image', 'title', 'keywords', 'content', 'created_at', 'updated_at', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
+        self::TYPE_PHPNAME       => array('Id', 'IdUser', 'IdImage', 'IdCategory', 'Title', 'Url', 'Keywords', 'Content', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_CAMELNAME     => array('id', 'idUser', 'idImage', 'idCategory', 'title', 'url', 'keywords', 'content', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(ArticleTableMap::COL_ID, ArticleTableMap::COL_ID_USER, ArticleTableMap::COL_ID_IMAGE, ArticleTableMap::COL_ID_CATEGORY, ArticleTableMap::COL_TITLE, ArticleTableMap::COL_URL, ArticleTableMap::COL_KEYWORDS, ArticleTableMap::COL_CONTENT, ArticleTableMap::COL_CREATED_AT, ArticleTableMap::COL_UPDATED_AT, ),
+        self::TYPE_FIELDNAME     => array('id', 'id_user', 'id_image', 'id_category', 'title', 'url', 'keywords', 'content', 'created_at', 'updated_at', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
     );
 
     /**
@@ -137,11 +147,11 @@ class ArticleTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'IdUser' => 1, 'IdImage' => 2, 'Title' => 3, 'Keywords' => 4, 'Content' => 5, 'CreatedAt' => 6, 'UpdatedAt' => 7, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'idUser' => 1, 'idImage' => 2, 'title' => 3, 'keywords' => 4, 'content' => 5, 'createdAt' => 6, 'updatedAt' => 7, ),
-        self::TYPE_COLNAME       => array(ArticleTableMap::COL_ID => 0, ArticleTableMap::COL_ID_USER => 1, ArticleTableMap::COL_ID_IMAGE => 2, ArticleTableMap::COL_TITLE => 3, ArticleTableMap::COL_KEYWORDS => 4, ArticleTableMap::COL_CONTENT => 5, ArticleTableMap::COL_CREATED_AT => 6, ArticleTableMap::COL_UPDATED_AT => 7, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'id_user' => 1, 'id_image' => 2, 'title' => 3, 'keywords' => 4, 'content' => 5, 'created_at' => 6, 'updated_at' => 7, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'IdUser' => 1, 'IdImage' => 2, 'IdCategory' => 3, 'Title' => 4, 'Url' => 5, 'Keywords' => 6, 'Content' => 7, 'CreatedAt' => 8, 'UpdatedAt' => 9, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'idUser' => 1, 'idImage' => 2, 'idCategory' => 3, 'title' => 4, 'url' => 5, 'keywords' => 6, 'content' => 7, 'createdAt' => 8, 'updatedAt' => 9, ),
+        self::TYPE_COLNAME       => array(ArticleTableMap::COL_ID => 0, ArticleTableMap::COL_ID_USER => 1, ArticleTableMap::COL_ID_IMAGE => 2, ArticleTableMap::COL_ID_CATEGORY => 3, ArticleTableMap::COL_TITLE => 4, ArticleTableMap::COL_URL => 5, ArticleTableMap::COL_KEYWORDS => 6, ArticleTableMap::COL_CONTENT => 7, ArticleTableMap::COL_CREATED_AT => 8, ArticleTableMap::COL_UPDATED_AT => 9, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'id_user' => 1, 'id_image' => 2, 'id_category' => 3, 'title' => 4, 'url' => 5, 'keywords' => 6, 'content' => 7, 'created_at' => 8, 'updated_at' => 9, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
     );
 
     /**
@@ -163,8 +173,10 @@ class ArticleTableMap extends TableMap
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addForeignKey('id_user', 'IdUser', 'INTEGER', 'users', 'id', true, null, null);
-        $this->addColumn('id_image', 'IdImage', 'INTEGER', false, null, null);
+        $this->addForeignKey('id_image', 'IdImage', 'INTEGER', 'images', 'id', false, null, null);
+        $this->addForeignKey('id_category', 'IdCategory', 'INTEGER', 'categories', 'id', true, null, null);
         $this->addColumn('title', 'Title', 'VARCHAR', true, 100, null);
+        $this->addColumn('url', 'Url', 'VARCHAR', true, 120, null);
         $this->addColumn('keywords', 'Keywords', 'VARCHAR', true, 200, null);
         $this->addColumn('content', 'Content', 'LONGVARCHAR', true, null, null);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
@@ -183,6 +195,27 @@ class ArticleTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, null, false);
+        $this->addRelation('Image', '\\Models\\Image', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':id_image',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('Category', '\\Models\\Category', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':id_category',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('Comment', '\\Models\\Comment', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':id_article',
+    1 => ':id',
+  ),
+), null, null, 'Comments', false);
     } // buildRelations()
 
     /**
@@ -342,7 +375,9 @@ class ArticleTableMap extends TableMap
             $criteria->addSelectColumn(ArticleTableMap::COL_ID);
             $criteria->addSelectColumn(ArticleTableMap::COL_ID_USER);
             $criteria->addSelectColumn(ArticleTableMap::COL_ID_IMAGE);
+            $criteria->addSelectColumn(ArticleTableMap::COL_ID_CATEGORY);
             $criteria->addSelectColumn(ArticleTableMap::COL_TITLE);
+            $criteria->addSelectColumn(ArticleTableMap::COL_URL);
             $criteria->addSelectColumn(ArticleTableMap::COL_KEYWORDS);
             $criteria->addSelectColumn(ArticleTableMap::COL_CONTENT);
             $criteria->addSelectColumn(ArticleTableMap::COL_CREATED_AT);
@@ -351,7 +386,9 @@ class ArticleTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.id_user');
             $criteria->addSelectColumn($alias . '.id_image');
+            $criteria->addSelectColumn($alias . '.id_category');
             $criteria->addSelectColumn($alias . '.title');
+            $criteria->addSelectColumn($alias . '.url');
             $criteria->addSelectColumn($alias . '.keywords');
             $criteria->addSelectColumn($alias . '.content');
             $criteria->addSelectColumn($alias . '.created_at');

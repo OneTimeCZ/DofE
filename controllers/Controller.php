@@ -5,7 +5,7 @@ namespace controllers;
 use Models\User;
 use Models\UserQuery;
 
-class Controller{
+class Controller {
     
     //Renders a view, passing $data within
     public function view($view, $template, $data = []){
