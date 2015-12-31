@@ -13,6 +13,7 @@ CREATE TABLE `users`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `username` VARCHAR(50) NOT NULL,
+    `url` VARCHAR(50) NOT NULL,
     `email` VARCHAR(100) NOT NULL,
     `email_confirmed_at` DATETIME,
     `email_confirm_token` VARCHAR(50),
@@ -107,6 +108,7 @@ CREATE TABLE `categories`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(50) NOT NULL,
+    `url` VARCHAR(50) NOT NULL,
     `color` VARCHAR(10),
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;

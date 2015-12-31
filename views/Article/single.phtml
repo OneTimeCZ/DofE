@@ -1,7 +1,7 @@
 <div class="content">    
     <div class="section">
         <div class="page-heading">
-            <h1><?php echo $data["article"]->getTitle(); ?></h1>
+            <h1><?= $data["title"] ?></h1>
         </div>
     </div>
     
@@ -9,23 +9,21 @@
         <div class="column">
             <div class="section-header image">
                 <div class="thumbnail">
-                    <img src="../../includes/images/fullsize/<?= $data["imgurl"]; ?>" alt="" title="" />
+                    <img src="../../includes/images/fullsize/prvniobrazek.png" alt="" title="" />
                 </div>
             </div>
             <div class="section-content post article">
                 <div class="meta">
                     <p>
                         Autor:
-                        <a href="/profil/<?= $data["author"] ?>" rel="author" title="Profil uživatele <?= $data["author"] ?>"><?= $data["author"] ?></a>
-                        | 24.12.2015 |
-                        <a href="/clanky/<?php echo $data["category"]->getUrl(); ?>"><?php echo ucfirst($data["category"]->getName()); ?></a>      
+                        <a href="/profil/<?= $data["article_author_url"] ?>" rel="author" title="Profil uživatele <?= $data["article_author"] ?>"><?= $data["article_author"] ?></a>
+                        | <?= $data["article_date"] ?> |
+                        <a href="/clanky/<?= $data["category_url"] ?>"><?= ucfirst($data["category"]) ?></a>      
                     </p>
                 </div>
                 <div class="text">
                     <p class="text">
-                        <?php echo $data["article"]->getContent();
-                            echo $data["comment_author"];
-                        ?>
+                        <?= $data["content"] ?>
                     </p>
                 </div>
             </div>    
@@ -34,93 +32,57 @@
     
     <div class="section">
         <div class="column single">
+            <?php if($data["comments"] != NULL): ?>
             <div class="section-header comments">
                 Komentáře
             </div>
+            <?php endif;
+            ?>
             <div class="section-content comments" id="komentare">
                 <ul class="comments">
+                    <?php
+                    if(isset($data["comments"])) {
+                    foreach ($data["comments"] as $comment): ?>
+                               
                     <li class="comment">
                         <div class="avatar">
-                            <a href="/profil/Username">
-                                <img src="../../includes/images/50x50/profilepic.png" alt="profilepic" title="Uživatel Insert a username" />
-                            </a>    
+                            <a href="/profil/<?= $comment["profile_url"] ?>">
+                                <img src="../../includes/images/50x50/<?= $comment["author_avatar"] ?>" alt="" title="" />
+                            </a>
                         </div>
                         <div class="info">
-                            <a href="/profil/Username">
-                                <h4>Insert a username</h4>
-                            </a>    
-                            <p>dne 24.12.2015 v 21:24</p>
+                            <a href="/profil/<?= $comment["profile_url"] ?>">
+                                <h4><?= $comment["author"] ?></h4>
+                            </a>
+                            <p>dne <?= $comment["date"] ?> v <?= $comment["time"] ?></p>
                         </div>
                         <div class="content_area">
                             <p class="comment">
-                                Bacon ipsum dolor amet meatloaf pork landjaeger tongue prosciutto pork loin pork chop pig. Strip steak shankle pastrami t-bone, tri-tip pork chop sausage salami leberkas meatball pork belly hamburger corned beef filet mignon boudin. Jerky porchetta boudin, tail ground round ball tip pig capicola pork bresaola drumstick chicken leberkas ham.
-                            </p>
-                        </div>
-                    </li>   
-                    <li class="comment">
-                        <div class="avatar">
-                            <a href="/profil/Username">
-                                <img src="../../includes/images/50x50/profilepic2.png" alt="profilepic" title="Uživatel Insert a username" />
-                            </a>    
-                        </div>
-                        <div class="info">
-                            <a href="/profil/Username">
-                                <h4>Insert a username</h4>
-                            </a>    
-                            <p>dne 24.12.2015 v 21:28</p>
-                        </div>
-                        <div class="content_area">
-                            <p class="comment">
-                                Jerky porchetta boudin, tail ground round ball tip pig capicola pork bresaola drumstick chicken leberkas ham.
+                                <?= $comment["content"] ?>
                             </p>
                         </div>
                     </li>
-                    <li class="comment">
-                        <div class="avatar">
-                            <a href="/profil/Username">
-                                <img src="../../includes/images/50x50/profilepic4.png" alt="profilepic" title="Uživatel Insert a username" />
-                            </a>    
-                        </div>
-                        <div class="info">
-                            <a href="/profil/Username">
-                                <h4>Insert a username</h4>
-                            </a>    
-                            <p>dne 24.12.2015 v 21:33</p>
-                        </div>
-                        <div class="content_area">
-                            <p class="comment">
-                                Bacon ipsum dolor amet meatloaf pork landjaeger tongue prosciutto pork loin pork chop pig. Pork belly ground round doner, pork chop jerky kevin leberkas shank fatback tail tri-tip pancetta. Strip steak shankle pastrami t-bone, tri-tip pork chop sausage salami leberkas meatball pork belly hamburger corned beef filet mignon boudin. Jerky porchetta boudin, tail ground round ball tip pig capicola pork bresaola drumstick chicken leberkas ham.
-                            </p>
-                        </div>
-                    </li>
-                    <li class="comment">
-                        <div class="avatar">
-                            <a href="/profil/Username">
-                                <img src="../../includes/images/50x50/profilepic3.png" alt="profilepic" title="Uživatel Insert a username" />
-                            </a>    
-                        </div>
-                        <div class="info">
-                            <a href="/profil/Username">
-                                <h4>Insert a username</h4>
-                            </a>    
-                            <p>dne 24.12.2015 v 21:44</p>
-                        </div>
-                        <div class="content_area">
-                            <p class="comment">
-                                Strip steak shankle pastrami t-bone, tri-tip pork chop sausage salami leberkas meatball pork belly hamburger corned beef filet mignon boudin.
-                            </p>
-                        </div>
-                    </li>
+
+                    <?php endforeach;
+                    }
+
+                    if(isset($_SESSION["user"])): ?>
                     <li class="comment_form">
                         <div class="comment_form">
-                        <h3 class="heading">Sdílejte svůj názor</h3>
-                            <form class="comment_form" role="form" action="/clanek/1-nazev-clanku/komentovat" method="post">
+                            <h3 class="heading">Sdílejte svůj názor</h3>
+                            <form class="comment_form" role="form" action="/clanek/<?= $data["article_url"] ?>/komentovat" method="post">
                                 <label for="comtxt"></label>
                                 <textarea placeholder="Text komentáře" name="comment_text" id="comtxt" required ></textarea>
                                 <input type="submit" value="Okomentovat" class="comment_submit" name="comment_submit" />
                             </form>
                         </div>
                     </li>
+                    <?php else: ?>
+                    <li class="comment_help">
+                        <h3>Pro okomentování tohoto příspěvku se prosíme přihlašte...</h3>
+                    </li>
+                    <?php endif;
+                    ?>
                 </ul>
             </div>
         </div>

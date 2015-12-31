@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="/">
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="">
+        <meta name="keywords" content="">
+		<meta name="author" content="OneTimeCZ">
+		<title>DofE</title>
+		<script src="includes/scripts/jquery-1.11.3.js"></script>
+		<script src="includes/scripts/bootstrap.min.js"></script>
+		<link rel="shortcut icon" type="image/png" href="/includes/images/favicon.png"/>
+		<link rel="stylesheet" type="text/css" href="includes/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="includes/css/style.css" />
+	</head>
+	<body>
+        <div class="page-container">
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="admin_side_nav col-sm-2">
+                        <div class="navbar-header">
+                            <a href="/administrace">Administrace</a>
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#admin_navbar" aria-expanded="false">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                        </div>
+                        <div class="collapse navbar-collapse" id="admin_navbar">
+                            <ul class="navigation">
+                                <li class="profile">
+                                    <p>Jste přihlášeni jako: </p>
+                                    <a href="/profil/Username">
+                                        <img class="img img-responsive" src="../includes/images/50x50/profilepic2.png">
+                                        Username
+                                    </a>
+                                </li>
+                                <li class="inverse">
+                                    <a href="/">ZPĚT NA HLAVNÍ STRÁNKU</a>
+                                </li>                            
+                                <li>
+                                    <a href="/administrace/clanky/pridat">PŘIDAT ČLÁNEK</a>
+                                </li>
+                                <li>
+                                    <a href="/administrace/clanky">EDITOVAT ČLÁNEK</a>
+                                </li>
+                                <li>
+                                    <a href="/administrace/clanky">ODSTRANIT ČLÁNEK</a>
+                                </li>
+                                <li>
+                                    <a href="/administrace/fotografie/pridat">PŘIDAT FOTOGRAFIE</a>
+                                </li>
+                                <li>
+                                    <a href="/administrace/fotografie">ODSTRANIT FOTOGRAFIE</a>
+                                </li>
+                                <li class="inverse">
+                                    <a href="/odhlasit">ODHLÁSIT SE</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="admin_main col-sm-10">
+                        <?php require_once $view . '.phtml'; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</body>
+</html>

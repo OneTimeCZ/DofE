@@ -2,8 +2,8 @@
 
 namespace Models\Map;
 
-use Models\Image;
-use Models\ImageQuery;
+use Models\Category;
+use Models\CategoryQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'images' table.
+ * This class defines the structure of the 'categories' table.
  *
  *
  *
@@ -26,7 +26,7 @@ use Propel\Runtime\Map\TableMapTrait;
  * (i.e. if it's a text column type).
  *
  */
-class ImageTableMap extends TableMap
+class CategoryTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
@@ -34,7 +34,7 @@ class ImageTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'Models.Map.ImageTableMap';
+    const CLASS_NAME = 'Models.Map.CategoryTableMap';
 
     /**
      * The default database name for this class
@@ -44,22 +44,22 @@ class ImageTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'images';
+    const TABLE_NAME = 'categories';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\Models\\Image';
+    const OM_CLASS = '\\Models\\Category';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'Models.Image';
+    const CLASS_DEFAULT = 'Models.Category';
 
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 5;
+    const NUM_COLUMNS = 4;
 
     /**
      * The number of lazy-loaded columns
@@ -69,32 +69,27 @@ class ImageTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 5;
+    const NUM_HYDRATE_COLUMNS = 4;
 
     /**
      * the column name for the id field
      */
-    const COL_ID = 'images.id';
+    const COL_ID = 'categories.id';
 
     /**
-     * the column name for the description field
+     * the column name for the name field
      */
-    const COL_DESCRIPTION = 'images.description';
+    const COL_NAME = 'categories.name';
 
     /**
-     * the column name for the path field
+     * the column name for the url field
      */
-    const COL_PATH = 'images.path';
+    const COL_URL = 'categories.url';
 
     /**
-     * the column name for the created_at field
+     * the column name for the color field
      */
-    const COL_CREATED_AT = 'images.created_at';
-
-    /**
-     * the column name for the updated_at field
-     */
-    const COL_UPDATED_AT = 'images.updated_at';
+    const COL_COLOR = 'categories.color';
 
     /**
      * The default string format for model objects of the related table
@@ -108,11 +103,11 @@ class ImageTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Description', 'Path', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_CAMELNAME     => array('id', 'description', 'path', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(ImageTableMap::COL_ID, ImageTableMap::COL_DESCRIPTION, ImageTableMap::COL_PATH, ImageTableMap::COL_CREATED_AT, ImageTableMap::COL_UPDATED_AT, ),
-        self::TYPE_FIELDNAME     => array('id', 'description', 'path', 'created_at', 'updated_at', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
+        self::TYPE_PHPNAME       => array('Id', 'Name', 'Url', 'Color', ),
+        self::TYPE_CAMELNAME     => array('id', 'name', 'url', 'color', ),
+        self::TYPE_COLNAME       => array(CategoryTableMap::COL_ID, CategoryTableMap::COL_NAME, CategoryTableMap::COL_URL, CategoryTableMap::COL_COLOR, ),
+        self::TYPE_FIELDNAME     => array('id', 'name', 'url', 'color', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -122,11 +117,11 @@ class ImageTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Description' => 1, 'Path' => 2, 'CreatedAt' => 3, 'UpdatedAt' => 4, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'description' => 1, 'path' => 2, 'createdAt' => 3, 'updatedAt' => 4, ),
-        self::TYPE_COLNAME       => array(ImageTableMap::COL_ID => 0, ImageTableMap::COL_DESCRIPTION => 1, ImageTableMap::COL_PATH => 2, ImageTableMap::COL_CREATED_AT => 3, ImageTableMap::COL_UPDATED_AT => 4, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'description' => 1, 'path' => 2, 'created_at' => 3, 'updated_at' => 4, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Name' => 1, 'Url' => 2, 'Color' => 3, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'name' => 1, 'url' => 2, 'color' => 3, ),
+        self::TYPE_COLNAME       => array(CategoryTableMap::COL_ID => 0, CategoryTableMap::COL_NAME => 1, CategoryTableMap::COL_URL => 2, CategoryTableMap::COL_COLOR => 3, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'name' => 1, 'url' => 2, 'color' => 3, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -139,18 +134,17 @@ class ImageTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('images');
-        $this->setPhpName('Image');
+        $this->setName('categories');
+        $this->setPhpName('Category');
         $this->setIdentifierQuoting(false);
-        $this->setClassName('\\Models\\Image');
+        $this->setClassName('\\Models\\Category');
         $this->setPackage('Models');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('description', 'Description', 'VARCHAR', false, 150, null);
-        $this->addColumn('path', 'Path', 'VARCHAR', false, 150, null);
-        $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
+        $this->addColumn('name', 'Name', 'VARCHAR', true, 50, null);
+        $this->addColumn('url', 'Url', 'VARCHAR', true, 50, null);
+        $this->addColumn('color', 'Color', 'VARCHAR', false, 10, null);
     } // initialize()
 
     /**
@@ -161,24 +155,11 @@ class ImageTableMap extends TableMap
         $this->addRelation('Article', '\\Models\\Article', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
-    0 => ':id_image',
+    0 => ':id_category',
     1 => ':id',
   ),
 ), null, null, 'Articles', false);
     } // buildRelations()
-
-    /**
-     *
-     * Gets the list of behaviors registered for this table
-     *
-     * @return array Associative array (name => parameters) of behaviors
-     */
-    public function getBehaviors()
-    {
-        return array(
-            'timestampable' => array('create_column' => 'created_at', 'update_column' => 'updated_at', 'disable_created_at' => 'false', 'disable_updated_at' => 'false', ),
-        );
-    } // getBehaviors()
 
     /**
      * Retrieves a string version of the primary key from the DB resultset row that can be used to uniquely identify a row in this table.
@@ -237,7 +218,7 @@ class ImageTableMap extends TableMap
      */
     public static function getOMClass($withPrefix = true)
     {
-        return $withPrefix ? ImageTableMap::CLASS_DEFAULT : ImageTableMap::OM_CLASS;
+        return $withPrefix ? CategoryTableMap::CLASS_DEFAULT : CategoryTableMap::OM_CLASS;
     }
 
     /**
@@ -251,22 +232,22 @@ class ImageTableMap extends TableMap
      *
      * @throws PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array           (Image object, last column rank)
+     * @return array           (Category object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        $key = ImageTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = ImageTableMap::getInstanceFromPool($key))) {
+        $key = CategoryTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = CategoryTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + ImageTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + CategoryTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = ImageTableMap::OM_CLASS;
-            /** @var Image $obj */
+            $cls = CategoryTableMap::OM_CLASS;
+            /** @var Category $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            ImageTableMap::addInstanceToPool($obj, $key);
+            CategoryTableMap::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -289,18 +270,18 @@ class ImageTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = ImageTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = ImageTableMap::getInstanceFromPool($key))) {
+            $key = CategoryTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = CategoryTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                /** @var Image $obj */
+                /** @var Category $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                ImageTableMap::addInstanceToPool($obj, $key);
+                CategoryTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -321,17 +302,15 @@ class ImageTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(ImageTableMap::COL_ID);
-            $criteria->addSelectColumn(ImageTableMap::COL_DESCRIPTION);
-            $criteria->addSelectColumn(ImageTableMap::COL_PATH);
-            $criteria->addSelectColumn(ImageTableMap::COL_CREATED_AT);
-            $criteria->addSelectColumn(ImageTableMap::COL_UPDATED_AT);
+            $criteria->addSelectColumn(CategoryTableMap::COL_ID);
+            $criteria->addSelectColumn(CategoryTableMap::COL_NAME);
+            $criteria->addSelectColumn(CategoryTableMap::COL_URL);
+            $criteria->addSelectColumn(CategoryTableMap::COL_COLOR);
         } else {
             $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.description');
-            $criteria->addSelectColumn($alias . '.path');
-            $criteria->addSelectColumn($alias . '.created_at');
-            $criteria->addSelectColumn($alias . '.updated_at');
+            $criteria->addSelectColumn($alias . '.name');
+            $criteria->addSelectColumn($alias . '.url');
+            $criteria->addSelectColumn($alias . '.color');
         }
     }
 
@@ -344,7 +323,7 @@ class ImageTableMap extends TableMap
      */
     public static function getTableMap()
     {
-        return Propel::getServiceContainer()->getDatabaseMap(ImageTableMap::DATABASE_NAME)->getTable(ImageTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(CategoryTableMap::DATABASE_NAME)->getTable(CategoryTableMap::TABLE_NAME);
     }
 
     /**
@@ -352,16 +331,16 @@ class ImageTableMap extends TableMap
      */
     public static function buildTableMap()
     {
-        $dbMap = Propel::getServiceContainer()->getDatabaseMap(ImageTableMap::DATABASE_NAME);
-        if (!$dbMap->hasTable(ImageTableMap::TABLE_NAME)) {
-            $dbMap->addTableObject(new ImageTableMap());
+        $dbMap = Propel::getServiceContainer()->getDatabaseMap(CategoryTableMap::DATABASE_NAME);
+        if (!$dbMap->hasTable(CategoryTableMap::TABLE_NAME)) {
+            $dbMap->addTableObject(new CategoryTableMap());
         }
     }
 
     /**
-     * Performs a DELETE on the database, given a Image or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a Category or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or Image object or primary key or array of primary keys
+     * @param mixed               $values Criteria or Category object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param  ConnectionInterface $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -372,27 +351,27 @@ class ImageTableMap extends TableMap
      public static function doDelete($values, ConnectionInterface $con = null)
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(ImageTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(CategoryTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \Models\Image) { // it's a model object
+        } elseif ($values instanceof \Models\Category) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(ImageTableMap::DATABASE_NAME);
-            $criteria->add(ImageTableMap::COL_ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(CategoryTableMap::DATABASE_NAME);
+            $criteria->add(CategoryTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
-        $query = ImageQuery::create()->mergeWith($criteria);
+        $query = CategoryQuery::create()->mergeWith($criteria);
 
         if ($values instanceof Criteria) {
-            ImageTableMap::clearInstancePool();
+            CategoryTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
             foreach ((array) $values as $singleval) {
-                ImageTableMap::removeInstanceFromPool($singleval);
+                CategoryTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -400,20 +379,20 @@ class ImageTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the images table.
+     * Deletes all rows from the categories table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
-        return ImageQuery::create()->doDeleteAll($con);
+        return CategoryQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a Image or Criteria object.
+     * Performs an INSERT on the database, given a Category or Criteria object.
      *
-     * @param mixed               $criteria Criteria or Image object containing data that is used to create the INSERT statement.
+     * @param mixed               $criteria Criteria or Category object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed           The new primary key.
      * @throws PropelException Any exceptions caught during processing will be
@@ -422,22 +401,22 @@ class ImageTableMap extends TableMap
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(ImageTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(CategoryTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from Image object
+            $criteria = $criteria->buildCriteria(); // build Criteria from Category object
         }
 
-        if ($criteria->containsKey(ImageTableMap::COL_ID) && $criteria->keyContainsValue(ImageTableMap::COL_ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.ImageTableMap::COL_ID.')');
+        if ($criteria->containsKey(CategoryTableMap::COL_ID) && $criteria->keyContainsValue(CategoryTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.CategoryTableMap::COL_ID.')');
         }
 
 
         // Set the correct dbName
-        $query = ImageQuery::create()->mergeWith($criteria);
+        $query = CategoryQuery::create()->mergeWith($criteria);
 
         // use transaction because $criteria could contain info
         // for more than one table (I guess, conceivably)
@@ -446,7 +425,7 @@ class ImageTableMap extends TableMap
         });
     }
 
-} // ImageTableMap
+} // CategoryTableMap
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-ImageTableMap::buildTableMap();
+CategoryTableMap::buildTableMap();

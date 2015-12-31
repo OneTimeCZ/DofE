@@ -3,6 +3,67 @@ body {
   font-family: calibri; }
   body div.page-container {
     overflow: hidden; }
+    body div.page-container div.content div.container-fluid {
+      padding-left: 0;
+      padding-right: 0;
+      margin: 0;
+      width: 100%; }
+      body div.page-container div.content div.container-fluid div.admin_side_nav {
+        background: #232323;
+        padding: 0;
+        color: gray;
+        font-weight: bold; }
+        body div.page-container div.content div.container-fluid div.admin_side_nav div.navbar-header button {
+          margin-right: 25px;
+          background: white; }
+          body div.page-container div.content div.container-fluid div.admin_side_nav div.navbar-header button span.icon-bar {
+            background: #232323; }
+        body div.page-container div.content div.container-fluid div.admin_side_nav div.navbar-header a {
+          text-decoration: none;
+          color: white;
+          line-height: 50px;
+          font-size: 1.4em;
+          margin-left: 15px;
+          height: 40px;
+          padding: 5px; }
+        @media (min-width: 768px) {
+          body div.page-container div.content div.container-fluid div.admin_side_nav div.navbar-header {
+            width: 100%;
+            text-align: center; }
+            body div.page-container div.content div.container-fluid div.admin_side_nav div.navbar-header a {
+              margin-left: 0; } }
+        body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar {
+          padding: 0; }
+          body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul {
+            list-style-type: none;
+            margin-bottom: 0;
+            padding-left: 0;
+            text-align: center; }
+            body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul li {
+              padding: 10px; }
+              body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul li a {
+                text-decoration: none;
+                color: gray; }
+                body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul li a:hover {
+                  color: white; }
+              body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul li.profile p {
+                color: white; }
+              body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul li.profile a {
+                overflow: hidden; }
+                body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul li.profile a img {
+                  margin: auto;
+                  border-radius: 5px; }
+              body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul li.inverse {
+                background: gray; }
+                body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul li.inverse a {
+                  color: #232323; }
+                  body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul li.inverse a:hover {
+                    color: white; }
+      body div.page-container div.content div.container-fluid div.admin_main {
+        background: #e9eaed;
+        padding: 0; }
+        body div.page-container div.content div.container-fluid div.admin_main div.content {
+          padding: 10px; }
     @media (max-width: 767px) {
       body div.page-container div.container-fluid {
         margin-left: 5%;
@@ -271,6 +332,14 @@ body {
                       body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.content_area p.comment {
                         color: gray;
                         margin-bottom: 0; }
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment_help {
+                    padding: 10px;
+                    border-bottom-right-radius: 5px;
+                    border-bottom-left-radius: 5px; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment_help h3 {
+                      color: gray;
+                      text-align: center;
+                      margin: 0; }
                   body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment_form {
                     padding: 10px;
                     border-bottom-right-radius: 5px;

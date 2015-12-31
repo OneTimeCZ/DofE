@@ -25,6 +25,114 @@ body {
     div.page-container {
         overflow: hidden;
         
+        div.content {
+            div.container-fluid {
+                padding-left: 0;
+                padding-right: 0;
+                margin: 0;
+                width: 100%;
+                
+                div.admin_side_nav {
+                    background: $darkgray;
+                    padding: 0;
+                    color: gray;
+                    font-weight: bold;
+                    
+                    div.navbar-header {                        
+                        button {
+                            margin-right: 25px;
+                            background: white;
+                            
+                            span.icon-bar {
+                                background: $darkgray;
+                            }
+                        }
+                        
+                        a {
+                            text-decoration: none;
+                            color: white;
+                            line-height: 50px;
+                            font-size: 1.4em;
+                            margin-left: 15px;
+                            height: 40px;
+                            padding: 5px;
+                        }
+                        
+                        @media (min-width: $break) {
+                            & {
+                                width: 100%;
+                                text-align: center;
+                                
+                                a {
+                                    margin-left: 0;
+                                }
+                            }
+                        }
+                    }
+                    
+                    div#admin_navbar {
+                        padding: 0;
+                        
+                        ul {
+                            list-style-type: none;
+                            margin-bottom: 0;
+                            padding-left: 0;
+                            text-align: center;
+
+                            li {
+                                padding: 10px;
+
+                                a {
+                                    text-decoration: none;
+                                    color: gray;
+
+                                    &:hover {
+                                        color: white;
+                                    }
+                                }
+
+                                &.profile {                                 
+                                    p {
+                                        color: white;
+                                    }
+
+                                    a {
+                                        overflow: hidden;
+
+                                        img {
+                                            margin: auto;
+                                            border-radius: 5px;
+                                        }
+                                    }
+                                }
+
+                                &.inverse {
+                                    background: gray;
+
+                                    a {
+                                        color: $darkgray;
+
+                                        &:hover {
+                                            color: white;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                div.admin_main {
+                    background: $dnw;
+                    padding: 0;
+                    
+                    div.content {
+                        padding: 10px;
+                    }
+                }
+            }
+        }
+        
         div.container-fluid {
             @media (max-width: $break - 1px) {
                 & {
@@ -450,6 +558,18 @@ body {
                                                     color: gray;
                                                     margin-bottom: 0;
                                                 }
+                                            }
+                                        }
+                                        
+                                        li.comment_help {
+                                            padding: 10px;
+                                            border-bottom-right-radius: 5px;
+                                            border-bottom-left-radius: 5px;
+                                            
+                                            h3 {
+                                                color: gray;
+                                                text-align: center;
+                                                margin: 0;
                                             }
                                         }
                                         

@@ -27,6 +27,19 @@ $router->addGet('Gallery.single', '/galerie/{name}')
 //REGISTER
 $router->addGet('Register.index', '/registrace');
 
+//ADMIN BACKGROUND
+$router->addGet('Admin.index', '/administrace');
+$router->addGet('Admin.articleList', '/administrace/clanky');
+$router->addGet('Admin.articleEdit', '/administrace/clanek/{name}/upravit');
+$router->addPost('Admin.articleEdit', '/administrace/clanek/{name}/upravit');
+$router->addGet('Admin.articleAdd', '/administrace/clanky/pridat');
+$router->addPost('Admin.articleAdd', '/administrace/clanky/ulozit');
+$router->addPost('Admin.articleDelete', '/administrace/clanek/{name}/odstranit');
+$router->addGet('Admin.imageList', '/administrace/fotografie');
+$router->addGet('Admin.imageAdd', '/administrace/fotografie/nahrat');
+$router->addPost('Admin.imageAdd', '/administrace/fotografie/ulozit');
+$router->addPost('Admin.imageDelete', '/administrace/fotografie/{name}/odstranit');
+
 //USER
 $router->addGet('User.profile', '/profil/{name}');
 $router->addGet('User.logout', '/odhlasit');
