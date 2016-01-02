@@ -26,13 +26,3 @@ function token($length){
     
     return $str;
 }
-
-function isAdmin() {
-    if(!isset($_SESSION["user"])){
-        return false;
-    } elseif(UserQuery::create()->findPk($_SESSION["user"])->getPermissions() < 2) {
-        return false;
-    } else {
-        return true;
-    }
-}

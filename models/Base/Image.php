@@ -9,6 +9,8 @@ use Models\Article as ChildArticle;
 use Models\ArticleQuery as ChildArticleQuery;
 use Models\Image as ChildImage;
 use Models\ImageQuery as ChildImageQuery;
+use Models\User as ChildUser;
+use Models\UserQuery as ChildUserQuery;
 use Models\Map\ImageTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
@@ -101,6 +103,12 @@ abstract class Image implements ActiveRecordInterface
     protected $updated_at;
 
     /**
+     * @var        ObjectCollection|ChildUser[] Collection to store aggregation of ChildUser objects.
+     */
+    protected $collUsers;
+    protected $collUsersPartial;
+
+    /**
      * @var        ObjectCollection|ChildArticle[] Collection to store aggregation of ChildArticle objects.
      */
     protected $collArticles;
@@ -113,6 +121,12 @@ abstract class Image implements ActiveRecordInterface
      * @var boolean
      */
     protected $alreadyInSave = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildUser[]
+     */
+    protected $usersScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -640,6 +654,8 @@ abstract class Image implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->collUsers = null;
+
             $this->collArticles = null;
 
         } // if (deep)
@@ -762,6 +778,24 @@ abstract class Image implements ActiveRecordInterface
                     $affectedRows += $this->doUpdate($con);
                 }
                 $this->resetModified();
+            }
+
+            if ($this->usersScheduledForDeletion !== null) {
+                if (!$this->usersScheduledForDeletion->isEmpty()) {
+                    foreach ($this->usersScheduledForDeletion as $user) {
+                        // need to save related object because we set the relation to null
+                        $user->save($con);
+                    }
+                    $this->usersScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collUsers !== null) {
+                foreach ($this->collUsers as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             if ($this->articlesScheduledForDeletion !== null) {
@@ -976,6 +1010,21 @@ abstract class Image implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
+            if (null !== $this->collUsers) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'users';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'userss';
+                        break;
+                    default:
+                        $key = 'Users';
+                }
+
+                $result[$key] = $this->collUsers->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
             if (null !== $this->collArticles) {
 
                 switch ($keyType) {
@@ -1233,6 +1282,12 @@ abstract class Image implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
+            foreach ($this->getUsers() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addUser($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getArticles() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addArticle($relObj->copy($deepCopy));
@@ -1280,9 +1335,234 @@ abstract class Image implements ActiveRecordInterface
      */
     public function initRelation($relationName)
     {
+        if ('User' == $relationName) {
+            return $this->initUsers();
+        }
         if ('Article' == $relationName) {
             return $this->initArticles();
         }
+    }
+
+    /**
+     * Clears out the collUsers collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addUsers()
+     */
+    public function clearUsers()
+    {
+        $this->collUsers = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collUsers collection loaded partially.
+     */
+    public function resetPartialUsers($v = true)
+    {
+        $this->collUsersPartial = $v;
+    }
+
+    /**
+     * Initializes the collUsers collection.
+     *
+     * By default this just sets the collUsers collection to an empty array (like clearcollUsers());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initUsers($overrideExisting = true)
+    {
+        if (null !== $this->collUsers && !$overrideExisting) {
+            return;
+        }
+        $this->collUsers = new ObjectCollection();
+        $this->collUsers->setModel('\Models\User');
+    }
+
+    /**
+     * Gets an array of ChildUser objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildImage is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildUser[] List of ChildUser objects
+     * @throws PropelException
+     */
+    public function getUsers(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collUsersPartial && !$this->isNew();
+        if (null === $this->collUsers || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collUsers) {
+                // return empty collection
+                $this->initUsers();
+            } else {
+                $collUsers = ChildUserQuery::create(null, $criteria)
+                    ->filterByImage($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collUsersPartial && count($collUsers)) {
+                        $this->initUsers(false);
+
+                        foreach ($collUsers as $obj) {
+                            if (false == $this->collUsers->contains($obj)) {
+                                $this->collUsers->append($obj);
+                            }
+                        }
+
+                        $this->collUsersPartial = true;
+                    }
+
+                    return $collUsers;
+                }
+
+                if ($partial && $this->collUsers) {
+                    foreach ($this->collUsers as $obj) {
+                        if ($obj->isNew()) {
+                            $collUsers[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collUsers = $collUsers;
+                $this->collUsersPartial = false;
+            }
+        }
+
+        return $this->collUsers;
+    }
+
+    /**
+     * Sets a collection of ChildUser objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $users A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildImage The current object (for fluent API support)
+     */
+    public function setUsers(Collection $users, ConnectionInterface $con = null)
+    {
+        /** @var ChildUser[] $usersToDelete */
+        $usersToDelete = $this->getUsers(new Criteria(), $con)->diff($users);
+
+
+        $this->usersScheduledForDeletion = $usersToDelete;
+
+        foreach ($usersToDelete as $userRemoved) {
+            $userRemoved->setImage(null);
+        }
+
+        $this->collUsers = null;
+        foreach ($users as $user) {
+            $this->addUser($user);
+        }
+
+        $this->collUsers = $users;
+        $this->collUsersPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related User objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related User objects.
+     * @throws PropelException
+     */
+    public function countUsers(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collUsersPartial && !$this->isNew();
+        if (null === $this->collUsers || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collUsers) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getUsers());
+            }
+
+            $query = ChildUserQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByImage($this)
+                ->count($con);
+        }
+
+        return count($this->collUsers);
+    }
+
+    /**
+     * Method called to associate a ChildUser object to this object
+     * through the ChildUser foreign key attribute.
+     *
+     * @param  ChildUser $l ChildUser
+     * @return $this|\Models\Image The current object (for fluent API support)
+     */
+    public function addUser(ChildUser $l)
+    {
+        if ($this->collUsers === null) {
+            $this->initUsers();
+            $this->collUsersPartial = true;
+        }
+
+        if (!$this->collUsers->contains($l)) {
+            $this->doAddUser($l);
+
+            if ($this->usersScheduledForDeletion and $this->usersScheduledForDeletion->contains($l)) {
+                $this->usersScheduledForDeletion->remove($this->usersScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildUser $user The ChildUser object to add.
+     */
+    protected function doAddUser(ChildUser $user)
+    {
+        $this->collUsers[]= $user;
+        $user->setImage($this);
+    }
+
+    /**
+     * @param  ChildUser $user The ChildUser object to remove.
+     * @return $this|ChildImage The current object (for fluent API support)
+     */
+    public function removeUser(ChildUser $user)
+    {
+        if ($this->getUsers()->contains($user)) {
+            $pos = $this->collUsers->search($user);
+            $this->collUsers->remove($pos);
+            if (null === $this->usersScheduledForDeletion) {
+                $this->usersScheduledForDeletion = clone $this->collUsers;
+                $this->usersScheduledForDeletion->clear();
+            }
+            $this->usersScheduledForDeletion[]= $user;
+            $user->setImage(null);
+        }
+
+        return $this;
     }
 
     /**
@@ -1587,6 +1867,11 @@ abstract class Image implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
+            if ($this->collUsers) {
+                foreach ($this->collUsers as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collArticles) {
                 foreach ($this->collArticles as $o) {
                     $o->clearAllReferences($deep);
@@ -1594,6 +1879,7 @@ abstract class Image implements ActiveRecordInterface
             }
         } // if ($deep)
 
+        $this->collUsers = null;
         $this->collArticles = null;
     }
 

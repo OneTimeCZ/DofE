@@ -6,110 +6,34 @@
     </div>
     
     <div class="section">
+    <?php foreach($data["articles"] as $article): ?>
         <div class="col-md-6 column double">
             <div class="content-box">
                 <div class="section-header image">
                     <div class="thumbnail">
-                        <img src="../../includes/images/960x540/expedice.png" alt="" title="" />
+                        <img src="../../includes/images/960x540/<?= $article["Image.Path"] ?>" alt="" title="" />
                     </div>
                 </div>
                 <div class="section-content post">
-                    <h2 class="title">Nadpis článku</h2>
+                    <h2 class="title"><?= $article["Title"] ?></h2>
                     <div class="meta">
                         <p>
                             Autor:
-                            <a href="/profil/Username" rel="author" title="Profil uživatele Insert a username">Insert a username</a>
+                            <a href="/profil/<?= $article["User.Url"] ?>" rel="author" title="Profil uživatele <?= $article["User.Username"] ?>"><?= $article["User.Username"] ?></a>
                             | Datum |
-                            <a href="/clanky/kategorie">Kategorie</a>      
+                            <a href="/clanky/<?= $article["Category.Url"] ?>"><?= $article["Category.Name"] ?></a>      
                         </p>
                     </div>
                     <div class="description">
                         <p class="description">
-                            Bacon ipsum dolor amet meatloaf frankfurter tongue shoulder ham, beef ribs pork sirloin...
+                            <?= substr($article["Content"], 0, 100)."..." ?>
                         </p>
                     </div>
-                    <a class="read_more btn btn-default" href="/clanek/1-test-clanku">Více...</a>
+                    <a class="read_more btn btn-default" href="/clanek/<?= $article["Url"] ?>">Více...</a>
                 </div>
             </div>
         </div>
-        <div class="col-md-6 column double">
-            <div class="content-box">
-                <div class="section-header image">
-                    <div class="thumbnail">
-                        <img src="../../includes/images/960x540/vyhled_polednik.png" alt="" title="" />
-                    </div>
-                </div>
-                <div class="section-content post">
-                    <h2 class="title">Nadpis článku</h2>
-                    <div class="meta">
-                        <p>
-                            Autor:
-                            <a href="/profil/Username" rel="author" title="Profil uživatele Insert a username">Insert a username</a>
-                            | Datum |
-                            <a href="/clanky/kategorie">Kategorie</a>      
-                        </p>
-                    </div>
-                    <div class="description">
-                        <p class="description">
-                            Bacon ipsum dolor amet meatloaf frankfurter tongue shoulder ham, beef ribs pork sirloin...
-                        </p>
-                    </div>
-                    <a class="read_more btn btn-default" href="/clanek/1-test-clanku">Více...</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 column double">
-            <div class="content-box">
-                <div class="section-header image">
-                    <div class="thumbnail">
-                        <img src="../../includes/images/960x540/hlavy.png" alt="" title="" />
-                    </div>
-                </div>
-                <div class="section-content post">
-                    <h2 class="title">Nadpis článku</h2>
-                    <div class="meta">
-                        <p>
-                            Autor:
-                            <a href="/profil/Username" rel="author" title="Profil uživatele Insert a username">Insert a username</a>
-                            | Datum |
-                            <a href="/clanky/kategorie">Kategorie</a>      
-                        </p>
-                    </div>
-                    <div class="description">
-                        <p class="description">
-                            Bacon ipsum dolor amet meatloaf frankfurter tongue shoulder ham, beef ribs pork sirloin...
-                        </p>
-                    </div>
-                    <a class="read_more btn btn-default" href="/clanek/1-test-clanku">Více...</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 column double">
-            <div class="content-box">
-                <div class="section-header image">
-                    <div class="thumbnail">
-                        <img src="../../includes/images/960x540/vecere.png" alt="" title="" />
-                    </div>
-                </div>
-                <div class="section-content post">
-                    <h2 class="title">Nadpis článku</h2>
-                    <div class="meta">
-                        <p>
-                            Autor:
-                            <a href="/profil/Username" rel="author" title="Profil uživatele Insert a username">Insert a username</a>
-                            | Datum |
-                            <a href="/clanky/kategorie">Kategorie</a>      
-                        </p>
-                    </div>
-                    <div class="description">
-                        <p class="description">
-                            Bacon ipsum dolor amet meatloaf frankfurter tongue shoulder ham, beef ribs pork sirloin...
-                        </p>
-                    </div>
-                    <a class="read_more btn btn-default" href="/clanek/1-test-clanku">Více...</a>
-                </div>
-            </div>
-        </div>
+    <?php endforeach; ?>
     </div>
     
     <div class="section">

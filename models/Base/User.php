@@ -9,6 +9,8 @@ use Models\Article as ChildArticle;
 use Models\ArticleQuery as ChildArticleQuery;
 use Models\Comment as ChildComment;
 use Models\CommentQuery as ChildCommentQuery;
+use Models\Image as ChildImage;
+use Models\ImageQuery as ChildImageQuery;
 use Models\User as ChildUser;
 use Models\UserQuery as ChildUserQuery;
 use Models\Map\UserTableMap;
@@ -164,6 +166,11 @@ abstract class User implements ActiveRecordInterface
      * @var        \DateTime
      */
     protected $updated_at;
+
+    /**
+     * @var        ChildImage
+     */
+    protected $aImage;
 
     /**
      * @var        ObjectCollection|ChildArticle[] Collection to store aggregation of ChildArticle objects.
@@ -819,6 +826,10 @@ abstract class User implements ActiveRecordInterface
             $this->modifiedColumns[UserTableMap::COL_ID_IMAGE] = true;
         }
 
+        if ($this->aImage !== null && $this->aImage->getId() !== $v) {
+            $this->aImage = null;
+        }
+
         return $this;
     } // setIdImage()
 
@@ -1001,6 +1012,9 @@ abstract class User implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
+        if ($this->aImage !== null && $this->id_image !== $this->aImage->getId()) {
+            $this->aImage = null;
+        }
     } // ensureConsistency
 
     /**
@@ -1040,6 +1054,7 @@ abstract class User implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aImage = null;
             $this->collArticles = null;
 
             $this->collComments = null;
@@ -1154,6 +1169,18 @@ abstract class User implements ActiveRecordInterface
         $affectedRows = 0; // initialize var to track total num of affected rows
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
+
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aImage !== null) {
+                if ($this->aImage->isModified() || $this->aImage->isNew()) {
+                    $affectedRows += $this->aImage->save($con);
+                }
+                $this->setImage($this->aImage);
+            }
 
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
@@ -1492,6 +1519,21 @@ abstract class User implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
+            if (null !== $this->aImage) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'image';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'images';
+                        break;
+                    default:
+                        $key = 'Image';
+                }
+
+                $result[$key] = $this->aImage->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
             if (null !== $this->collArticles) {
 
                 switch ($keyType) {
@@ -1894,6 +1936,57 @@ abstract class User implements ActiveRecordInterface
         $this->copyInto($copyObj, $deepCopy);
 
         return $copyObj;
+    }
+
+    /**
+     * Declares an association between this object and a ChildImage object.
+     *
+     * @param  ChildImage $v
+     * @return $this|\Models\User The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setImage(ChildImage $v = null)
+    {
+        if ($v === null) {
+            $this->setIdImage(NULL);
+        } else {
+            $this->setIdImage($v->getId());
+        }
+
+        $this->aImage = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildImage object, it will not be re-added.
+        if ($v !== null) {
+            $v->addUser($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildImage object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildImage The associated ChildImage object.
+     * @throws PropelException
+     */
+    public function getImage(ConnectionInterface $con = null)
+    {
+        if ($this->aImage === null && ($this->id_image !== null)) {
+            $this->aImage = ChildImageQuery::create()->findPk($this->id_image, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aImage->addUsers($this);
+             */
+        }
+
+        return $this->aImage;
     }
 
 
@@ -2441,6 +2534,9 @@ abstract class User implements ActiveRecordInterface
      */
     public function clear()
     {
+        if (null !== $this->aImage) {
+            $this->aImage->removeUser($this);
+        }
         $this->id = null;
         $this->username = null;
         $this->url = null;
@@ -2487,6 +2583,7 @@ abstract class User implements ActiveRecordInterface
 
         $this->collArticles = null;
         $this->collComments = null;
+        $this->aImage = null;
     }
 
     /**

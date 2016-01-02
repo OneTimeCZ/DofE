@@ -201,7 +201,7 @@ class UserTableMap extends TableMap
         $this->addColumn('password_reset_token', 'PasswordResetToken', 'VARCHAR', false, 50, null);
         $this->addColumn('permissions', 'Permissions', 'INTEGER', false, null, null);
         $this->addColumn('signin_count', 'SigninCount', 'INTEGER', false, null, null);
-        $this->addColumn('id_image', 'IdImage', 'INTEGER', false, null, null);
+        $this->addForeignKey('id_image', 'IdImage', 'INTEGER', 'images', 'id', false, null, null);
         $this->addColumn('last_signin_at', 'LastSigninAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
@@ -212,6 +212,13 @@ class UserTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('Image', '\\Models\\Image', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':id_image',
+    1 => ':id',
+  ),
+), null, null, null, false);
         $this->addRelation('Article', '\\Models\\Article', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (

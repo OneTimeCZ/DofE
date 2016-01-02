@@ -16,11 +16,18 @@ use Models\UserQuery;
 class ArticleController extends Controller{
 
     public function showAll(){
-        //SQL
+        $articles = ArticleQuery::create()
+            ->joinWith('Image')
+            ->joinWith('User')
+            ->joinWith('Category')
+            ->select(array('Title', 'Url', 'Content', 'Created_at', 'User.Username', 'User.Url', 'Image.Path', 'Category.Url', 'Category.Name'))
+            ->limit(10)
+            ->find();
         
         $this->view('Article/all', 'base_template', [
             'active' => 'blog',
-            'page' => '1'
+            'page' => '1',
+            'articles' => $articles
         ]);
     }
     
@@ -37,59 +44,33 @@ class ArticleController extends Controller{
         $id = explode('-', $name);
         $id = $id[0];
         
-        $article = ArticleQuery::create()->findPK($id);      
-        if(!$article) {
-            //Popup for non-existing article
+        $post = ArticleQuery::create()
+            ->joinWith('Image')
+            ->joinWith('User')
+            ->joinWith('Category')
+            ->select(array('Title', 'Url', 'Content', 'Keywords', 'Created_at', 'User.Username', 'User.Url', 'Image.Path', 'Category.Name', 'Category.Url'))
+            ->findPk($id);
+        
+        if($post == NULL){
+            //popup for nonexistent article
             redirectTo('/clanky');
         }
         
-        $article_author = UserQuery::create()->findPK($article->getIdUser())->getUsername();
-        $article_author_url = UserQuery::create()->findPK($article->getIdUser())->getUrl();
-        $article_category = CategoryQuery::create()->findPK($article->getIdCategory())->getName();
-        $article_content = $article->getContent();
-        $article_title = $article->getTitle();
-        $article_keywords = $article->getKeywords();
-        $article_url = $article->getUrl();
-        $article_date = $article->getCreatedAt()->format('d.m.Y');
-        $category_url = CategoryQuery::create()->findPK($article->getIdCategory())->getUrl();
-        
-        $comment = CommentQuery::create()->filterByIdArticle($id)->find();
-        
-        $comments = [];
-        foreach ($comment as $c) {
-            $c_author = UserQuery::create()->findPK($c->getIdUser())->getUsername();
-            $c_author_url = UserQuery::create()->findPK($c->getIdUser())->getUrl();
-            $c_a = UserQuery::create()->findPK($c->getIdUser())->getIdImage();
-            $c_path = ImageQuery::create()->findPK($c_a)->getPath();
-            $date = CommentQuery::create()->findPK($c->getId())->getCreatedAt();
-            $c_date = $date->format('d.m.Y');
-            $c_time = $date->format('H:i:s');
-            $c_text = CommentQuery::create()->findPK($c->getId())->getContent();
-            
-            array_push($comments, array(
-                'author' => $c_author,
-                'profile_url' => $c_author_url,
-                'author_avatar' => $c_path,
-                'date' => $c_date,
-                'time' => $c_time,
-                'content' => $c_text
-            ));
-        }
+        $comments = CommentQuery::create()
+            ->filterByIdArticle($id)
+            ->joinWith('User')
+            ->useUserQuery()
+                ->joinWith('Image')
+            ->endUse()
+            ->select(array('Content', 'Created_at', 'User.Username', 'User.Url', 'Image.Path'))
+            ->find();
         
         $this->view('Article/single', 'base_template', [
             'active' => 'blog',
-            'article_author' => $article_author,
-            'article_author_url' => $article_author_url,
-            'article_date' => $article_date,
-            'category' => $article_category,
-            'category_url' => $category_url,
-            'content' => $article_content,
-            'keywords' => $article_keywords,
-            'title' => $article_title,
-            'article_url' => $article_url,
+            'article' => $post,
             'comments' => $comments
-            //'comment_author' => $comment_author
         ]);
+        
     }
 
     public function showByCategory($category){

@@ -26,20 +26,20 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navigation">
-                <li <?php $class = $data['active'] == 'gallery' ? 'class = active' : ''; echo $class; ?> >
+                <li <?= $data['active'] == 'gallery' ? 'class = active' : '' ?> >
                     <a class="border" href="/galerie">GALERIE</a>
                 </li>
-                <li <?php $class = $data['active'] == 'blog' ? 'class = active' : ''; echo $class; ?> >
+                <li <?= $data['active'] == 'blog' ? 'class = active' : '' ?> >
                     <a class="border" href="/clanky">BLOG</a>    
                 </li>
                 <?php if(isset($_SESSION["user"]) && UserQuery::create()->findPk($_SESSION["user"])->getPermissions() > 1): ?>
-                <li <?php $class = $data['active'] == 'admin' ? 'class = active' : ''; echo $class; ?> >
+                <li <?= $data['active'] == 'admin' ? 'class = active' : '' ?> >
                     <a class="border" href="/administrace">ADMINISTRACE</a>    
                 </li>
                 <?php endif; ?>
             </ul>
             <ul class="nav navbar-nav navigation login-box navbar-right">
-                <li <?php $class = $data['active'] == 'profile' ? 'class = active' : ''; echo $class; ?> >
+                <li <?= $data['active'] == 'profile' ? 'class = active' : '' ?> >
                     <?php if (!isset($_SESSION['user'])): ?>
                         <a class="border" data-toggle="modal" data-target="#login_modal" href="#">PŘIHLÁSIT SE</a>
                     <?php else: ?>

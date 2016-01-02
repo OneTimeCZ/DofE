@@ -158,6 +158,13 @@ class ImageTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('User', '\\Models\\User', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':id_image',
+    1 => ':id',
+  ),
+), null, null, 'Users', false);
         $this->addRelation('Article', '\\Models\\Article', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (

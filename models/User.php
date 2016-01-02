@@ -16,5 +16,12 @@ use Models\Base\User as BaseUser;
  */
 class User extends BaseUser
 {
-
+    public static function sideBarInit(){
+        $user = UserQuery::create()
+            ->joinWith('Image')
+            ->select(array('Username', 'Url', 'Permissions', 'Image.Path'))
+            ->findPk($_SESSION["user"]);
+        
+        return $user;
+    }
 }

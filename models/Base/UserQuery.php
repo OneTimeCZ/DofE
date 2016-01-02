@@ -58,6 +58,16 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildUserQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
+ * @method     ChildUserQuery leftJoinImage($relationAlias = null) Adds a LEFT JOIN clause to the query using the Image relation
+ * @method     ChildUserQuery rightJoinImage($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Image relation
+ * @method     ChildUserQuery innerJoinImage($relationAlias = null) Adds a INNER JOIN clause to the query using the Image relation
+ *
+ * @method     ChildUserQuery joinWithImage($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Image relation
+ *
+ * @method     ChildUserQuery leftJoinWithImage() Adds a LEFT JOIN clause and with to the query using the Image relation
+ * @method     ChildUserQuery rightJoinWithImage() Adds a RIGHT JOIN clause and with to the query using the Image relation
+ * @method     ChildUserQuery innerJoinWithImage() Adds a INNER JOIN clause and with to the query using the Image relation
+ *
  * @method     ChildUserQuery leftJoinArticle($relationAlias = null) Adds a LEFT JOIN clause to the query using the Article relation
  * @method     ChildUserQuery rightJoinArticle($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Article relation
  * @method     ChildUserQuery innerJoinArticle($relationAlias = null) Adds a INNER JOIN clause to the query using the Article relation
@@ -78,7 +88,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoinWithComment() Adds a RIGHT JOIN clause and with to the query using the Comment relation
  * @method     ChildUserQuery innerJoinWithComment() Adds a INNER JOIN clause and with to the query using the Comment relation
  *
- * @method     \Models\ArticleQuery|\Models\CommentQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \Models\ImageQuery|\Models\ArticleQuery|\Models\CommentQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUser findOne(ConnectionInterface $con = null) Return the first ChildUser matching the query
  * @method     ChildUser findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUser matching the query, or a new ChildUser object populated from the query conditions when no match is found
@@ -663,6 +673,8 @@ abstract class UserQuery extends ModelCriteria
      * $query->filterByIdImage(array('min' => 12)); // WHERE id_image > 12
      * </code>
      *
+     * @see       filterByImage()
+     *
      * @param     mixed $idImage The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
@@ -821,6 +833,83 @@ abstract class UserQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(UserTableMap::COL_UPDATED_AT, $updatedAt, $comparison);
+    }
+
+    /**
+     * Filter the query by a related \Models\Image object
+     *
+     * @param \Models\Image|ObjectCollection $image The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByImage($image, $comparison = null)
+    {
+        if ($image instanceof \Models\Image) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID_IMAGE, $image->getId(), $comparison);
+        } elseif ($image instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID_IMAGE, $image->toKeyValue('PrimaryKey', 'Id'), $comparison);
+        } else {
+            throw new PropelException('filterByImage() only accepts arguments of type \Models\Image or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Image relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinImage($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Image');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Image');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Image relation Image object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Models\ImageQuery A secondary query class using the current class as primary query
+     */
+    public function useImageQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinImage($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Image', '\Models\ImageQuery');
     }
 
     /**

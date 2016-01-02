@@ -1,7 +1,7 @@
 <div class="content">    
     <div class="section">
         <div class="page-heading">
-            <h1><?= $data["title"] ?></h1>
+            <h1><?= $data["article"]["Title"] ?></h1>
         </div>
     </div>
     
@@ -9,21 +9,21 @@
         <div class="column">
             <div class="section-header image">
                 <div class="thumbnail">
-                    <img src="../../includes/images/fullsize/prvniobrazek.png" alt="" title="" />
+                    <img src="../../includes/images/fullsize/<?= $data["article"]["Image.Path"] ?>" alt="" title="" />
                 </div>
             </div>
             <div class="section-content post article">
                 <div class="meta">
                     <p>
                         Autor:
-                        <a href="/profil/<?= $data["article_author_url"] ?>" rel="author" title="Profil uživatele <?= $data["article_author"] ?>"><?= $data["article_author"] ?></a>
-                        | <?= $data["article_date"] ?> |
-                        <a href="/clanky/<?= $data["category_url"] ?>"><?= ucfirst($data["category"]) ?></a>      
+                        <a href="/profil/<?= $data["article"]["User.Url"] ?>" rel="author" title="Profil uživatele <?= $data["article"]["User.Username"] ?>"><?= $data["article"]["User.Username"] ?></a>
+                        | <?= $data["article"]["Created_at"] ?> |
+                        <a href="/clanky/<?= $data["article"]["Category.Url"] ?>"><?= ucfirst($data["article"]["Category.Name"]) ?></a>      
                     </p>
                 </div>
                 <div class="text">
                     <p class="text">
-                        <?= $data["content"] ?>
+                        <?= $data["article"]["Content"] ?>
                     </p>
                 </div>
             </div>    
@@ -46,19 +46,19 @@
                                
                     <li class="comment">
                         <div class="avatar">
-                            <a href="/profil/<?= $comment["profile_url"] ?>">
-                                <img src="../../includes/images/50x50/<?= $comment["author_avatar"] ?>" alt="" title="" />
+                            <a href="/profil/<?= $comment["User.Url"] ?>">
+                                <img src="../../includes/images/50x50/<?= $comment["Image.Path"] ?>" alt="" title="" />
                             </a>
                         </div>
                         <div class="info">
-                            <a href="/profil/<?= $comment["profile_url"] ?>">
-                                <h4><?= $comment["author"] ?></h4>
+                            <a href="/profil/<?= $comment["User.Url"] ?>">
+                                <h4><?= $comment["User.Username"] ?></h4>
                             </a>
-                            <p>dne <?= $comment["date"] ?> v <?= $comment["time"] ?></p>
+                            <p><?= $comment["Created_at"] ?></p>
                         </div>
                         <div class="content_area">
                             <p class="comment">
-                                <?= $comment["content"] ?>
+                                <?= $comment["Content"] ?>
                             </p>
                         </div>
                     </li>

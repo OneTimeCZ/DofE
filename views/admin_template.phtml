@@ -32,9 +32,9 @@
                             <ul class="navigation">
                                 <li class="profile">
                                     <p>Jste přihlášeni jako: </p>
-                                    <a href="/profil/Username">
-                                        <img class="img img-responsive" src="../includes/images/50x50/profilepic2.png">
-                                        Username
+                                    <a href="/profil/<?= $data["sidebar"]["Url"] ?>">
+                                        <img class="img img-responsive" src="../includes/images/50x50/<?= $data["sidebar"]["Image.Path"] ?>">
+                                        <?= $data["sidebar"]["Username"] ?>
                                     </a>
                                 </li>
                                 <li class="inverse">

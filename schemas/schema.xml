@@ -19,6 +19,10 @@
         <column name="id_image" type="integer"/>
         <column name="last_signin_at" type="timestamp"/>
 
+        <foreign-key foreignTable="images">
+            <reference local="id_image" foreign="id"/>
+        </foreign-key>
+        
         <behavior name="timestampable" />
     </table>
     
