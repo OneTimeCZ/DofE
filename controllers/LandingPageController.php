@@ -6,7 +6,8 @@ class LandingPageController extends Controller{
     
     public function index(){
         $this->view('Landing/index', 'base_template', [
-            'active' => 'landing'
+            'active' => 'landing',
+            'title' => 'Hlavní stránka'
         ]);
     }
 }

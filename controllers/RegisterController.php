@@ -8,7 +8,8 @@ class RegisterController extends Controller{
         //SQL
         
         $this->view('Register/index', 'base_template', [
-            'active' => 'register'
+            'active' => 'register',
+            'title' => 'Registrace'
         ]);
     }
 }

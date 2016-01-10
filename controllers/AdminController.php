@@ -16,6 +16,7 @@ class AdminController extends Controller{
         
         $this->view('Admin/index', 'admin_template', [
             'active' => 'admin',
+            'title' => 'Administrace',
             'sidebar' => User::sideBarInit()
         ]);
     }

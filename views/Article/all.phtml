@@ -21,7 +21,7 @@
                             Autor:
                             <a href="/profil/<?= $article["User.Url"] ?>" rel="author" title="Profil uživatele <?= $article["User.Username"] ?>"><?= $article["User.Username"] ?></a>
                             | Datum |
-                            <a href="/clanky/<?= $article["Category.Url"] ?>"><?= $article["Category.Name"] ?></a>      
+                            <a href="/clanky/<?= $article["Category.Url"] ?>"><?= ucfirst($article["Category.Name"]) ?></a>      
                         </p>
                     </div>
                     <div class="description">

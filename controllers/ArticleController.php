@@ -26,6 +26,7 @@ class ArticleController extends Controller{
         
         $this->view('Article/all', 'base_template', [
             'active' => 'blog',
+            'title' => 'Blog',
             'page' => '1',
             'articles' => $articles
         ]);
@@ -36,6 +37,7 @@ class ArticleController extends Controller{
         
         $this->view('Article/all', 'base_template', [
             'active' => 'blog',
+            'title' => 'Blog',
             'page' => $id
         ]);
     }
@@ -67,6 +69,7 @@ class ArticleController extends Controller{
         
         $this->view('Article/single', 'base_template', [
             'active' => 'blog',
+            'title' => $post["Title"],
             'article' => $post,
             'comments' => $comments
         ]);
@@ -78,6 +81,7 @@ class ArticleController extends Controller{
         
         $this->view('Article/category', 'base_template', [
             'active' => 'blog',
+            'title' => 'Blog | '.ucfirst($category),
             'category' => $category
         ]);
     }

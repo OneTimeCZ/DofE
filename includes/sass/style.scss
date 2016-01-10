@@ -136,8 +136,9 @@ body {
         div.container-fluid {
             @media (max-width: $break - 1px) {
                 & {
-                    margin-left: 5%;
-                    width: 90%;
+                    padding: 0;
+                    margin-left: 1%;
+                    width: 98%;
                 }
             }
             
@@ -275,7 +276,20 @@ body {
                 
                 div.main {
                     background: $dnw;
-                    margin-top: 30px;
+                    
+                    @media (min-width: $break) {
+                        & {
+                            margin-top: 30px;
+                        }
+                    }
+                    
+                    @media (max-width: $break - 1px) {
+                        & {
+                            margin-top: 12px;
+                            padding-left: 5px;
+                            padding-right: 5px;
+                        }
+                    }
                     
                     &.nomargin {
                         margin-top: 0;
@@ -307,6 +321,10 @@ body {
                             div.column {
                                 float: left;
                                 margin-bottom: 30px;
+                                
+                                &.image-slider {
+                                    margin: auto;
+                                }
                                 
                                 &.single {
                                     width: 100%;
@@ -404,11 +422,6 @@ body {
                                         }
                                     }
                                 }
-
-                                div.content-box {
-                                    box-shadow: 0px 0px 8px lightgray;
-                                    border-radius: 5px;
-                                }
                             }
 
                             div.section-header {
@@ -466,6 +479,54 @@ body {
                                 background: white;
                                 border-bottom-right-radius: 5px;
                                 border-bottom-left-radius: 5px;
+                                
+                                &.participants {
+                                    overflow: hidden;
+                                    padding-left: 10px;
+                                    padding-right: 10px;
+                                    
+                                    div.person {
+                                        overflow: hidden;
+                                        margin-top: 25px;
+                                        
+                                        div.col-xs-6 {
+                                            padding: 0;
+                                            
+                                            img {
+                                                padding: 15px;
+                                                margin: auto;
+                                            }
+                                            
+                                            blockquote {
+                                                font-size: 1.15em;
+                                                
+                                                footer {
+                                                    background: none;
+                                                    font-size: 1em;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                &.about {
+                                    ul {
+                                        color: $darkgray;
+                                        list-style-type: none;
+                                        padding-left: 0;
+                                        margin-bottom: 0;
+                                        
+                                        li {
+                                            padding: 5px;
+                                            text-align: justify;
+                                            
+                                            h4 {
+                                                margin-top: 5px;
+                                                margin-bottom: 5px;
+                                            }
+                                        }
+                                    }
+                                }
                                 
                                 &.pagination {
                                     margin: 0;
@@ -724,6 +785,7 @@ body {
                     ul.login-box {
                         height: 40px;
                         margin-top: 0;
+                        margin-bottom: 10px;
 
                         li,
                         li.active {
@@ -741,11 +803,13 @@ body {
                                     width: 34px;
                                     margin-top: 3px;
                                     margin-left: 10px;
-                                }
-
-                                p {
-                                    height: 32px;
-                                    margin-top: 4px;
+                                    
+                                    @media (max-width: $break) {
+                                        &.avatar {
+                                            margin-left: 0px;
+                                            margin-right: 10px;
+                                        }
+                                    }
                                 }
                             }    
                         }
@@ -816,14 +880,62 @@ body {
 
                         li,
                         li.active {
-                            a.borderless {
-                                height: 50px;
-                                margin-top: 26px;
-                                margin-bottom: 26px;
-                                line-height: 50px;
+                            div.dropdown {
+                                height: 76px;
                                 
-                                img {
-                                    margin-left: 10px;
+                                ul.dropdown-menu {
+                                    width: 180px;
+                                    padding-bottom: 0;
+                                    
+                                    li {
+                                        &.divider {
+                                            height: 1px;
+                                            margin-top: 1px;
+                                            margin-bottom: 1px;
+                                        }
+                                        
+                                        &.header {
+                                            height: 52px;
+                                            line-height: 21px;
+                                            padding: 5px;
+                                            padding-left: 10px;
+                                        }
+                                        
+                                        & {
+                                            font-size: 1em;
+                                            margin: 0;
+                                            height: 26px;
+                                            
+                                            &:last-of-type {
+                                                border-bottom-right-radius: 3px;
+                                                border-bottom-left-radius: 3px;
+                                            }
+                                            
+                                            a {
+                                                color: $darkgray;
+                                                height: 26px;
+                                                margin: 0;
+                                                line-height: 16px;
+                                                padding: 5px;
+                                                padding-left: 10px;
+                                                font-size: 1em;
+                                            
+                                                &:hover, &:focus {
+                                                    background: $lightblue;
+                                                    color: $dnw;
+                                                    font-weight: bold;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                button.borderless {
+                                    margin: 0;
+                                    margin-top: 26px;
+                                    padding: 0;
+                                    border: 0;
+                                    border-radius: 5px;
                                 }
                             }
                         }
@@ -971,7 +1083,7 @@ footer {
                     margin-bottom: 0;
                     padding-left: 0;
                     
-                    li {
+                    li {                        
                         a {
                         
                         }

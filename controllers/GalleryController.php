@@ -8,15 +8,17 @@ class GalleryController extends Controller{
         //SQL
         
         $this->view('Gallery/index', 'base_template', [
-            'active' => 'gallery'
+            'active' => 'gallery',
+            'title' => 'Galerie'
         ]);
     }
 
-    public function single(){
-        //SQL for image route
+    public function single($name){
+        //SQL for image route w/ $name
         
         $this->view('Gallery/single', 'gallery_template', [
-            'active' => 'gallery'
+            'active' => 'gallery',
+            'title' => 'Galerie | '.$name
         ]);
     }
 }

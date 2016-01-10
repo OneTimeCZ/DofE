@@ -27,6 +27,9 @@ $router->addGet('Gallery.single', '/galerie/{name}')
 //REGISTER
 $router->addGet('Register.index', '/registrace');
 
+//INFORMATIONS
+$router->addGet('Info.index', '/informace');
+
 //ADMIN BACKGROUND
 $router->addGet('Admin.index', '/administrace');
 $router->addGet('Admin.articleList', '/administrace/clanky');

@@ -35,6 +35,7 @@ class UserController extends Controller{
         
         $this->view('Profile/index', 'base_template', [
             'active' => 'profile',
+            'title' => 'Profil | '.$name,
             'name' => $name
         ]);
     }

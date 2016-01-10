@@ -43,8 +43,25 @@
                     <?php if (!isset($_SESSION['user'])): ?>
                         <a class="border" data-toggle="modal" data-target="#login_modal" href="#">PŘIHLÁSIT SE</a>
                     <?php else: ?>
-                        <!-- SQL profile picture -->
-                        <a class="borderless" href="/profil/<?= UserQuery::create()->findPk($_SESSION["user"])->getUrl() ?>"><p><?= UserQuery::create()->findPk($_SESSION["user"])->getUsername(); ?></p><img alt="profilepic" class="img img-responsive" src="../includes/images/50x50/<?= ImageQuery::create()->findPk(UserQuery::create()->findPk($_SESSION["user"])->getIdImage())->getPath(); ?>"></a>
+                        <a class="borderless visible-xs" href="/profil/<?= UserQuery::create()->findPk($_SESSION["user"])->getUrl() ?>">
+                            <img alt="profilepic" class="img img-responsive avatar" src="../includes/images/50x50/<?= ImageQuery::create()->findPk(UserQuery::create()->findPk($_SESSION["user"])->getIdImage())->getPath(); ?>">
+                        </a>
+                        <div class="dropdown">
+                            <button class="borderless hidden-xs dropdown-toggle" type="button" data-toggle="dropdown">
+                                <img alt="profilepic" class="img img-responsive avatar" src="../includes/images/50x50/<?= ImageQuery::create()->findPk(UserQuery::create()->findPk($_SESSION["user"])->getIdImage())->getPath(); ?>">
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li class="header">
+                                    Jste přihlášeni jako:<br>
+                                    <?= UserQuery::create()->findPk($_SESSION["user"])->getUsername() ?>
+                                </li>
+                                <li class="divider"></li>
+                                <li><a href="">Váš Profil</a></li>
+                                <li><a href="">Nastavení</a></li>
+                                <li class="divider"></li>
+                                <li><a href="/odhlasit">Odhlásit</a></li>
+                            </ul>
+                        </div>
                     <?php endif; ?>
                 </li>        
             </ul>

@@ -66,8 +66,9 @@ body {
           padding: 10px; }
     @media (max-width: 767px) {
       body div.page-container div.container-fluid {
-        margin-left: 5%;
-        width: 90%; } }
+        padding: 0;
+        margin-left: 1%;
+        width: 98%; } }
     body div.page-container div.container-fluid div.main-content {
       overflow: hidden; }
       body div.page-container div.container-fluid div.main-content aside {
@@ -157,8 +158,15 @@ body {
                             color: #2c3e50;
                             text-decoration: none; }
       body div.page-container div.container-fluid div.main-content div.main {
-        background: #e9eaed;
-        margin-top: 30px; }
+        background: #e9eaed; }
+        @media (min-width: 768px) {
+          body div.page-container div.container-fluid div.main-content div.main {
+            margin-top: 30px; } }
+        @media (max-width: 767px) {
+          body div.page-container div.container-fluid div.main-content div.main {
+            margin-top: 12px;
+            padding-left: 5px;
+            padding-right: 5px; } }
         body div.page-container div.container-fluid div.main-content div.main.nomargin {
           margin-top: 0; }
         body div.page-container div.container-fluid div.main-content div.main div.content {
@@ -182,6 +190,8 @@ body {
               float: left;
               margin-bottom: 30px;
               background: #e9eaed; }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.image-slider {
+                margin: auto; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.single {
                 width: 100%; }
               @media (max-width: 991px) {
@@ -232,9 +242,6 @@ body {
                     body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.gallery div.content-box div.gallery a img {
                       display: block;
                       margin: auto; }
-              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column div.content-box {
-                box-shadow: 0px 0px 8px lightgray;
-                border-radius: 5px; }
             body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header {
               height: 50px;
               background: #2c3e50;
@@ -274,6 +281,34 @@ body {
               background: white;
               border-bottom-right-radius: 5px;
               border-bottom-left-radius: 5px; }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.participants {
+                overflow: hidden;
+                padding-left: 10px;
+                padding-right: 10px; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.participants div.person {
+                  overflow: hidden;
+                  margin-top: 25px; }
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.participants div.person div.col-xs-6 {
+                    padding: 0; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.participants div.person div.col-xs-6 img {
+                      padding: 15px;
+                      margin: auto; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.participants div.person div.col-xs-6 blockquote {
+                      font-size: 1.15em; }
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.participants div.person div.col-xs-6 blockquote footer {
+                        background: none;
+                        font-size: 1em; }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.about ul {
+                color: #232323;
+                list-style-type: none;
+                padding-left: 0;
+                margin-bottom: 0; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.about ul li {
+                  padding: 5px;
+                  text-align: justify; }
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.about ul li h4 {
+                    margin-top: 5px;
+                    margin-bottom: 5px; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.pagination {
                 margin: 0;
                 width: 100%; }
@@ -426,7 +461,8 @@ body {
             margin-top: 0; }
         body div.page-container header nav.navigation ul.login-box {
           height: 40px;
-          margin-top: 0; }
+          margin-top: 0;
+          margin-bottom: 10px; }
           body div.page-container header nav.navigation ul.login-box li,
           body div.page-container header nav.navigation ul.login-box li.active {
             margin: 0; }
@@ -442,11 +478,13 @@ body {
                 height: 34px;
                 width: 34px;
                 margin-top: 3px;
-                margin-left: 10px; }
-              body div.page-container header nav.navigation ul.login-box li a.borderless p,
-              body div.page-container header nav.navigation ul.login-box li.active a.borderless p {
-                height: 32px;
-                margin-top: 4px; } }
+                margin-left: 10px; } }
+          @media (max-width: 767px) and (max-width: 768px) {
+            body div.page-container header nav.navigation ul.login-box li a.borderless img.avatar,
+            body div.page-container header nav.navigation ul.login-box li.active a.borderless img.avatar {
+              margin-left: 0px;
+              margin-right: 10px; } }
+
     @media (min-width: 768px) {
       body div.page-container header nav.navigation img[alt="DofE logo"] {
         padding: 10px;
@@ -482,15 +520,55 @@ body {
             border-bottom: 2px solid white; }
       body div.page-container header nav.navigation ul.login-box {
         margin-right: 0; }
-        body div.page-container header nav.navigation ul.login-box li a.borderless,
-        body div.page-container header nav.navigation ul.login-box li.active a.borderless {
-          height: 50px;
-          margin-top: 26px;
-          margin-bottom: 26px;
-          line-height: 50px; }
-          body div.page-container header nav.navigation ul.login-box li a.borderless img,
-          body div.page-container header nav.navigation ul.login-box li.active a.borderless img {
-            margin-left: 10px; } }
+        body div.page-container header nav.navigation ul.login-box li div.dropdown,
+        body div.page-container header nav.navigation ul.login-box li.active div.dropdown {
+          height: 76px; }
+          body div.page-container header nav.navigation ul.login-box li div.dropdown ul.dropdown-menu,
+          body div.page-container header nav.navigation ul.login-box li.active div.dropdown ul.dropdown-menu {
+            width: 180px;
+            padding-bottom: 0; }
+            body div.page-container header nav.navigation ul.login-box li div.dropdown ul.dropdown-menu li.divider,
+            body div.page-container header nav.navigation ul.login-box li.active div.dropdown ul.dropdown-menu li.divider {
+              height: 1px;
+              margin-top: 1px;
+              margin-bottom: 1px; }
+            body div.page-container header nav.navigation ul.login-box li div.dropdown ul.dropdown-menu li.header,
+            body div.page-container header nav.navigation ul.login-box li.active div.dropdown ul.dropdown-menu li.header {
+              height: 52px;
+              line-height: 21px;
+              padding: 5px;
+              padding-left: 10px; }
+            body div.page-container header nav.navigation ul.login-box li div.dropdown ul.dropdown-menu li,
+            body div.page-container header nav.navigation ul.login-box li.active div.dropdown ul.dropdown-menu li {
+              font-size: 1em;
+              margin: 0;
+              height: 26px; }
+              body div.page-container header nav.navigation ul.login-box li div.dropdown ul.dropdown-menu li:last-of-type,
+              body div.page-container header nav.navigation ul.login-box li.active div.dropdown ul.dropdown-menu li:last-of-type {
+                border-bottom-right-radius: 3px;
+                border-bottom-left-radius: 3px; }
+              body div.page-container header nav.navigation ul.login-box li div.dropdown ul.dropdown-menu li a,
+              body div.page-container header nav.navigation ul.login-box li.active div.dropdown ul.dropdown-menu li a {
+                color: #232323;
+                height: 26px;
+                margin: 0;
+                line-height: 16px;
+                padding: 5px;
+                padding-left: 10px;
+                font-size: 1em; }
+                body div.page-container header nav.navigation ul.login-box li div.dropdown ul.dropdown-menu li a:hover, body div.page-container header nav.navigation ul.login-box li div.dropdown ul.dropdown-menu li a:focus,
+                body div.page-container header nav.navigation ul.login-box li.active div.dropdown ul.dropdown-menu li a:hover,
+                body div.page-container header nav.navigation ul.login-box li.active div.dropdown ul.dropdown-menu li a:focus {
+                  background: #08b5bc;
+                  color: #e9eaed;
+                  font-weight: bold; }
+          body div.page-container header nav.navigation ul.login-box li div.dropdown button.borderless,
+          body div.page-container header nav.navigation ul.login-box li.active div.dropdown button.borderless {
+            margin: 0;
+            margin-top: 26px;
+            padding: 0;
+            border: 0;
+            border-radius: 5px; } }
     body div.page-container header nav.navigation {
       margin-bottom: 0;
       border-radius: 0;
