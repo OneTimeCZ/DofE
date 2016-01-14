@@ -73,13 +73,15 @@ body {
                     div#admin_navbar {
                         padding: 0;
                         
-                        ul {
+                        ul.navigation {
                             list-style-type: none;
                             margin-bottom: 0;
                             padding-left: 0;
                             text-align: center;
 
                             li {
+                                border-bottom: 1px solid gray;
+                                border-right: 1px solid gray;
                                 padding: 10px;
 
                                 a {
@@ -91,7 +93,7 @@ body {
                                     }
                                 }
 
-                                &.profile {                                 
+                                &.profile {   
                                     p {
                                         color: white;
                                     }
@@ -105,16 +107,13 @@ body {
                                         }
                                     }
                                 }
-
-                                &.inverse {
+                                
+                                &.active {
                                     background: gray;
-
+                                    font-weight: bold;
+                                    
                                     a {
-                                        color: $darkgray;
-
-                                        &:hover {
-                                            color: white;
-                                        }
+                                        color: white
                                     }
                                 }
                             }
@@ -123,11 +122,35 @@ body {
                 }
                 
                 div.admin_main {
-                    background: $dnw;
                     padding: 0;
+                    background: $dnw;
                     
-                    div.content {
-                        padding: 10px;
+                    div.content {                        
+                        div.page-heading {
+                            h1 {
+                                padding: 10px;
+                                margin: 0;
+                                text-align: center;
+                            }
+                        }
+                        
+                        div.section {
+                            div.column {
+                                div.content-box {      
+                                    padding: 10px;
+                                    
+                                    form#addArticle {  
+                                        div.col-lg-6 {
+                                            div.form-group {
+                                                textarea#content {
+                                                    resize: none none;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -346,9 +369,9 @@ body {
                                             padding-right: 0;
                                         }
                                     }
+                                    
+                                    background: $dnw;
                                 }
-
-                                background: $dnw;
 
                                 &:nth-of-type(1) {
                                     margin-bottom: 30px;
@@ -503,6 +526,22 @@ body {
                                                 footer {
                                                     background: none;
                                                     font-size: 1em;
+                                                }
+                                            }
+                                        }
+                                        
+                                        div.navigation {
+                                            button {       
+                                                background: none;
+                                                border: 0;
+                                                
+                                                &.previous {
+                                                    clear: both;
+                                                    float: left;
+                                                }
+                                                
+                                                &.next {
+                                                    float: right;
                                                 }
                                             }
                                         }
@@ -895,9 +934,10 @@ body {
                                         }
                                         
                                         &.header {
-                                            height: 52px;
+                                            height: 26px;
                                             line-height: 21px;
                                             padding: 5px;
+                                            padding-top: 0px;
                                             padding-left: 10px;
                                         }
                                         

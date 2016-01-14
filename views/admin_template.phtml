@@ -37,32 +37,31 @@
                                         <?= $data["sidebar"]["Username"] ?>
                                     </a>
                                 </li>
-                                <li class="inverse">
+                                <li>
                                     <a href="/">ZPĚT NA HLAVNÍ STRÁNKU</a>
                                 </li>                            
-                                <li>
+                                <li <?= $data['active'] == 'addArticle' ? 'class = active' : '' ?>>
                                     <a href="/administrace/clanky/pridat">PŘIDAT ČLÁNEK</a>
                                 </li>
-                                <li>
-                                    <a href="/administrace/clanky">EDITOVAT ČLÁNEK</a>
+                                <li <?= $data['active'] == 'articleList' ? 'class = active' : '' ?>>
+                                    <a href="/administrace/clanky">SEZNAM ČLÁNKŮ</a>
                                 </li>
-                                <li>
-                                    <a href="/administrace/clanky">ODSTRANIT ČLÁNEK</a>
+                                <li <?= $data['active'] == 'addPhoto' ? 'class = active' : '' ?>>
+                                    <a href="/administrace/fotografie/nahrat">PŘIDAT FOTOGRAFIE</a>
                                 </li>
-                                <li>
-                                    <a href="/administrace/fotografie/pridat">PŘIDAT FOTOGRAFIE</a>
-                                </li>
-                                <li>
+                                <li <?= $data['active'] == 'deletePhoto' ? 'class = active' : '' ?>>
                                     <a href="/administrace/fotografie">ODSTRANIT FOTOGRAFIE</a>
                                 </li>
-                                <li class="inverse">
+                                <li>
                                     <a href="/odhlasit">ODHLÁSIT SE</a>
                                 </li>
                             </ul>
                         </div>
                     </div>
                     <div class="admin_main col-sm-10">
-                        <?php require_once $view . '.phtml'; ?>
+                        <div class="content">
+                            <?php require_once $view . '.phtml'; ?>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -20,13 +20,13 @@
                         <p>
                             Autor:
                             <a href="/profil/<?= $article["User.Url"] ?>" rel="author" title="Profil uživatele <?= $article["User.Username"] ?>"><?= $article["User.Username"] ?></a>
-                            | Datum |
-                            <a href="/clanky/<?= $article["Category.Url"] ?>"><?= ucfirst($article["Category.Name"]) ?></a>      
+                            | <?= $article["Created_at"] ?> |
+                            <a href="/clanky/<?= $article["Category.Url"] ?>"><?= $article["Category.Name"] ?></a>      
                         </p>
                     </div>
                     <div class="description">
                         <p class="description">
-                            <?= substr($article["Content"], 0, 100)."..." ?>
+                            <?= substr(strip_tags($article["Content"]), 0, 100)."..." ?>
                         </p>
                     </div>
                     <a class="read_more btn btn-default" href="/clanek/<?= $article["Url"] ?>">Více...</a>

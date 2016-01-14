@@ -21,6 +21,7 @@ class ArticleController extends Controller{
             ->joinWith('User')
             ->joinWith('Category')
             ->select(array('Title', 'Url', 'Content', 'Created_at', 'User.Username', 'User.Url', 'Image.Path', 'Category.Url', 'Category.Name'))
+            ->orderByCreatedAt("desc")
             ->limit(10)
             ->find();
         

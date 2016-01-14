@@ -18,7 +18,7 @@
                         Autor:
                         <a href="/profil/<?= $data["article"]["User.Url"] ?>" rel="author" title="Profil uživatele <?= $data["article"]["User.Username"] ?>"><?= $data["article"]["User.Username"] ?></a>
                         | <?= $data["article"]["Created_at"] ?> |
-                        <a href="/clanky/<?= $data["article"]["Category.Url"] ?>"><?= ucfirst($data["article"]["Category.Name"]) ?></a>      
+                        <a href="/clanky/<?= $data["article"]["Category.Url"] ?>"><?= $data["article"]["Category.Name"] ?></a>      
                     </p>
                 </div>
                 <div class="text">

@@ -34,36 +34,43 @@ body {
               margin-left: 0; } }
         body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar {
           padding: 0; }
-          body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul {
+          body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul.navigation {
             list-style-type: none;
             margin-bottom: 0;
             padding-left: 0;
             text-align: center; }
-            body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul li {
+            body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul.navigation li {
+              border-bottom: 1px solid gray;
+              border-right: 1px solid gray;
               padding: 10px; }
-              body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul li a {
+              body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul.navigation li a {
                 text-decoration: none;
                 color: gray; }
-                body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul li a:hover {
+                body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul.navigation li a:hover {
                   color: white; }
-              body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul li.profile p {
+              body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul.navigation li.profile p {
                 color: white; }
-              body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul li.profile a {
+              body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul.navigation li.profile a {
                 overflow: hidden; }
-                body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul li.profile a img {
+                body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul.navigation li.profile a img {
                   margin: auto;
                   border-radius: 5px; }
-              body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul li.inverse {
-                background: gray; }
-                body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul li.inverse a {
-                  color: #232323; }
-                  body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul li.inverse a:hover {
-                    color: white; }
+              body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul.navigation li.active {
+                background: gray;
+                font-weight: bold; }
+                body div.page-container div.content div.container-fluid div.admin_side_nav div#admin_navbar ul.navigation li.active a {
+                  color: white; }
       body div.page-container div.content div.container-fluid div.admin_main {
-        background: #e9eaed;
-        padding: 0; }
-        body div.page-container div.content div.container-fluid div.admin_main div.content {
+        padding: 0;
+        background: #e9eaed; }
+        body div.page-container div.content div.container-fluid div.admin_main div.content div.page-heading h1 {
+          padding: 10px;
+          margin: 0;
+          text-align: center; }
+        body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box {
           padding: 10px; }
+          body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box form#addArticle div.col-lg-6 div.form-group textarea#content {
+            resize: none none; }
     @media (max-width: 767px) {
       body div.page-container div.container-fluid {
         padding: 0;
@@ -188,22 +195,23 @@ body {
                 padding-left: 20px; }
             body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column {
               float: left;
-              margin-bottom: 30px;
-              background: #e9eaed; }
+              margin-bottom: 30px; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.image-slider {
                 margin: auto; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.single {
                 width: 100%; }
-              @media (max-width: 991px) {
-                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.double {
-                  padding-left: 0;
-                  padding-right: 0;
-                  width: 100%; } }
-              @media (min-width: 992px) {
-                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.double:nth-of-type(2n+1) {
-                  padding-left: 0; }
-                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.double:nth-of-type(2n) {
-                  padding-right: 0; } }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.double {
+                background: #e9eaed; }
+                @media (max-width: 991px) {
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.double {
+                    padding-left: 0;
+                    padding-right: 0;
+                    width: 100%; } }
+                @media (min-width: 992px) {
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.double:nth-of-type(2n+1) {
+                    padding-left: 0; }
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.double:nth-of-type(2n) {
+                    padding-right: 0; } }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column:nth-of-type(1) {
                 margin-bottom: 30px; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.image div.content-box div.section-content img {
@@ -298,6 +306,14 @@ body {
                       body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.participants div.person div.col-xs-6 blockquote footer {
                         background: none;
                         font-size: 1em; }
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.participants div.person div.navigation button {
+                    background: none;
+                    border: 0; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.participants div.person div.navigation button.previous {
+                      clear: both;
+                      float: left; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.participants div.person div.navigation button.next {
+                      float: right; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.about ul {
                 color: #232323;
                 list-style-type: none;
@@ -534,9 +550,10 @@ body {
               margin-bottom: 1px; }
             body div.page-container header nav.navigation ul.login-box li div.dropdown ul.dropdown-menu li.header,
             body div.page-container header nav.navigation ul.login-box li.active div.dropdown ul.dropdown-menu li.header {
-              height: 52px;
+              height: 26px;
               line-height: 21px;
               padding: 5px;
+              padding-top: 0px;
               padding-left: 10px; }
             body div.page-container header nav.navigation ul.login-box li div.dropdown ul.dropdown-menu li,
             body div.page-container header nav.navigation ul.login-box li.active div.dropdown ul.dropdown-menu li {

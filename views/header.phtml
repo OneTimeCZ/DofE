@@ -52,12 +52,12 @@
                             </button>
                             <ul class="dropdown-menu">
                                 <li class="header">
-                                    Jste přihlášeni jako:<br>
                                     <?= UserQuery::create()->findPk($_SESSION["user"])->getUsername() ?>
                                 </li>
                                 <li class="divider"></li>
-                                <li><a href="">Váš Profil</a></li>
-                                <li><a href="">Nastavení</a></li>
+                                <li><a href="#">Váš Profil</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">Nastavení</a></li>
                                 <li class="divider"></li>
                                 <li><a href="/odhlasit">Odhlásit</a></li>
                             </ul>

@@ -1,0 +1,61 @@
+<div class="page-heading">
+    <h1>Přidat nový článek</h1>
+</div>
+
+<script src="../../includes/tinymce/tinymce.min.js"></script>
+<script>
+    tinymce.init({
+        selector: '#content',
+        toolbar: [
+            'undo redo | bold italic underline'
+        ],
+        height: 250
+    });
+  </script>
+
+<div class="section">
+    <div class="column single">
+        <div class="content-box">
+            <form role="form" action="/administrace/clanky/ulozit" method="post">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="title">Nadpis článku</label>
+                        <input class="form-control" type="text" name="title" placeholder="Zadejte nadpis článku" id="title" required>
+                        <input type="hidden" name="author" value="<?= $_SESSION["user"] ?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="keywords">Klíčová slova</label>
+                        <input class="form-control" type="text" name="keywords" placeholder="Zadejte klíčová slova článku" id="keywords" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Kategorie</label>
+                        <select class="form-control" name="category" id="category">
+                            <?php for($i=0;$i<count($data["categories"]);$i++): ?>
+                            <option <?= $data["categories"][$i]=="Obecné" ? "selected='selected'" : "" ?> value="<?= $i+1 ?>"><?= $data["categories"][$i] ?></option>
+                            <?php endfor; ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input class="btn btn-lg btn-default pull-right" type="submit" name="save" value="Přidat" id="add">
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="content">Obsah článku</label>
+                        <textarea class="form-control" name="content" id="content">
+                            
+                        </textarea>
+                    </div>
+                </div>
+                    <!--
+                    title - text
+                    category - radio
+                    keywords - text
+                    content - textarea - tinyMCE
+                    image - radio or add new
+                    -->
+            </form>
+        </div>
+    </div>
+</div>
