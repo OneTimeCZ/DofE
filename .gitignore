@@ -4,3 +4,5 @@ schemas/propel.yml
 TODO.md
 includes/.sass-cache
 includes/images
+includes/tinymce
+models

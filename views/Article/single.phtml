@@ -1,7 +1,7 @@
 <div class="content">    
     <div class="section">
         <div class="page-heading">
-            <h1><?= $data["article"]["Title"] ?></h1>
+            <h1><?= $data["article"]->getTitle() ?></h1>
         </div>
     </div>
     
@@ -9,21 +9,21 @@
         <div class="column">
             <div class="section-header image">
                 <div class="thumbnail">
-                    <img src="../../includes/images/fullsize/<?= $data["article"]["Image.Path"] ?>" alt="" title="" />
+                    <img src="../../includes/images/fullsize/<?= $data["article"]->getImage()->getPath() ?>" alt="" title="" />
                 </div>
             </div>
             <div class="section-content post article">
                 <div class="meta">
                     <p>
                         Autor:
-                        <a href="/profil/<?= $data["article"]["User.Url"] ?>" rel="author" title="Profil uživatele <?= $data["article"]["User.Username"] ?>"><?= $data["article"]["User.Username"] ?></a>
-                        | <?= $data["article"]["Created_at"] ?> |
-                        <a href="/clanky/<?= $data["article"]["Category.Url"] ?>"><?= $data["article"]["Category.Name"] ?></a>      
+                        <a href="/profil/<?= $data["article"]->getUser()->getUrl() ?>" rel="author" title="Profil uživatele <?= $data["article"]->getUser()->getUsername() ?>"><?= $data["article"]->getUser()->getUsername() ?></a>
+                        | <?= $data["article"]->getCreatedAt()->format("d.m.Y H:i:s") ?> |
+                        <a href="/clanky/<?= $data["article"]->getCategory()->getUrl() ?>"><?= $data["article"]->getCategory()->getName() ?></a>      
                     </p>
                 </div>
                 <div class="text">
                     <p class="text">
-                        <?= $data["article"]["Content"] ?>
+                        <?= $data["article"]->getContent() ?>
                     </p>
                 </div>
             </div>    
@@ -46,20 +46,19 @@
                                
                     <li class="comment">
                         <div class="avatar">
-                            <a href="/profil/<?= $comment["User.Url"] ?>">
-                                <img src="../../includes/images/50x50/<?= $comment["Image.Path"] ?>" alt="" title="" />
+                            <a href="/profil/<?= $comment->getUser()->getUrl() ?>">
+                                <img src="../../includes/images/50x50/<?= $comment->getUser()->getImage()->getPath() ?>" alt="profilový obrázek" title="Profil uživatele <?= $comment->getUser()->getUsername() ?>" />
                             </a>
                         </div>
                         <div class="info">
-                            <a href="/profil/<?= $comment["User.Url"] ?>">
-                                <h4><?= $comment["User.Username"] ?></h4>
+                            <a href="/profil/<?= $comment->getUser()->getUrl() ?>">
+                                <h4><?= $comment->getUser()->getUsername() ?></h4>
                             </a>
-                            <p><?= $comment["Created_at"] ?></p>
+                            <p><?= $comment->getCreatedAt()->format("d.m.Y H:m:s") ?></p>
                         </div>
                         <div class="content_area">
                             <p class="comment">
-                                <?= $comment["Content"] ?>
-                            </p>
+                                <?= $comment->getContent() ?>
                         </div>
                     </li>
 

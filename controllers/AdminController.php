@@ -26,6 +26,14 @@ class AdminController extends Controller{
     }
     
     public function articleList(){
+        $articles = ArticleQuery::create()
+            ->find();
+        
+        $this->view('Admin/list', 'admin_template', [
+            'active' => 'list',
+            'title' => 'Seznam článků',
+            'sidebar' => User::sideBarInit()
+        ]);
     }
     
     public function articleAdd(){

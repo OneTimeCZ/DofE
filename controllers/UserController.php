@@ -5,19 +5,25 @@ namespace controllers;
 use Controllers\ApplicationController;
 use Models\User;
 use Models\UserQuery;
+use Models\Image;
+use Models\ImageQuery;
 
 require_once '/helpers/helper.php';
 
 class UserController extends Controller{
 
     public function login(){
-        $user = UserQuery::create()->filterByUsername($_POST['inputUsername'])->filterByPassword(sha1($_POST['inputPassword']))->findOne();
+        $user = UserQuery::create()
+            ->joinWith("Image")
+            ->filterByUsername($_POST['inputUsername'])
+            ->filterByPassword(sha1($_POST['inputPassword']))
+            ->findOne();
         
         if ($user == NULL) {
             $_SESSION['user'] = NULL;
             //Add popup for failed login
         } else {
-            $_SESSION['user'] = $user->getId();
+            $_SESSION['user'] = $user;
         }
         
         //Add popup for successful login

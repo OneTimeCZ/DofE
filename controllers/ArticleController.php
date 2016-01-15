@@ -20,7 +20,6 @@ class ArticleController extends Controller{
             ->joinWith('Image')
             ->joinWith('User')
             ->joinWith('Category')
-            ->select(array('Title', 'Url', 'Content', 'Created_at', 'User.Username', 'User.Url', 'Image.Path', 'Category.Url', 'Category.Name'))
             ->orderByCreatedAt("desc")
             ->limit(10)
             ->find();
@@ -51,7 +50,6 @@ class ArticleController extends Controller{
             ->joinWith('Image')
             ->joinWith('User')
             ->joinWith('Category')
-            ->select(array('Title', 'Url', 'Content', 'Keywords', 'Created_at', 'User.Username', 'User.Url', 'Image.Path', 'Category.Name', 'Category.Url'))
             ->findPk($id);
         
         if($post == NULL){
@@ -65,12 +63,11 @@ class ArticleController extends Controller{
             ->useUserQuery()
                 ->joinWith('Image')
             ->endUse()
-            ->select(array('Content', 'Created_at', 'User.Username', 'User.Url', 'Image.Path'))
             ->find();
         
         $this->view('Article/single', 'base_template', [
             'active' => 'blog',
-            'title' => $post["Title"],
+            'title' => $post->getTitle(),
             'article' => $post,
             'comments' => $comments
         ]);

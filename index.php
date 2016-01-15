@@ -1,8 +1,6 @@
 <?php
 mb_internal_encoding("UTF-8");
 
-session_start();
-
 //Includes Composer stuffs
 require_once 'vendor/autoload.php';
 
@@ -28,6 +26,8 @@ spl_autoload_register(function ($class) {
         require_once($file);
     }
 });
+
+session_start();
 
 require_once 'helpers/helper.php';
 

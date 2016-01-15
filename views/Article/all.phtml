@@ -11,25 +11,25 @@
             <div class="content-box">
                 <div class="section-header image">
                     <div class="thumbnail">
-                        <img src="../../includes/images/960x540/<?= $article["Image.Path"] ?>" alt="" title="" />
+                        <img src="../../includes/images/960x540/<?= $article->getImage()->getPath() ?>" alt="" title="" />
                     </div>
                 </div>
                 <div class="section-content post">
-                    <h2 class="title"><?= $article["Title"] ?></h2>
+                    <h2 class="title"><?= $article->getTitle() ?></h2>
                     <div class="meta">
                         <p>
                             Autor:
-                            <a href="/profil/<?= $article["User.Url"] ?>" rel="author" title="Profil uživatele <?= $article["User.Username"] ?>"><?= $article["User.Username"] ?></a>
-                            | <?= $article["Created_at"] ?> |
-                            <a href="/clanky/<?= $article["Category.Url"] ?>"><?= $article["Category.Name"] ?></a>      
+                            <a href="/profil/<?= $article->getUser()->getUrl() ?>" rel="author" title="Profil uživatele <?= $article->getUser()->getUsername() ?>"><?= $article->getUser()->getUsername() ?></a>
+                            | <?= $article->getCreatedAt()->format("d.m.Y H:i:s") ?> |
+                            <a href="/clanky/<?= $article->getCategory()->getUrl() ?>"><?= $article->getCategory()->getName() ?></a>      
                         </p>
                     </div>
                     <div class="description">
                         <p class="description">
-                            <?= substr(strip_tags($article["Content"]), 0, 100)."..." ?>
+                            <?= substr(strip_tags($article->getContent()), 0, 100)."..." ?>
                         </p>
                     </div>
-                    <a class="read_more btn btn-default" href="/clanek/<?= $article["Url"] ?>">Více...</a>
+                    <a class="read_more btn btn-default" href="/clanek/<?= $article->getUrl() ?>">Více...</a>
                 </div>
             </div>
         </div>
