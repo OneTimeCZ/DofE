@@ -1,0 +1,51 @@
+<div class="page-heading">
+    <h1>Seznam komentářů k článku číslo <?= $data["article_id"] ?></h1>
+</div>
+
+<div class="section">
+    <div class="column single">
+        <div class="content-box">
+            <?php if(!isset($data["comments"])): ?>
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <strong>Ale ne!</strong> V databázi se k tomuto článku nenachází žádné komentáře :&#40;
+            </div>
+            <?php else: ?>
+            <table class="table table-bordered table-striped comment-list">
+                <thead>
+                    <tr>
+                        <th>Obsah komentáře</th>
+                        <th>Autor</th>
+                        <th class="text-center">Datum</th>
+                        <th class="text-center">Odstranit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($data["comments"] as $comment): ?>
+                    <tr>
+                        <td class="col-xs-7">
+                            <?= $comment->getContent() ?>
+                        </td>
+                        <td class="col-xs-2">
+                            <a class="list" href="/profil/<?= $comment->getUser()->getUrl() ?>">
+                                <?= $comment->getUser()->getUsername() ?>
+                            </a>
+                        </td>
+                        <td class="text-center col-xs-2">
+                            <?= $comment->getCreatedAt()->format("d.m.Y H:i:s") ?>
+                        </td>
+                        <td class="text-center col-xs-1">
+                            <a class="list" href="/administrace/clanek/<?= $data["article_id"] ?>/komentar/<?= $comment->getId() ?>/odstranit">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </a>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>

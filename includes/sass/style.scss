@@ -148,6 +148,30 @@ body {
                                             }
                                         }
                                     }
+                                    
+                                    table {
+                                        &.article-list,
+                                        &.comment-list {
+                                            tbody {
+                                                tr {
+                                                    td {
+                                                        &.col-xs-1,
+                                                        &.col-xs-2 {
+                                                            a.list {
+                                                                font-weight: bold;
+                                                                color: gray;
+
+                                                                &:hover, &:focus {
+                                                                    text-decoration: none;
+                                                                    color: black;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -818,6 +842,40 @@ body {
 
                         &:nth-of-type(2) {
                             margin-top: 0;
+                        }
+                    }
+                    
+                    ul.login-menu {
+                        li {
+                            div.visible-xs {
+                                height: 40px;
+                                
+                                a {
+                                    float: left;
+                                    color: gray;
+                                    
+                                    &.menu-item {
+                                        padding: 10px;
+                                        
+                                        &:last-of-type {
+                                            padding-right: 15px;
+                                        }
+                                        
+                                        &:hover, &:focus {
+                                            text-decoration: none;
+                                            color: white;
+                                        }
+                                    }
+                                }
+                                
+                                div.divider {
+                                    float: left;
+                                    width: 2px;
+                                    height: 32px;
+                                    margin-top: 4px;
+                                    background: gray;
+                                }
+                            }
                         }
                     }
 

@@ -10,7 +10,10 @@
 		<title>DofE | <?= $data["title"] ?></title>
 		<script src="includes/scripts/jquery-1.11.3.js"></script>
 		<script src="includes/scripts/bootstrap.min.js"></script>
-		<link rel="shortcut icon" type="image/png" href="/includes/images/favicon.png"/>
+        <?php if(isset($data["js"]))foreach($data["js"] as $js): ?>
+        <script src="includes/scripts/<?= $js ?>.js"></script>
+        <?php endforeach; ?>
+		<link rel="shortcut icon" type="image/png" href="includes/images/favicon.png"/>
 		<link rel="stylesheet" type="text/css" href="includes/css/bootstrap.min.css" />
 		<link rel="stylesheet" type="text/css" href="includes/css/style.css" />
 	</head>
@@ -32,9 +35,9 @@
                             <ul class="navigation">
                                 <li class="profile">
                                     <p>Jste přihlášeni jako: </p>
-                                    <a href="/profil/<?= $data["sidebar"]["Url"] ?>">
-                                        <img class="img img-responsive" src="../includes/images/50x50/<?= $data["sidebar"]["Image.Path"] ?>">
-                                        <?= $data["sidebar"]["Username"] ?>
+                                    <a href="/profil/<?= $data["sidebar"]->getUrl() ?>">
+                                        <img class="img img-responsive" src="../includes/images/50x50/<?= $data["sidebar"]->getImage()->getPath() ?>">
+                                        <?= $data["sidebar"]->getUsername() ?>
                                     </a>
                                 </li>
                                 <li>
@@ -43,7 +46,7 @@
                                 <li <?= $data['active'] == 'addArticle' ? 'class = active' : '' ?>>
                                     <a href="/administrace/clanky/pridat">PŘIDAT ČLÁNEK</a>
                                 </li>
-                                <li <?= $data['active'] == 'articleList' ? 'class = active' : '' ?>>
+                                <li <?= $data['active'] == 'list' ? 'class = active' : '' ?>>
                                     <a href="/administrace/clanky">SEZNAM ČLÁNKŮ</a>
                                 </li>
                                 <li <?= $data['active'] == 'addPhoto' ? 'class = active' : '' ?>>

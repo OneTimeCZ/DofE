@@ -71,6 +71,12 @@ body {
           padding: 10px; }
           body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box form#addArticle div.col-lg-6 div.form-group textarea#content {
             resize: none none; }
+          body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box table.article-list tbody tr td.col-xs-1 a.list, body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box table.article-list tbody tr td.col-xs-2 a.list, body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box table.comment-list tbody tr td.col-xs-1 a.list, body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box table.comment-list tbody tr td.col-xs-2 a.list {
+            font-weight: bold;
+            color: gray; }
+            body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box table.article-list tbody tr td.col-xs-1 a.list:hover, body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box table.article-list tbody tr td.col-xs-1 a.list:focus, body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box table.article-list tbody tr td.col-xs-2 a.list:hover, body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box table.article-list tbody tr td.col-xs-2 a.list:focus, body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box table.comment-list tbody tr td.col-xs-1 a.list:hover, body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box table.comment-list tbody tr td.col-xs-1 a.list:focus, body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box table.comment-list tbody tr td.col-xs-2 a.list:hover, body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box table.comment-list tbody tr td.col-xs-2 a.list:focus {
+              text-decoration: none;
+              color: black; }
     @media (max-width: 767px) {
       body div.page-container div.container-fluid {
         padding: 0;
@@ -475,6 +481,24 @@ body {
             margin-bottom: 0; }
           body div.page-container header nav.navigation ul.navigation:nth-of-type(2) {
             margin-top: 0; }
+        body div.page-container header nav.navigation ul.login-menu li div.visible-xs {
+          height: 40px; }
+          body div.page-container header nav.navigation ul.login-menu li div.visible-xs a {
+            float: left;
+            color: gray; }
+            body div.page-container header nav.navigation ul.login-menu li div.visible-xs a.menu-item {
+              padding: 10px; }
+              body div.page-container header nav.navigation ul.login-menu li div.visible-xs a.menu-item:last-of-type {
+                padding-right: 15px; }
+              body div.page-container header nav.navigation ul.login-menu li div.visible-xs a.menu-item:hover, body div.page-container header nav.navigation ul.login-menu li div.visible-xs a.menu-item:focus {
+                text-decoration: none;
+                color: white; }
+          body div.page-container header nav.navigation ul.login-menu li div.visible-xs div.divider {
+            float: left;
+            width: 2px;
+            height: 32px;
+            margin-top: 4px;
+            background: gray; }
         body div.page-container header nav.navigation ul.login-box {
           height: 40px;
           margin-top: 0;

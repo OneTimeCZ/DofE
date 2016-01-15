@@ -34,16 +34,30 @@
                 </li>
                 <?php endif; ?>
             </ul>
-            <ul class="nav navbar-nav navigation login-box navbar-right">
+            <ul class="nav navbar-nav navigation login-menu login-box navbar-right">
                 <li <?= $data['active'] == 'profile' ? 'class = active' : '' ?> >
                     <?php if (!isset($_SESSION['user'])): ?>
                         <a class="border" data-toggle="modal" data-target="#login_modal" href="#">PŘIHLÁSIT SE</a>
                     <?php else: ?>
-                        <a class="borderless visible-xs" href="/profil/<?= $_SESSION["user"]->getUrl() ?>">
-                            <img alt="profilepic" class="img img-responsive avatar" src="../includes/images/50x50/<?= $_SESSION["user"]->getImage()->getPath() ?>">
-                        </a>
-                        <div class="dropdown">
-                            <button class="borderless hidden-xs dropdown-toggle" type="button" data-toggle="dropdown">
+                        <!-- Mobile phone -->
+                        <div class="visible-xs">
+                            <a class="borderless" href="/profil/<?= $_SESSION["user"]->getUrl() ?>">
+                                <img alt="profilepic" class="img img-responsive avatar" src="../includes/images/50x50/<?= $_SESSION["user"]->getImage()->getPath() ?>">
+                            </a>
+                            <a class="menu-item" href="/profil/<?= $_SESSION["user"]->getUrl() ?>">
+                                VÁŠ PROFIL
+                            </a>
+                            <div class="divider"></div>
+                            <a class="menu-item" href="#">
+                                NASTAVENÍ
+                            </a>
+                            <a class="menu-item pull-right" href="/odhlasit">
+                                ODHLÁSIT SE
+                            </a>
+                        </div>
+                        <!-- Tablet, PC -->
+                        <div class="dropdown hidden-xs">
+                            <button class="borderless dropdown-toggle" type="button" data-toggle="dropdown">
                                 <img alt="profilepic" class="img img-responsive avatar" src="../includes/images/50x50/<?= $_SESSION["user"]->getImage()->getPath() ?>">
                             </button>
                             <ul class="dropdown-menu">

@@ -19,8 +19,7 @@ class User extends BaseUser
     public static function sideBarInit(){
         $user = UserQuery::create()
             ->joinWith('Image')
-            ->select(array('Username', 'Url', 'Permissions', 'Image.Path'))
-            ->findPk($_SESSION["user"]);
+            ->findPk($_SESSION["user"]->getId());
         
         return $user;
     }

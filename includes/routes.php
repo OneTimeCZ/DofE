@@ -42,7 +42,11 @@
     //save an article
     $router->addPost('Admin.articleSave', '/administrace/clanky/ulozit');
     //delete an article
-    $router->addPost('Admin.articleDelete', '/administrace/clanek/{name}/odstranit');
+    $router->addGet('Admin.articleDelete', '/administrace/clanek/{name}/odstranit');
+    //comment list
+    $router->addGet('Admin.commentList', '/administrace/clanek/{name}/komentare');
+    //delete a comment
+    $router->addGet('Admin.commentDelete', '/administrace/clanek/{name}/komentar/{comment}/odstranit');
     //photo list
     $router->addGet('Admin.imageList', '/administrace/fotografie');
     //add a new photo page
@@ -50,7 +54,7 @@
     //save a new photo
     $router->addPost('Admin.imageSave', '/administrace/fotografie/ulozit');
     //delete a photo
-    $router->addPost('Admin.imageDelete', '/administrace/fotografie/{name}/odstranit');
+    $router->addGet('Admin.imageDelete', '/administrace/fotografie/{name}/odstranit');
 
 //---USER---
     $router->addGet('User.profile', '/profil/{name}');

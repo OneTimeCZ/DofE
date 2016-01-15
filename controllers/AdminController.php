@@ -8,6 +8,8 @@ use Models\Image;
 use Models\ImageQuery;
 use Models\Category;
 use Models\CategoryQuery;
+use Models\Comment;
+use Models\CommentQuery;
 use Models\User;
 use Models\UserQuery;
 
@@ -26,35 +28,62 @@ class AdminController extends Controller{
     }
     
     public function articleList(){
-        $articles = ArticleQuery::create()
-            ->find();
+        if($_SESSION["user"]->getPermissions() >= 3) {
+            $articles = ArticleQuery::create()
+                ->joinWith("User")
+                ->orderByCreatedAt("desc")
+                ->find();
+        } else {
+            $articles = ArticleQuery::create()
+                ->joinWith("User")
+                ->filterByIdUser($_SESSION["user"]->getId())
+                ->orderByCreatedAt("desc")
+                ->find();
+        }
         
-        $this->view('Admin/list', 'admin_template', [
+        $this->view('Admin/articleList', 'admin_template', [
             'active' => 'list',
             'title' => 'Seznam článků',
-            'sidebar' => User::sideBarInit()
+            'sidebar' => User::sideBarInit(),
+            'articles' => $articles
         ]);
     }
     
     public function articleAdd(){
         //Get a list of all available categories
         $categories = CategoryQuery::create()
-            ->select('Name')
             ->find();
         
         $this->view('Admin/addArticle', 'admin_template', [
             'active' => 'addArticle',
             'title' => 'Přidat nový článek',
             'sidebar' => User::sideBarInit(),
+            'js' => array('tinymce/tinymce.min', 'tinymceinit'),
             'categories' => $categories
         ]);
     }
     
-    public function articleEdit(){
+    public function articleEdit($name){
+        $id = explode('-', $name);
+        $id = $id[0]; 
         
+        $article = ArticleQuery::create()
+            ->findPk($id);
+        
+        $categories = CategoryQuery::create()
+            ->find();
+        
+        $this->view('Admin/editArticle', 'admin_template', [
+            'active' => 'addArticle',
+            'title' => 'Upravit článek',
+            'sidebar' => User::sideBarInit(),
+            'js' => array('tinymce/tinymce.min', 'tinymceinit'),
+            'categories' => $categories,
+            'article' => $article
+        ]);
     }
     
-    public function articleDelete(){
+    public function articleDelete($name){
         
     }
     
@@ -68,13 +97,24 @@ class AdminController extends Controller{
             $article->setTitle($_POST["title"]);
             $article->setUrl("2-test-url");
             $article->setKeywords(str_replace(", ", ",", $_POST["keywords"]));
-            $p = array("<p>", "</p>");
-            $article->setContent(str_replace($p, "", $_POST["content"]));
+            $article->setContent($_POST["content"]);
             
             $article->save();
             
             //Popup for succesfully created article
             redirectTo("/administrace");
+        } elseif($_POST["save"]=="Upravit") {
+            $article = ArticleQuery::create()
+                ->findPk($_POST["article"]);
+            $article->setIdCategory($_POST["category"]);
+            $article->setTitle($_POST["title"]);
+            $article->setKeywords(str_replace(", ", ",", $_POST["keywords"]));
+            $article->setContent($_POST["content"]);
+            
+            $article->save();
+            
+            //Popup for succesfully updated article
+            redirectTo("/administrace/clanky");
         }
     }
     
@@ -86,7 +126,39 @@ class AdminController extends Controller{
         
     }
     
-    public function imageDelete(){
+    public function imageDelete($name){
         
+    }
+    
+    public function commentList($name){
+        $id = explode('-', $name);
+        $id = $id[0];
+        
+        $comments = CommentQuery::create()
+            ->joinWith("User")
+            ->filterByIdArticle($id)
+            ->orderByCreatedAt("desc")
+            ->find();
+            
+        $this->view('Admin/commentList', 'admin_template', [
+            'active' => 'commentList',
+            'title' => 'Seznam komentářů',
+            'sidebar' => User::sideBarInit(),
+            'article_id' => $id,
+            'comments' => $comments
+        ]);
+    }
+    
+    public function commentDelete($name, $comment){
+        $id = explode('-', $name);
+        $article_id = $id[0];
+        $comment_id = $comment;
+        
+        $comment = CommentQuery::create()
+            ->findPk($comment_id)
+            ->delete();
+        
+        //Popup for succesfully deleted comment
+        redirectTo("/administrace/clanek/".$article_id."/komentare");
     }
 }
