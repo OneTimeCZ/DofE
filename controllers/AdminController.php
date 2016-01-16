@@ -22,20 +22,18 @@ class AdminController extends Controller{
         
         $this->view('Admin/index', 'admin_template', [
             'active' => 'main',
-            'title' => 'Administrace',
-            'sidebar' => User::sideBarInit()
+            'title' => 'Administrace'
         ]);
     }
     
     public function articleList(){
-        if($_SESSION["user"]->getPermissions() >= 3) {
+        if($_SESSION["user"]->getPermissions() == 3) {
             $articles = ArticleQuery::create()
                 ->joinWith("User")
                 ->orderByCreatedAt("desc")
                 ->find();
         } else {
             $articles = ArticleQuery::create()
-                ->joinWith("User")
                 ->filterByIdUser($_SESSION["user"]->getId())
                 ->orderByCreatedAt("desc")
                 ->find();
@@ -44,7 +42,6 @@ class AdminController extends Controller{
         $this->view('Admin/articleList', 'admin_template', [
             'active' => 'list',
             'title' => 'Seznam článků',
-            'sidebar' => User::sideBarInit(),
             'articles' => $articles
         ]);
     }
@@ -57,7 +54,6 @@ class AdminController extends Controller{
         $this->view('Admin/addArticle', 'admin_template', [
             'active' => 'addArticle',
             'title' => 'Přidat nový článek',
-            'sidebar' => User::sideBarInit(),
             'js' => array('tinymce/tinymce.min', 'tinymceinit'),
             'categories' => $categories
         ]);
@@ -76,7 +72,6 @@ class AdminController extends Controller{
         $this->view('Admin/editArticle', 'admin_template', [
             'active' => 'addArticle',
             'title' => 'Upravit článek',
-            'sidebar' => User::sideBarInit(),
             'js' => array('tinymce/tinymce.min', 'tinymceinit'),
             'categories' => $categories,
             'article' => $article
@@ -143,7 +138,6 @@ class AdminController extends Controller{
         $this->view('Admin/commentList', 'admin_template', [
             'active' => 'commentList',
             'title' => 'Seznam komentářů',
-            'sidebar' => User::sideBarInit(),
             'article_id' => $id,
             'comments' => $comments
         ]);

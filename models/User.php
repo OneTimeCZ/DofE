@@ -16,11 +16,5 @@ use Models\Base\User as BaseUser;
  */
 class User extends BaseUser
 {
-    public static function sideBarInit(){
-        $user = UserQuery::create()
-            ->joinWith('Image')
-            ->findPk($_SESSION["user"]->getId());
-        
-        return $user;
-    }
+    
 }

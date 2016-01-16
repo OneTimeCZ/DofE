@@ -19,7 +19,6 @@ class ArticleController extends Controller{
         $articles = ArticleQuery::create()
             ->joinWith('Image')
             ->joinWith('User')
-            ->joinWith('Category')
             ->orderByCreatedAt("desc")
             ->limit(10)
             ->find();
@@ -28,17 +27,22 @@ class ArticleController extends Controller{
             'active' => 'blog',
             'title' => 'Blog',
             'page' => '1',
-            'articles' => $articles
+            'articles' => $articles,
+            'recent' => Article::recent()
         ]);
     }
     
     public function showAllPage($id){
-        //SQL /w page $id 
+        $articles = ArticleQuery::create()
+            ->orderByCreatedAt("desc")
+            ->paginate($page = $id, $maxPerPage = 10);
         
         $this->view('Article/all', 'base_template', [
             'active' => 'blog',
             'title' => 'Blog',
-            'page' => $id
+            'page' => $id,
+            'articles' => $articles,
+            'recent' => Article::recent()
         ]);
     }
 
@@ -69,7 +73,8 @@ class ArticleController extends Controller{
             'active' => 'blog',
             'title' => $post->getTitle(),
             'article' => $post,
-            'comments' => $comments
+            'comments' => $comments,
+            'recent' => Article::recent()
         ]);
         
     }
@@ -80,7 +85,8 @@ class ArticleController extends Controller{
         $this->view('Article/category', 'base_template', [
             'active' => 'blog',
             'title' => 'Blog | '.ucfirst($category),
-            'category' => $category
+            'category' => $category,
+            'recent' => Article::recent()
         ]);
     }
     
@@ -90,7 +96,8 @@ class ArticleController extends Controller{
         $this->view('Article/category', 'base_template', [
             'active' => 'blog',
             'category' => $category,
-            'page' => $id
+            'page' => $id,
+            'recent' => Article::recent()
         ]);
     }
     

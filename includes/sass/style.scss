@@ -999,7 +999,7 @@ body {
                                             padding-left: 10px;
                                         }
                                         
-                                        & {
+                                        &, &.active {
                                             font-size: 1em;
                                             margin: 0;
                                             height: 26px;
@@ -1011,6 +1011,7 @@ body {
                                             
                                             a {
                                                 color: $darkgray;
+                                                background: white;
                                                 height: 26px;
                                                 margin: 0;
                                                 line-height: 16px;

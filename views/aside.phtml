@@ -20,63 +20,27 @@
             NEJNOVĚJŠÍ
         </div>
         <div class="section-content">
+            <?php if(isset($data["recent"])): ?>
             <ul class="article-recent">
+                <?php foreach($data["recent"] as $recent): ?>
                 <li class="article">
-                    <a href="/clanek/1-test-clanek" class="thumbnail">
-                        <img src="" alt="" title="" />
+                    <a href="/clanek/<?= $recent->getId() ?>" class="thumbnail">
+                        <img src="../includes/images/50x50/<?= $recent->getImage()->getPath() ?>" alt="" title="" />
                     </a>
                     <div class="info">
-                        <a href="/clanek/1-test-clanek" class="title">Nadpis článku</a>
+                        <a href="/clanek/<?= $recent->getId() ?>" class="title"><?= $recent->getTitle() ?></a>
                         <div class="meta">
-                            <p>Datum | <a class="category" href="/clanky/kategorie">Kategorie</a></p>
+                            <p><?= $recent->getCreatedAt()->format("d.m.Y") ?></p>
                         </div>
                     </div>
                 </li>
-                <li class="article">
-                    <a href="/clanek/1-test-clanek" class="thumbnail">
-                        <img src="" alt="" title="" />
-                    </a>
-                    <div class="info">
-                        <a href="/clanek/1-test-clanek" class="title">Nadpis článku</a>
-                        <div class="meta">
-                            <p>Datum | <a class="category" href="/clanky/kategorie">Kategorie</a></p>
-                        </div>
-                    </div>
-                </li>
-                <li class="article">
-                    <a href="/clanek/1-test-clanek" class="thumbnail">
-                        <img src="" alt="" title="" />
-                    </a>
-                    <div class="info">
-                        <a href="/clanek/1-test-clanek" class="title">Nadpis článku</a>
-                        <div class="meta">
-                            <p>Datum | <a class="category" href="/clanky/kategorie">Kategorie</a></p>
-                        </div>
-                    </div>
-                </li>
-                <li class="article">
-                    <a href="/clanek/1-test-clanek" class="thumbnail">
-                        <img src="" alt="" title="" />
-                    </a>
-                    <div class="info">
-                        <a href="/clanek/1-test-clanek" class="title">Nadpis článku</a>
-                        <div class="meta">
-                            <p>Datum | <a class="category" href="/clanky/kategorie">Kategorie</a></p>
-                        </div>
-                    </div>
-                </li>
-                <li class="article">
-                    <a href="/clanek/1-test-clanek" class="thumbnail">
-                        <img src="" alt="" title="" />
-                    </a>
-                    <div class="info">
-                        <a href="/clanek/1-test-clanek" class="title">Nadpis článku</a>
-                        <div class="meta">
-                            <p>Datum | <a class="category" href="/clanky/kategorie">Kategorie</a></p>
-                        </div>
-                    </div>
-                </li>
+                <?php endforeach; ?>
             </ul>
+            <?php else: ?>
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <strong>Ale ne!</strong> V databázi se momentálně nenachází žádný článek :&#40;
+            </div>
+            <?php endif; ?>
         </div>
     </div>
     

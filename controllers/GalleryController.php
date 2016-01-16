@@ -1,6 +1,7 @@
 <?php
 
 namespace controllers;
+use Models\Article;
 
 class GalleryController extends Controller{
 
@@ -9,7 +10,8 @@ class GalleryController extends Controller{
         
         $this->view('Gallery/index', 'base_template', [
             'active' => 'gallery',
-            'title' => 'Galerie'
+            'title' => 'Galerie',
+            'recent' => Article::recent()
         ]);
     }
 
@@ -18,7 +20,8 @@ class GalleryController extends Controller{
         
         $this->view('Gallery/single', 'gallery_template', [
             'active' => 'gallery',
-            'title' => 'Galerie | '.$name
+            'title' => 'Galerie | '.$name,
+            'recent' => Article::recent()
         ]);
     }
 }

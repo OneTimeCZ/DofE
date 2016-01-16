@@ -14,14 +14,14 @@
         ->setTokens([
             'id' => '[1-9]\d*',
         ]);
-    $router->addGet('Article.showSingle', '/clanek/{name}');
-    $router->addPost('Article.comment', '/clanek/{name}/komentovat');
+    $router->addGet('Article.showSingle', '/clanek/{id}');
+    $router->addPost('Article.comment', '/clanek/{id}/komentovat');
 
 //---GALLERY---
     $router->addGet('Gallery.index', '/galerie');
     $router->addGet('Gallery.single', '/galerie/{name}')
         ->setTokens([
-            'id' => '[1-9]\d*([-]\w+)+',
+            'id' => '[1-9]\d*',
         ]);
 
 //---REGISTER---

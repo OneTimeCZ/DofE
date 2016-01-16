@@ -579,27 +579,33 @@ body {
               padding: 5px;
               padding-top: 0px;
               padding-left: 10px; }
-            body div.page-container header nav.navigation ul.login-box li div.dropdown ul.dropdown-menu li,
-            body div.page-container header nav.navigation ul.login-box li.active div.dropdown ul.dropdown-menu li {
+            body div.page-container header nav.navigation ul.login-box li div.dropdown ul.dropdown-menu li, body div.page-container header nav.navigation ul.login-box li div.dropdown ul.dropdown-menu li.active,
+            body div.page-container header nav.navigation ul.login-box li.active div.dropdown ul.dropdown-menu li,
+            body div.page-container header nav.navigation ul.login-box li.active div.dropdown ul.dropdown-menu li.active {
               font-size: 1em;
               margin: 0;
               height: 26px; }
-              body div.page-container header nav.navigation ul.login-box li div.dropdown ul.dropdown-menu li:last-of-type,
-              body div.page-container header nav.navigation ul.login-box li.active div.dropdown ul.dropdown-menu li:last-of-type {
+              body div.page-container header nav.navigation ul.login-box li div.dropdown ul.dropdown-menu li:last-of-type, body div.page-container header nav.navigation ul.login-box li div.dropdown ul.dropdown-menu li.active:last-of-type,
+              body div.page-container header nav.navigation ul.login-box li.active div.dropdown ul.dropdown-menu li:last-of-type,
+              body div.page-container header nav.navigation ul.login-box li.active div.dropdown ul.dropdown-menu li.active:last-of-type {
                 border-bottom-right-radius: 3px;
                 border-bottom-left-radius: 3px; }
-              body div.page-container header nav.navigation ul.login-box li div.dropdown ul.dropdown-menu li a,
-              body div.page-container header nav.navigation ul.login-box li.active div.dropdown ul.dropdown-menu li a {
+              body div.page-container header nav.navigation ul.login-box li div.dropdown ul.dropdown-menu li a, body div.page-container header nav.navigation ul.login-box li div.dropdown ul.dropdown-menu li.active a,
+              body div.page-container header nav.navigation ul.login-box li.active div.dropdown ul.dropdown-menu li a,
+              body div.page-container header nav.navigation ul.login-box li.active div.dropdown ul.dropdown-menu li.active a {
                 color: #232323;
+                background: white;
                 height: 26px;
                 margin: 0;
                 line-height: 16px;
                 padding: 5px;
                 padding-left: 10px;
                 font-size: 1em; }
-                body div.page-container header nav.navigation ul.login-box li div.dropdown ul.dropdown-menu li a:hover, body div.page-container header nav.navigation ul.login-box li div.dropdown ul.dropdown-menu li a:focus,
+                body div.page-container header nav.navigation ul.login-box li div.dropdown ul.dropdown-menu li a:hover, body div.page-container header nav.navigation ul.login-box li div.dropdown ul.dropdown-menu li a:focus, body div.page-container header nav.navigation ul.login-box li div.dropdown ul.dropdown-menu li.active a:hover, body div.page-container header nav.navigation ul.login-box li div.dropdown ul.dropdown-menu li.active a:focus,
                 body div.page-container header nav.navigation ul.login-box li.active div.dropdown ul.dropdown-menu li a:hover,
-                body div.page-container header nav.navigation ul.login-box li.active div.dropdown ul.dropdown-menu li a:focus {
+                body div.page-container header nav.navigation ul.login-box li.active div.dropdown ul.dropdown-menu li a:focus,
+                body div.page-container header nav.navigation ul.login-box li.active div.dropdown ul.dropdown-menu li.active a:hover,
+                body div.page-container header nav.navigation ul.login-box li.active div.dropdown ul.dropdown-menu li.active a:focus {
                   background: #08b5bc;
                   color: #e9eaed;
                   font-weight: bold; }

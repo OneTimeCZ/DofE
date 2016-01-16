@@ -20,13 +20,12 @@
                         <p>
                             Autor:
                             <a href="/profil/<?= $article->getUser()->getUrl() ?>" rel="author" title="Profil uživatele <?= $article->getUser()->getUsername() ?>"><?= $article->getUser()->getUsername() ?></a>
-                            | <?= $article->getCreatedAt()->format("d.m.Y H:i:s") ?> |
-                            <a href="/clanky/<?= $article->getCategory()->getUrl() ?>"><?= $article->getCategory()->getName() ?></a>      
+                            | <?= $article->getCreatedAt()->format("d.m.Y H:i:s") ?>    
                         </p>
                     </div>
                     <div class="description">
                         <p class="description">
-                            <?= substr(strip_tags($article->getContent()), 0, 100)."..." ?>
+                            <?= substr(strip_tags($article->getContent()), 0, 80)."..." ?>
                         </p>
                     </div>
                     <a class="read_more btn btn-default" href="/clanek/<?= $article->getUrl() ?>">Více...</a>

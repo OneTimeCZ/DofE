@@ -35,9 +35,9 @@
                             <ul class="navigation">
                                 <li class="profile">
                                     <p>Jste přihlášeni jako: </p>
-                                    <a href="/profil/<?= $data["sidebar"]->getUrl() ?>">
-                                        <img class="img img-responsive" src="../includes/images/50x50/<?= $data["sidebar"]->getImage()->getPath() ?>">
-                                        <?= $data["sidebar"]->getUsername() ?>
+                                    <a href="/profil/<?= $_SESSION["user"]->getUrl() ?>">
+                                        <img class="img img-responsive" src="../includes/images/50x50/<?= $_SESSION["user"]->getImage()->getPath() ?>">
+                                        <?= $_SESSION["user"]->getUsername() ?>
                                     </a>
                                 </li>
                                 <li>

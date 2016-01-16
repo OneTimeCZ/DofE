@@ -3,6 +3,7 @@
 namespace controllers;
 
 use Controllers\ApplicationController;
+use Models\Article;
 use Models\User;
 use Models\UserQuery;
 use Models\Image;
@@ -42,7 +43,8 @@ class UserController extends Controller{
         $this->view('Profile/index', 'base_template', [
             'active' => 'profile',
             'title' => 'Profil | '.$name,
-            'name' => $name
+            'name' => $name,
+            'recent' => Article::recent()
         ]);
     }
     
