@@ -84,9 +84,12 @@ body {
         width: 98%; } }
     body div.page-container div.container-fluid div.main-content {
       overflow: hidden; }
+      body div.page-container div.container-fluid div.main-content div.main-alert {
+        margin: 15px;
+        margin-bottom: -15px; }
       body div.page-container div.container-fluid div.main-content aside {
         background: #e9eaed;
-        padding-top: 30px; }
+        margin-top: 30px; }
         body div.page-container div.container-fluid div.main-content aside div.content {
           background: #e9eaed; }
           body div.page-container div.container-fluid div.main-content aside div.content div.section {
@@ -215,9 +218,12 @@ body {
                     width: 100%; } }
                 @media (min-width: 992px) {
                   body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.double:nth-of-type(2n+1) {
-                    padding-left: 0; }
+                    padding-left: 0;
+                    clear: left;
+                    overflow: auto; }
                   body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.double:nth-of-type(2n) {
-                    padding-right: 0; } }
+                    padding-right: 0;
+                    clear: right; } }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column:nth-of-type(1) {
                 margin-bottom: 30px; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.image div.content-box div.section-content img {

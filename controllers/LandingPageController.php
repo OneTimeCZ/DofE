@@ -1,6 +1,8 @@
 <?php
 
-namespace controllers;
+namespace Controllers;
+
+use Controllers\Controller;
 use Models\Article;
 use Models\ArticleQuery;
 
@@ -10,7 +12,7 @@ class LandingPageController extends Controller{
         $this->view('Landing/index', 'base_template', [
             'active' => 'landing',
             'title' => 'Hlavní stránka',
-            'recent' => Article::recent()
+            'recent' => ArticleQuery::recent()
         ]);
     }
 }

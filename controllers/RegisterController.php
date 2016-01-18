@@ -1,6 +1,7 @@
 <?php
 
-namespace controllers;
+namespace Controllers;
+
 use Models\Article;
 
 class RegisterController extends Controller{
@@ -11,7 +12,7 @@ class RegisterController extends Controller{
         $this->view('Register/index', 'base_template', [
             'active' => 'register',
             'title' => 'Registrace',
-            'recent' => Article::recent()
+            'recent' => ArticleQuery::recent()
         ]);
     }
 }

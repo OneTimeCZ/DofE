@@ -21,6 +21,16 @@
             </header>
             <div class="container-fluid col-lg-offset-1 col-lg-10">
                 <div class="main-content">
+                    <?php if(!empty($data["popups"])): ?>
+                        <?php foreach($data["popups"] as $f): ?>
+                        <div class="alert main-alert alert-<?= $f["type"] ?> alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <?= $f["content"] ?>
+                        </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                     <aside class="col-sm-4 col-sm-push-8 hidden-xs">
                         <?php require_once 'views/aside.phtml'; ?> 
                     </aside>

@@ -1,6 +1,6 @@
 <?php
 
-namespace controllers;
+namespace Controllers;
 
 use Models\Article;
 use Models\ArticleQuery;
@@ -28,7 +28,7 @@ class ArticleController extends Controller{
             'title' => 'Blog',
             'page' => '1',
             'articles' => $articles,
-            'recent' => Article::recent()
+            'recent' => ArticleQuery::recent()
         ]);
     }
     
@@ -42,7 +42,7 @@ class ArticleController extends Controller{
             'title' => 'Blog',
             'page' => $id,
             'articles' => $articles,
-            'recent' => Article::recent()
+            'recent' => ArticleQuery::recent()
         ]);
     }
 
@@ -74,7 +74,7 @@ class ArticleController extends Controller{
             'title' => $post->getTitle(),
             'article' => $post,
             'comments' => $comments,
-            'recent' => Article::recent()
+            'recent' => ArticleQuery::recent()
         ]);
         
     }
@@ -86,7 +86,7 @@ class ArticleController extends Controller{
             'active' => 'blog',
             'title' => 'Blog | '.ucfirst($category),
             'category' => $category,
-            'recent' => Article::recent()
+            'recent' => ArticleQuery::recent()
         ]);
     }
     
@@ -97,7 +97,7 @@ class ArticleController extends Controller{
             'active' => 'blog',
             'category' => $category,
             'page' => $id,
-            'recent' => Article::recent()
+            'recent' => ArticleQuery::recent()
         ]);
     }
     

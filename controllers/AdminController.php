@@ -1,6 +1,6 @@
 <?php
 
-namespace controllers;
+namespace Controllers;
 
 use Models\Article;
 use Models\ArticleQuery;

@@ -25,7 +25,7 @@
                     </div>
                     <div class="description">
                         <p class="description">
-                            <?= substr(strip_tags($article->getContent()), 0, 80)."..." ?>
+                            <?= substr(strip_tags($article->getContent()), 0, 250)."..." ?>
                         </p>
                     </div>
                     <a class="read_more btn btn-default" href="/clanek/<?= $article->getUrl() ?>">Více...</a>

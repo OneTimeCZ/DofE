@@ -1,6 +1,7 @@
 <?php
 
-namespace controllers;
+namespace Controllers;
+
 use Models\Article;
 
 class InfoController extends Controller{
@@ -11,7 +12,7 @@ class InfoController extends Controller{
         $this->view('Info/index', 'base_template', [
             'active' => 'info',
             'title' => 'Informace',
-            'recent' => Article::recent()
+            'recent' => ArticleQuery::recent()
         ]);
     }
 }

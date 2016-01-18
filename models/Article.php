@@ -16,13 +16,5 @@ use Models\Base\Article as BaseArticle;
  */
 class Article extends BaseArticle
 {
-    public static function recent(){
-        $recent = ArticleQuery::create()
-            ->joinWithImage()
-            ->orderByCreatedAt("desc")
-            ->limit(5)
-            ->find();
     
-        return $recent;
-    }
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace controllers;
+namespace Controllers;
 
-use Controllers\ApplicationController;
+use Controllers\Controller;
 use Models\Article;
 use Models\User;
 use Models\UserQuery;
@@ -22,12 +22,12 @@ class UserController extends Controller{
         
         if ($user == NULL) {
             $_SESSION['user'] = NULL;
-            //Add popup for failed login
+            $this->addPopup('danger', 'Zadali jste nesprávné přihlašovací údaje. Zkuste to prosím znovu.');
         } else {
             $_SESSION['user'] = $user;
+            $this->addPopup('success', 'Byli jste úspěšně přihlášeni!');
         }
         
-        //Add popup for successful login
         redirectTo('/');
     }
     
@@ -44,7 +44,7 @@ class UserController extends Controller{
             'active' => 'profile',
             'title' => 'Profil | '.$name,
             'name' => $name,
-            'recent' => Article::recent()
+            'recent' => ArticleQuery::recent()
         ]);
     }
     

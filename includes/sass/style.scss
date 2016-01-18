@@ -192,9 +192,14 @@ body {
             div.main-content {
                 overflow: hidden;
                 
+                div.main-alert {
+                    margin: 15px;
+                    margin-bottom: -15px;
+                }
+                
                 aside {
                     background: $dnw;
-                    padding-top: 30px; 
+                    margin-top: 30px; 
                     
                     div.content {   
                         background: $dnw;
@@ -384,13 +389,16 @@ body {
                                         width: 100%;
                                     }
 
-                                    @media (min-width: 992px){
+                                    @media (min-width: 992px){                                        
                                         &:nth-of-type(2n+1) {
                                             padding-left: 0;
+                                            clear: left;
+                                            overflow: auto;
                                         }
 
                                         &:nth-of-type(2n) {
                                             padding-right: 0;
+                                            clear: right
                                         }
                                     }
                                     
