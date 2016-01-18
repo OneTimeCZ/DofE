@@ -84,12 +84,9 @@ body {
         width: 98%; } }
     body div.page-container div.container-fluid div.main-content {
       overflow: hidden; }
-      body div.page-container div.container-fluid div.main-content div.main-alert {
-        margin: 15px;
-        margin-bottom: -15px; }
       body div.page-container div.container-fluid div.main-content aside {
         background: #e9eaed;
-        margin-top: 30px; }
+        margin-top: 15px; }
         body div.page-container div.container-fluid div.main-content aside div.content {
           background: #e9eaed; }
           body div.page-container div.container-fluid div.main-content aside div.content div.section {
@@ -174,13 +171,10 @@ body {
                             color: #2c3e50;
                             text-decoration: none; }
       body div.page-container div.container-fluid div.main-content div.main {
-        background: #e9eaed; }
-        @media (min-width: 768px) {
-          body div.page-container div.container-fluid div.main-content div.main {
-            margin-top: 30px; } }
+        background: #e9eaed;
+        margin-top: 15px; }
         @media (max-width: 767px) {
           body div.page-container div.container-fluid div.main-content div.main {
-            margin-top: 12px;
             padding-left: 5px;
             padding-right: 5px; } }
         body div.page-container div.container-fluid div.main-content div.main.nomargin {
@@ -463,75 +457,79 @@ body {
                 body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.article div.text p.text {
                   margin-bottom: 0; }
     @media (max-width: 767px) {
-      body div.page-container header div.container-fluid {
-        margin-left: 5%;
-        width: 90%; }
-      body div.page-container header nav.navigation {
-        font-weight: bold; }
-        body div.page-container header nav.navigation button.menu, body div.page-container header nav.navigation button.menu:hover, body div.page-container header nav.navigation button.menu:focus {
-          background: white;
-          height: 35px;
-          margin-top: 35px; }
-        body div.page-container header nav.navigation button.menu span.icon-bar {
-          background: #2c3e50; }
-        body div.page-container header nav.navigation img[alt="DofE logo"] {
-          padding: 5px;
-          padding-bottom: 15px; }
-        body div.page-container header nav.navigation ul.navigation {
-          margin-bottom: 0; }
-          body div.page-container header nav.navigation ul.navigation li.active {
-            background: #08b5bc; }
-            body div.page-container header nav.navigation ul.navigation li.active a, body div.page-container header nav.navigation ul.navigation li.active a:hover, body div.page-container header nav.navigation ul.navigation li.active a:focus {
-              background: #08b5bc; }
-          body div.page-container header nav.navigation ul.navigation:nth-of-type(1) {
+      body div.page-container header {
+        margin-bottom: 5px; }
+        body div.page-container header div.container-fluid {
+          margin-left: 5%;
+          width: 90%; }
+        body div.page-container header nav.navigation {
+          font-weight: bold; }
+          body div.page-container header nav.navigation button.menu, body div.page-container header nav.navigation button.menu:hover, body div.page-container header nav.navigation button.menu:focus {
+            background: white;
+            height: 35px;
+            margin-top: 35px; }
+          body div.page-container header nav.navigation button.menu span.icon-bar {
+            background: #2c3e50; }
+          body div.page-container header nav.navigation img[alt="DofE logo"] {
+            padding: 5px;
+            padding-bottom: 15px; }
+          body div.page-container header nav.navigation ul.navigation {
             margin-bottom: 0; }
-          body div.page-container header nav.navigation ul.navigation:nth-of-type(2) {
-            margin-top: 0; }
-        body div.page-container header nav.navigation ul.login-menu li div.visible-xs {
-          height: 40px; }
-          body div.page-container header nav.navigation ul.login-menu li div.visible-xs a {
-            float: left;
-            color: gray; }
-            body div.page-container header nav.navigation ul.login-menu li div.visible-xs a.menu-item {
-              padding: 10px; }
-              body div.page-container header nav.navigation ul.login-menu li div.visible-xs a.menu-item:last-of-type {
-                padding-right: 15px; }
-              body div.page-container header nav.navigation ul.login-menu li div.visible-xs a.menu-item:hover, body div.page-container header nav.navigation ul.login-menu li div.visible-xs a.menu-item:focus {
-                text-decoration: none;
-                color: white; }
-          body div.page-container header nav.navigation ul.login-menu li div.visible-xs div.divider {
-            float: left;
-            width: 2px;
-            height: 32px;
-            margin-top: 4px;
-            background: gray; }
-        body div.page-container header nav.navigation ul.login-box {
-          height: 40px;
-          margin-top: 0;
-          margin-bottom: 10px; }
-          body div.page-container header nav.navigation ul.login-box li,
-          body div.page-container header nav.navigation ul.login-box li.active {
-            margin: 0; }
-            body div.page-container header nav.navigation ul.login-box li a.borderless,
-            body div.page-container header nav.navigation ul.login-box li.active a.borderless {
-              height: 40px;
-              margin: 0;
-              padding: 0;
-              padding-left: 15px;
+            body div.page-container header nav.navigation ul.navigation li.active {
+              background: #08b5bc; }
+              body div.page-container header nav.navigation ul.navigation li.active a, body div.page-container header nav.navigation ul.navigation li.active a:hover, body div.page-container header nav.navigation ul.navigation li.active a:focus {
+                background: #08b5bc; }
+            body div.page-container header nav.navigation ul.navigation:nth-of-type(1) {
+              margin-bottom: 0; }
+            body div.page-container header nav.navigation ul.navigation:nth-of-type(2) {
               margin-top: 0; }
-              body div.page-container header nav.navigation ul.login-box li a.borderless img,
-              body div.page-container header nav.navigation ul.login-box li.active a.borderless img {
-                height: 34px;
-                width: 34px;
-                margin-top: 3px;
-                margin-left: 10px; } }
-          @media (max-width: 767px) and (max-width: 768px) {
-            body div.page-container header nav.navigation ul.login-box li a.borderless img.avatar,
-            body div.page-container header nav.navigation ul.login-box li.active a.borderless img.avatar {
-              margin-left: 0px;
-              margin-right: 10px; } }
+          body div.page-container header nav.navigation ul.login-menu li div.visible-xs {
+            height: 40px; }
+            body div.page-container header nav.navigation ul.login-menu li div.visible-xs a {
+              float: left;
+              color: gray; }
+              body div.page-container header nav.navigation ul.login-menu li div.visible-xs a.menu-item {
+                padding: 10px; }
+                body div.page-container header nav.navigation ul.login-menu li div.visible-xs a.menu-item:last-of-type {
+                  padding-right: 15px; }
+                body div.page-container header nav.navigation ul.login-menu li div.visible-xs a.menu-item:hover, body div.page-container header nav.navigation ul.login-menu li div.visible-xs a.menu-item:focus {
+                  text-decoration: none;
+                  color: white; }
+            body div.page-container header nav.navigation ul.login-menu li div.visible-xs div.divider {
+              float: left;
+              width: 2px;
+              height: 32px;
+              margin-top: 4px;
+              background: gray; }
+          body div.page-container header nav.navigation ul.login-box {
+            height: 40px;
+            margin-top: 0;
+            margin-bottom: 10px; }
+            body div.page-container header nav.navigation ul.login-box li,
+            body div.page-container header nav.navigation ul.login-box li.active {
+              margin: 0; }
+              body div.page-container header nav.navigation ul.login-box li a.borderless,
+              body div.page-container header nav.navigation ul.login-box li.active a.borderless {
+                height: 40px;
+                margin: 0;
+                padding: 0;
+                padding-left: 15px;
+                margin-top: 0; }
+                body div.page-container header nav.navigation ul.login-box li a.borderless img,
+                body div.page-container header nav.navigation ul.login-box li.active a.borderless img {
+                  height: 34px;
+                  width: 34px;
+                  margin-top: 3px;
+                  margin-left: 10px; } }
+            @media (max-width: 767px) and (max-width: 768px) {
+              body div.page-container header nav.navigation ul.login-box li a.borderless img.avatar,
+              body div.page-container header nav.navigation ul.login-box li.active a.borderless img.avatar {
+                margin-left: 0px;
+                margin-right: 10px; } }
 
     @media (min-width: 768px) {
+      body div.page-container header {
+        margin-bottom: 15px; }
       body div.page-container header nav.navigation img[alt="DofE logo"] {
         padding: 10px;
         padding-left: 15px; }
@@ -701,5 +699,12 @@ footer {
         list-style-type: none;
         margin-bottom: 0;
         padding-left: 0; }
+
+div.main-alert {
+  margin: 15px; }
+  @media (max-width: 767px) {
+    div.main-alert {
+      margin-left: 5px;
+      margin-right: 5px; } }
 
 /*# sourceMappingURL=style.css.map */

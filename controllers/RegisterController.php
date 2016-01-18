@@ -2,7 +2,7 @@
 
 namespace Controllers;
 
-use Models\Article;
+use Models\ArticleQuery;
 
 class RegisterController extends Controller{
 

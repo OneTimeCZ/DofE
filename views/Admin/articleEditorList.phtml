@@ -1,0 +1,40 @@
+<div class="page-heading">
+    <h1>Seznam článků</h1>
+</div>
+
+<?php if(isset($data["articles"])): ?>
+<div class="section">
+    <div class="column single">
+        <div class="content-box">
+            <table class="table table-bordered table-striped article-list">
+                <thead>
+                    <tr>
+                        <th>Název článku</th>
+                        <th class="text-center">Datum</th>
+                        <th class="text-center">Upravit</th>
+                        <th class="text-center">Komentáře</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($data["articles"] as $article): ?>
+                    <tr>
+                        <td class="col-xs-8"><?= $article->getTitle() ?></td>
+                        <td class="col-xs-3 text-center"><?= $article->getCreatedAt()->format("d.m.Y H:i:s") ?></td>
+                        <td class="col-xs-1 text-center">
+                            <a class="list" href="/administrace/clanek/<?= $article->getId() ?>/upravit">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            </a>
+                        </td>
+                        <td class="col-xs-1 text-center">
+                            <a class="list" href="/administrace/clanek/<?= $article->getId() ?>/komentare">
+                                <span class="glyphicon glyphicon-comment"></span>
+                            </a>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<?php endif; ?>

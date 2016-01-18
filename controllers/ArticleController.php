@@ -19,6 +19,7 @@ class ArticleController extends Controller{
         $articles = ArticleQuery::create()
             ->joinWith('Image')
             ->joinWith('User')
+            ->joinWith('Category')
             ->orderByCreatedAt("desc")
             ->limit(10)
             ->find();

@@ -28,7 +28,7 @@
                 <li <?= $data['active'] == 'blog' ? 'class = active' : '' ?> >
                     <a class="border" href="/clanky">BLOG</a>    
                 </li>
-                <?php if(isset($_SESSION["user"]) && $_SESSION["user"]->getPermissions() >= 2): ?>
+                <?php if($this->isLogged() && ($this->isAdmin() || $this->isEditor())): ?>
                 <li <?= $data['active'] == 'admin' ? 'class = active' : '' ?> >
                     <a class="border" href="/administrace">ADMINISTRACE</a>    
                 </li>

@@ -26,3 +26,12 @@ function token($length){
     
     return $str;
 }
+
+//If there are any popups to be displayed, generates them
+function displayPopups(){
+    if(!empty($data["popups"])){
+        foreach($data["popups"] as $f){
+            require 'views/popup.phtml';
+        }
+    }
+}

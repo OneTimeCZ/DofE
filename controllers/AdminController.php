@@ -2,6 +2,7 @@
 
 namespace Controllers;
 
+use Controllers\Controller;
 use Models\Article;
 use Models\ArticleQuery;
 use Models\Image;
@@ -17,6 +18,17 @@ require_once '/helpers/helper.php';
 
 class AdminController extends Controller{
     
+    public function __construct(){
+        parent::__construct();
+        if(!$this->isLogged()){
+            $this->addPopup('danger', 'Do sekce této mají přístup pouze někteří přihlášení uživatelé. Pro vstup se prosíme přihlašte.');
+            redirectTo('/');
+        } elseif(!$this->isAdmin() && !$this->isEditor()){
+            $this->addPopup('danger', 'Do této sekce bohužel nemáte přístup.');
+            redirectTo('/');
+        }
+    }
+    
     public function index(){  
         //SQL
         
@@ -27,23 +39,37 @@ class AdminController extends Controller{
     }
     
     public function articleList(){
-        if($_SESSION["user"]->getPermissions() == 3) {
+        if($this->isAdmin()) {
             $articles = ArticleQuery::create()
                 ->joinWith("User")
                 ->orderByCreatedAt("desc")
                 ->find();
-        } else {
+            
+            if($articles == NULL){
+                $this->addPopup('danger', 'V databázi se nenechází žádný článek.');
+            }
+            
+            $this->view('Admin/articleAdminList', 'admin_template', [
+                'active' => 'list',
+                'title' => 'Seznam článků',
+                'articles' => $articles
+            ]);
+        } elseif($this->isEditor()) {
             $articles = ArticleQuery::create()
                 ->filterByIdUser($_SESSION["user"]->getId())
                 ->orderByCreatedAt("desc")
                 ->find();
+            
+            if($articles == NULL){
+                $this->addPopup('danger', 'Ale ne! V databázi se nenechází žádný Vámi napsaný článek.');
+            }
+            
+            $this->view('Admin/articleEditorList', 'admin_template', [
+                'active' => 'list',
+                'title' => 'Seznam článků',
+                'articles' => $articles
+            ]);
         }
-        
-        $this->view('Admin/articleList', 'admin_template', [
-            'active' => 'list',
-            'title' => 'Seznam článků',
-            'articles' => $articles
-        ]);
     }
     
     public function articleAdd(){
@@ -96,7 +122,7 @@ class AdminController extends Controller{
             
             $article->save();
             
-            //Popup for succesfully created article
+            $this->addPopup('success', 'Článek byl úspěšně přidán!');
             redirectTo("/administrace");
         } elseif($_POST["save"]=="Upravit") {
             $article = ArticleQuery::create()
@@ -108,7 +134,7 @@ class AdminController extends Controller{
             
             $article->save();
             
-            //Popup for succesfully updated article
+            $this->addPopup('success', 'Článek byl úspěšně upraven!');
             redirectTo("/administrace/clanky");
         }
     }
@@ -152,7 +178,7 @@ class AdminController extends Controller{
             ->findPk($comment_id)
             ->delete();
         
-        //Popup for succesfully deleted comment
+        $this->addPopup('success', 'Komentář byl úspěšně odstraněn!');
         redirectTo("/administrace/clanek/".$article_id."/komentare");
     }
 }

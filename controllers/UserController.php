@@ -8,6 +8,7 @@ use Models\User;
 use Models\UserQuery;
 use Models\Image;
 use Models\ImageQuery;
+use \DateTime;
 
 require_once '/helpers/helper.php';
 
@@ -19,6 +20,10 @@ class UserController extends Controller{
             ->filterByUsername($_POST['inputUsername'])
             ->filterByPassword(sha1($_POST['inputPassword']))
             ->findOne();
+        
+        $user->setSigninCount($user->getSigninCount()+1);
+        $user->setLastSigninAt(date("U"));
+        $user->save();
         
         if ($user == NULL) {
             $_SESSION['user'] = NULL;
@@ -34,6 +39,7 @@ class UserController extends Controller{
     public function logout(){
         $_SESSION['user'] = NULL;
         
+        $this->addPopup('success', 'Byli jste úspěšně odhlášeni!');
         redirectTo('/');
     }
     
@@ -51,7 +57,7 @@ class UserController extends Controller{
     public function create(){        
 		if($_POST['regPassword'] != $_POST['regPassword2']){
             
-			//Add popup for passwords don't match
+			$this->addPopup('danger', 'Hesla se neshodují.');
 			redirectTo("/registrace");
 		}
         
@@ -66,7 +72,7 @@ class UserController extends Controller{
         
 		$user->save();
         
-		//Add popup for successful registration
+		$this->addPopup('success', 'Registrace proběhla úspěšně! Nyní se můžete přihlásit.');
 		redirectTo("/");
     }
 }
