@@ -1,7 +1,7 @@
 <div class="content">    
     <div class="section">
         <div class="page-heading">
-            <h1>Blog - strana: <?= $data['page'] ?></h1>
+            <h1>Blog - strana <?= $data['page'] ?></h1>
         </div>
     </div>
     
@@ -36,24 +36,31 @@
     <?php endforeach; ?>
     </div>
     
+    <?php if($data["articles"]->getPreviousPage() != $data["articles"]->getNextPage()): ?>
     <div class="section">
         <div class="column single">
             <div class="content-box">
                 <div class="section-content pagination">
                     <ul>
+                        <?php if($data["articles"]->getPage() != 1): ?>
                         <li>
-                            <a href="/clanky">
+                            <a class="newer" href="/clanky/<?= $data["articles"]->getPreviousPage() ?>">
                                 <span>&laquo;</span> Novější
                             </a>
                         </li>
+                        <?php endif; ?>
+                        
+                        <?php if($data["articles"]->getPage() != $data["articles"]->getLastPage()): ?>
                         <li>
-                            <a href="/clanky">
+                            <a class="older" href="/clanky/<?= $data["articles"]->getNextPage() ?>">
                                 Starší <span>&raquo;</span>
                             </a>
                         </li>
+                        <?php endif; ?>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
+    <?php endif; ?>
 </div>

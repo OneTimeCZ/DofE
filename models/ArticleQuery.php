@@ -19,6 +19,7 @@ class ArticleQuery extends BaseArticleQuery
     public static function recent(){
         $recent = ArticleQuery::create()
             ->joinWithImage()
+            ->joinWithCategory()
             ->orderByCreatedAt("desc")
             ->limit(5)
             ->find();

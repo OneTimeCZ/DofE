@@ -266,9 +266,9 @@ body {
                                     margin: 0;
                                     
                                     li.article {
-                                        height: 81px;
                                         padding: 15px;
                                         width: 100%;
+                                        overflow: hidden;
                                         border-bottom: 1px solid lightgray;
                                         &:nth-of-type(5) {
                                             border-bottom-left-radius: 5px;
@@ -295,9 +295,11 @@ body {
                                         }
                                         
                                         div.info {
-                                            height: 22px;
-                                            margin-bottom: 2px;
                                             margin-top: 5px;
+                                            margin-left: 60px;
+                                            overflow: hidden;
+                                            word-break: break-all;
+                                            word-wrap: break-word;
 
                                             a.title {
                                                 height: 18px;
@@ -311,14 +313,16 @@ body {
 
                                             div.meta {
                                                 margin-top: 3px;
-                                                height: 15px;
+                                                overflow: hidden;
 
                                                 p {
                                                     color: gray;
+                                                    margin-bottom: 0;
 
                                                     a {                                        
                                                         text-decoration: none;
                                                         color: gray;
+                                                        word-break: break-word;
 
                                                         &:hover, &:focus {
                                                             color: $blue;
@@ -638,17 +642,17 @@ body {
                                             overflow: hidden;
                                             width: auto;
                                             
-                                            &:first-of-type {
-                                                float: left;
-                                            }
-                                            
-                                            &:last-of-type {
-                                                float: right;
-                                            }
-                                            
                                             a {
                                                 text-decoration: none;
                                                 color: gray;
+                                                
+                                                &.older {
+                                                    float: right;
+                                                }
+
+                                                &.newer {
+                                                    float: left;
+                                                }
                                             }
                                         }
                                     }

@@ -4,8 +4,7 @@
     $router->addGet('LandingPage.index', '/');
 
 //---ARTICLE---
-    $router->addGet('Article.showAll', '/clanky');
-    $router->addGet('Article.showAllPage', '/clanky/{id}')
+    $router->addGet('Article.showAllPage', '/clanky{/id}')
         ->setTokens([
             'id' => '[1-9]\d*',
         ]);

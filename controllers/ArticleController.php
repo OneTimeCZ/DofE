@@ -14,26 +14,10 @@ use Models\User;
 use Models\UserQuery;
 
 class ArticleController extends Controller{
-
-    public function showAll(){
-        $articles = ArticleQuery::create()
-            ->joinWith('Image')
-            ->joinWith('User')
-            ->joinWith('Category')
-            ->orderByCreatedAt("desc")
-            ->limit(10)
-            ->find();
-        
-        $this->view('Article/all', 'base_template', [
-            'active' => 'blog',
-            'title' => 'Blog',
-            'page' => '1',
-            'articles' => $articles,
-            'recent' => ArticleQuery::recent()
-        ]);
-    }
     
     public function showAllPage($id){
+        $id = $id == 0  ? 1 : $id;
+        
         $articles = ArticleQuery::create()
             ->orderByCreatedAt("desc")
             ->paginate($page = $id, $maxPerPage = 10);
@@ -41,7 +25,7 @@ class ArticleController extends Controller{
         $this->view('Article/all', 'base_template', [
             'active' => 'blog',
             'title' => 'Blog',
-            'page' => $id,
+            'page' => $articles->getPage(),
             'articles' => $articles,
             'recent' => ArticleQuery::recent()
         ]);

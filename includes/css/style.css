@@ -138,9 +138,9 @@ body {
                 padding: 0;
                 margin: 0; }
                 body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.article-recent li.article {
-                  height: 81px;
                   padding: 15px;
                   width: 100%;
+                  overflow: hidden;
                   border-bottom: 1px solid lightgray; }
                   body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.article-recent li.article:nth-of-type(5) {
                     border-bottom-left-radius: 5px;
@@ -159,9 +159,11 @@ body {
                       height: 50px;
                       width: 50px; }
                   body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.article-recent li.article div.info {
-                    height: 22px;
-                    margin-bottom: 2px;
-                    margin-top: 5px; }
+                    margin-top: 5px;
+                    margin-left: 60px;
+                    overflow: hidden;
+                    word-break: break-all;
+                    word-wrap: break-word; }
                     body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.article-recent li.article div.info a.title {
                       height: 18px;
                       line-height: 18px;
@@ -172,12 +174,14 @@ body {
                       font-weight: bold; }
                     body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.article-recent li.article div.info div.meta {
                       margin-top: 3px;
-                      height: 15px; }
+                      overflow: hidden; }
                       body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.article-recent li.article div.info div.meta p {
-                        color: gray; }
+                        color: gray;
+                        margin-bottom: 0; }
                         body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.article-recent li.article div.info div.meta p a {
                           text-decoration: none;
-                          color: gray; }
+                          color: gray;
+                          word-break: break-word; }
                           body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.article-recent li.article div.info div.meta p a:hover, body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.article-recent li.article div.info div.meta p a:focus {
                             color: #2c3e50;
                             text-decoration: none; }
@@ -365,13 +369,13 @@ body {
                   body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.pagination ul li {
                     overflow: hidden;
                     width: auto; }
-                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.pagination ul li:first-of-type {
-                      float: left; }
-                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.pagination ul li:last-of-type {
-                      float: right; }
                     body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.pagination ul li a {
                       text-decoration: none;
                       color: gray; }
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.pagination ul li a.older {
+                        float: right; }
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.pagination ul li a.newer {
+                        float: left; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments {
                 padding: 0;
                 border-bottom-left-radius: 5px;

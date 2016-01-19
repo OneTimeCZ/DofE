@@ -30,7 +30,10 @@
                     <div class="info">
                         <a href="/clanek/<?= $recent->getId() ?>" class="title"><?= $recent->getTitle() ?></a>
                         <div class="meta">
-                            <p><?= $recent->getCreatedAt()->format("d.m.Y") ?></p>
+                            <p>
+                                <?= $recent->getCreatedAt()->format("d.m.Y") ?> | 
+                                <a href="<?= $recent->getCategory()->getUrl() ?>"><?= $recent->getCategory()->getName() ?></a>
+                            </p>
                         </div>
                     </div>
                 </li>

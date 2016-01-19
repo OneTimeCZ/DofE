@@ -4,6 +4,7 @@ namespace Controllers;
 
 use Controllers\Controller;
 use Models\Article;
+use Models\ArticleQuery;
 use Models\User;
 use Models\UserQuery;
 use Models\Image;
@@ -57,23 +58,25 @@ class UserController extends Controller{
     }
     
     public function create(){  
-        $username = UserQuery::create()
+        $existing = UserQuery::create()
+            //->where('User.Username = ?', $_POST["regUsername"])
             ->filterByUsername($_POST["regUsername"])
-            ->find();
-        
-        $email = UserQuery::create()
+            ->_or()
+            //->where('User.Email = ?', $_POST["regEmail"])
             ->filterByEmail($_POST["regEmail"])
-            ->find();
+            ->findOne();
         
 		if($_POST['regPassword'] != $_POST['regPassword2']){
 			$this->addPopup('danger', 'Hesla se neshodují.');
 			redirectTo("/registrace");
-        } elseif(!$username->isEmpty()){
-            $this->addPopup('danger', 'Uživatel se stejným uživatelským jménem je již zaregistrován.');
-			redirectTo("/registrace");
-        } elseif(!$email->isEmpty()){
-            $this->addPopup('danger', 'Uživatel se stejnou emailovou adresou je již zaregistrován.');
-			redirectTo("/registrace");
+        } elseif($existing != NULL) {
+            if($existing->getUsername() == $_POST["regUsername"]){
+                $this->addPopup('danger', 'Uživatel se stejným uživatelským jménem je již zaregistrován.');
+            } elseif($existing->getEmail() == $_POST["regEmail"]){
+                $this->addPopup('danger', 'Uživatel se stejnou emailovou adresou je již zaregistrován.');
+            } 
+            
+            redirectTo("/registrace");
         } else {
             $user = new User();
             $user->setUsername($_POST['regUsername']);
@@ -81,8 +84,8 @@ class UserController extends Controller{
             $user->setEmail($_POST['regEmail']);
             $user->setEmailConfirmToken(token(50));
             $user->setPasswordResetToken(token(50));
-            $user->setPermissions(1);
-            $user->setSigninCount(1);
+            $user->setPermissions(0);
+            $user->setSigninCount(0);
 
             $user->save();
 
