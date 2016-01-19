@@ -2,7 +2,7 @@
     <h1>Seznam článků</h1>
 </div>
 
-<?php if(isset($data["articles"])): ?>
+<?php if(!$data["articles"]->isEmpty()): ?>
 <div class="section">
     <div class="column single">
         <div class="content-box">

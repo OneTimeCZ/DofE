@@ -30,38 +30,27 @@ class Controller {
     
     //Returns true if user is logged
     public function isLogged(){
-        if($_SESSION["user"] != NULL){
-            return true;
-        }
-        
-        return false;
+        return isset($_SESSION["user"]);
+    }
+    
+    //Check user's permissions
+    public function checkPermissions($i){
+        return $this->isLogged() && $_SESSION["user"]->getPermissions() == $i;
     }
     
     //Returns true if user is a DofE participant (permission level 1)
     public function isUser(){
-        if($this->isLogged() && $_SESSION["user"]->getPermissions() == 1){
-            return true;
-        }
-        
-        return false;
+        return $this->checkPermissions(1);
     }
     
     //Returns true if user is an editor (permission level 2)
     public function isEditor(){
-        if($this->isLogged() && $_SESSION["user"]->getPermissions() == 2){
-            return true;
-        }
-        
-        return false;
+        return $this->checkPermissions(2);
     }
     
     //Returns true if user is an admin (permission level 3)
     public function isAdmin(){
-        if($this->isLogged() && $_SESSION["user"]->getPermissions() == 3){
-            return true;
-        }
-        
-        return false;
+        return $this->checkPermissions(3);
     }
     
     public function userUpdate(){

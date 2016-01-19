@@ -13,6 +13,12 @@ body {
         padding: 0;
         color: gray;
         font-weight: bold; }
+        @media (min-width: 767px) {
+          body div.page-container div.content div.container-fluid div.admin_side_nav {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0; } }
         body div.page-container div.content div.container-fluid div.admin_side_nav div.navbar-header button {
           margin-right: 25px;
           background: white; }
@@ -63,12 +69,16 @@ body {
       body div.page-container div.content div.container-fluid div.admin_main {
         padding: 0;
         background: #e9eaed; }
+        @media (min-width: 768px) {
+          body div.page-container div.content div.container-fluid div.admin_main {
+            margin-left: 16.66667%; } }
         body div.page-container div.content div.container-fluid div.admin_main div.content div.page-heading h1 {
           padding: 10px;
           margin: 0;
           text-align: center; }
         body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box {
-          padding: 10px; }
+          padding: 10px;
+          overflow: auto; }
           body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box form#addArticle div.col-lg-6 div.form-group textarea#content {
             resize: none none; }
           body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box table.article-list tbody tr td.col-xs-1 a.list, body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box table.article-list tbody tr td.col-xs-2 a.list, body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box table.comment-list tbody tr td.col-xs-1 a.list, body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box table.comment-list tbody tr td.col-xs-2 a.list {
@@ -106,6 +116,7 @@ body {
               font-weight: bold; }
             body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content {
               width: 100%;
+              overflow: auto;
               border-radius: 0;
               border-bottom-left-radius: 5px;
               border-bottom-right-radius: 5px; }
@@ -196,6 +207,9 @@ body {
                 line-height: 64px;
                 margin: 0;
                 padding-left: 20px; }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.page-heading.register h1 {
+                padding-left: 0;
+                margin-left: 8.33333%; }
             body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column {
               float: left;
               margin-bottom: 30px; }
@@ -203,6 +217,14 @@ body {
                 margin: auto; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.single {
                 width: 100%; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.single div.content-box {
+                  overflow: auto; }
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.single div.content-box div.section-content {
+                    overflow: auto; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.single div.content-box div.section-content form.register {
+                      margin-top: 20px;
+                      padding-left: 0;
+                      padding-right: 0; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.double {
                 background: #e9eaed; }
                 @media (max-width: 991px) {
@@ -248,7 +270,8 @@ body {
                   padding-left: 22.5px;
                   padding-right: 0px; } }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.gallery div.content-box {
-                border-radius: 5px; }
+                border-radius: 5px;
+                overflow: auto; }
                 body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.gallery div.content-box div.gallery {
                   border-radius: 5px; }
                   body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.gallery div.content-box div.gallery a {

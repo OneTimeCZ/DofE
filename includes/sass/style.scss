@@ -35,6 +35,14 @@ body {
                 div.admin_side_nav {
                     background: $darkgray;
                     padding: 0;
+                    
+                    @media (min-width: $break - 1px) {
+                        position: fixed;
+                        top: 0;
+                        bottom: 0;
+                        left: 0;
+                    }
+                    
                     color: gray;
                     font-weight: bold;
                     
@@ -125,6 +133,10 @@ body {
                     padding: 0;
                     background: $dnw;
                     
+                    @media (min-width: $break) {
+                        margin-left: percentage(1/6);
+                    }
+                    
                     div.content {                        
                         div.page-heading {
                             h1 {
@@ -138,6 +150,7 @@ body {
                             div.column {
                                 div.content-box {      
                                     padding: 10px;
+                                    overflow: auto;
                                     
                                     form#addArticle {  
                                         div.col-lg-6 {
@@ -219,10 +232,11 @@ body {
                             
                             div.section-content {
                                 width: 100%;
+                                overflow: auto;
                                 border-radius: 0;
                                 border-bottom-left-radius: 5px;
-                                border-bottom-right-radius: 5px; 
-                                
+                                border-bottom-right-radius: 5px;                                 
+                                                                
                                 div.search {
                                     input.search-query {
                                         padding-left: 15px;
@@ -357,6 +371,13 @@ body {
                                     margin: 0;
                                     padding-left: 20px;
                                 }
+                                
+                                &.register {
+                                    h1 {
+                                        padding-left: 0;
+                                        margin-left: percentage(1/12);
+                                    }
+                                }
                             }
 
                             div.column {
@@ -369,6 +390,20 @@ body {
                                 
                                 &.single {
                                     width: 100%;
+                                    
+                                    div.content-box {
+                                        overflow: auto;
+                                        
+                                        div.section-content {
+                                            overflow: auto;
+                                            
+                                            form.register {
+                                                margin-top: 20px;
+                                                padding-left: 0;
+                                                padding-right: 0;
+                                            }
+                                        }
+                                    }
                                 }
                                 
                                 &.double {
@@ -451,6 +486,7 @@ body {
                                     
                                     div.content-box {
                                         border-radius: 5px;
+                                        overflow: auto;
                                         
                                         div.gallery {
                                             border-radius: 5px;

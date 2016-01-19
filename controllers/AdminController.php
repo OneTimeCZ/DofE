@@ -60,7 +60,7 @@ class AdminController extends Controller{
                 ->orderByCreatedAt("desc")
                 ->find();
             
-            if($articles == NULL){
+            if($articles->isEmpty()){
                 $this->addPopup('danger', 'Ale ne! V databázi se nenechází žádný Vámi napsaný článek.');
             }
             

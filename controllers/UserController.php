@@ -21,15 +21,14 @@ class UserController extends Controller{
             ->filterByPassword(sha1($_POST['inputPassword']))
             ->findOne();
         
-        $user->setSigninCount($user->getSigninCount()+1);
-        $user->setLastSigninAt(date("U"));
-        $user->save();
-        
         if ($user == NULL) {
             $_SESSION['user'] = NULL;
             $this->addPopup('danger', 'Zadali jste nesprávné přihlašovací údaje. Zkuste to prosím znovu.');
         } else {
             $_SESSION['user'] = $user;
+            $user->setSigninCount($user->getSigninCount()+1);
+            $user->setLastSigninAt(date("U"));
+            $user->save();
             $this->addPopup('success', 'Byli jste úspěšně přihlášeni!');
         }
         
@@ -37,9 +36,12 @@ class UserController extends Controller{
     }
     
     public function logout(){
-        $_SESSION['user'] = NULL;
+        if(isset($_SESSION['user'])) {
+            unset($_SESSION['user']); 
         
-        $this->addPopup('success', 'Byli jste úspěšně odhlášeni!');
+            $this->addPopup('success', 'Byli jste úspěšně odhlášeni!');       
+        }
+        
         redirectTo('/');
     }
     
@@ -54,25 +56,38 @@ class UserController extends Controller{
         ]);
     }
     
-    public function create(){        
+    public function create(){  
+        $username = UserQuery::create()
+            ->filterByUsername($_POST["regUsername"])
+            ->find();
+        
+        $email = UserQuery::create()
+            ->filterByEmail($_POST["regEmail"])
+            ->find();
+        
 		if($_POST['regPassword'] != $_POST['regPassword2']){
-            
 			$this->addPopup('danger', 'Hesla se neshodují.');
 			redirectTo("/registrace");
-		}
-        
-		$user = new User();
-        $user->setUsername($_POST['regUsername']);
-        $user->setPassword(sha1($_POST['regPassword']));
-        $user->setEmail($_POST['regEmail']);
-        $user->setEmailConfirmToken(token(50));
-        $user->setPasswordResetToken(token(50));
-        $user->setPermissions(1);
-        $user->setSigninCount(1);
-        
-		$user->save();
-        
-		$this->addPopup('success', 'Registrace proběhla úspěšně! Nyní se můžete přihlásit.');
-		redirectTo("/");
+        } elseif(!$username->isEmpty()){
+            $this->addPopup('danger', 'Uživatel se stejným uživatelským jménem je již zaregistrován.');
+			redirectTo("/registrace");
+        } elseif(!$email->isEmpty()){
+            $this->addPopup('danger', 'Uživatel se stejnou emailovou adresou je již zaregistrován.');
+			redirectTo("/registrace");
+        } else {
+            $user = new User();
+            $user->setUsername($_POST['regUsername']);
+            $user->setPassword(sha1($_POST['regPassword']));
+            $user->setEmail($_POST['regEmail']);
+            $user->setEmailConfirmToken(token(50));
+            $user->setPasswordResetToken(token(50));
+            $user->setPermissions(1);
+            $user->setSigninCount(1);
+
+            $user->save();
+
+            $this->addPopup('success', 'Registrace proběhla úspěšně! Nyní se můžete přihlásit.');
+            redirectTo("/");
+        }
     }
 }
