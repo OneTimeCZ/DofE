@@ -72,13 +72,48 @@ body {
         @media (min-width: 768px) {
           body div.page-container div.content div.container-fluid div.admin_main {
             margin-left: 16.66667%; } }
-        body div.page-container div.content div.container-fluid div.admin_main div.content div.page-heading h1 {
+        body div.page-container div.content div.container-fluid div.admin_main div.page-heading h1 {
           padding: 10px;
           margin: 0;
           text-align: center; }
         body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box {
           padding: 10px;
           overflow: auto; }
+          body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news {
+            overflow: auto; }
+            body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-item {
+              overflow: auto;
+              margin-bottom: 30px; }
+              body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-item div.content {
+                background: white;
+                overflow: auto; }
+                body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-item div.content div.icon {
+                  line-height: 50px;
+                  font-size: 1.4em;
+                  color: white;
+                  float: left;
+                  text-align: center; }
+                  body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-item div.content div.icon button.icon {
+                    background: none;
+                    border: 0;
+                    margin: 0;
+                    padding: 0;
+                    width: 50px;
+                    height: 50px; }
+                  body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-item div.content div.icon.physical {
+                    background: #e1c72c; }
+                  body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-item div.content div.icon.skills {
+                    background: #009edc; }
+                  body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-item div.content div.icon.volunteering {
+                    background: #e40046; }
+                  body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-item div.content div.icon.expedition {
+                    background: #71a100; }
+                body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-item div.content div.text {
+                  float: left;
+                  height: 50px;
+                  padding: 7px;
+                  line-height: 36px;
+                  width: auto; }
           body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box form#addArticle div.col-lg-6 div.form-group textarea#content {
             resize: none none; }
           body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box table.article-list tbody tr td.col-xs-1 a.list, body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box table.article-list tbody tr td.col-xs-2 a.list, body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box table.comment-list tbody tr td.col-xs-1 a.list, body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box table.comment-list tbody tr td.col-xs-2 a.list {
@@ -249,40 +284,6 @@ body {
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.image div.content-box div.section-content img {
                 display: block;
                 margin: auto; }
-              @media (max-width: 767px) {
-                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.gallery {
-                  padding: 0;
-                  width: 100%; } }
-              @media (min-width: 768px) {
-                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.gallery:nth-of-type(2n) {
-                  padding-right: 0;
-                  padding-left: 15px; }
-                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.gallery:nth-of-type(2n-1) {
-                  padding-right: 15px;
-                  padding-left: 0; } }
-              @media (min-width: 992px) {
-                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.gallery:nth-of-type(4n-3) {
-                  padding-left: 0px;
-                  padding-right: 22.5px; }
-                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.gallery:nth-of-type(4n-2) {
-                  padding-right: 15px;
-                  padding-left: 7.5px; }
-                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.gallery:nth-of-type(4n-1) {
-                  padding-left: 15px;
-                  padding-right: 7.5px; }
-                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.gallery:nth-of-type(4n) {
-                  padding-left: 22.5px;
-                  padding-right: 0px; } }
-              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.gallery div.content-box {
-                border-radius: 5px;
-                overflow: auto; }
-                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.gallery div.content-box div.gallery {
-                  border-radius: 5px; }
-                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.gallery div.content-box div.gallery a {
-                    overflow: hidden; }
-                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.gallery div.content-box div.gallery a img {
-                      display: block;
-                      margin: auto; }
             body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header {
               height: 50px;
               background: #2c3e50;

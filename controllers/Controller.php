@@ -53,6 +53,7 @@ class Controller {
         return $this->checkPermissions(3);
     }
     
+    //Updates user session
     public function userUpdate(){
         if($this->isLogged()){
             $_SESSION["user"] = UserQuery::create()

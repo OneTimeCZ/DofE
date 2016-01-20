@@ -137,20 +137,75 @@ body {
                         margin-left: percentage(1/6);
                     }
                     
-                    div.content {                        
-                        div.page-heading {
-                            h1 {
-                                padding: 10px;
-                                margin: 0;
-                                text-align: center;
-                            }
+                    div.page-heading {
+                        h1 {
+                            padding: 10px;
+                            margin: 0;
+                            text-align: center;
                         }
-                        
-                        div.section {
+                    }
+                    
+                    div.content {   
+                        div.section {                            
                             div.column {
                                 div.content-box {      
                                     padding: 10px;
                                     overflow: auto;
+                                    
+                                    div.admin-news {
+                                        overflow: auto;
+                                        
+                                        div.news-item {
+                                            overflow: auto;
+                                            margin-bottom: 30px;
+                                            
+                                            div.content {
+                                                background: white;
+                                                overflow: auto;
+                                                
+                                                div.icon {
+                                                    line-height: 50px;
+                                                    font-size: 1.4em;
+                                                    color: white;
+                                                    float: left;
+                                                    text-align: center;
+                                                    
+                                                    button.icon {
+                                                        background: none;
+                                                        border: 0;
+                                                        margin: 0;
+                                                        padding: 0;
+                                                        width: 50px;
+                                                        height: 50px;
+                                                    }
+
+                                                    &.physical{
+                                                        background: $physical;
+                                                    }
+
+                                                    &.skills {
+                                                        background: $skills;
+                                                    }
+
+                                                    &.volunteering {
+                                                        background: $volunteering;
+                                                    }
+
+                                                    &.expedition {
+                                                        background: $expedition;
+                                                    }
+                                                }
+
+                                                div.text {
+                                                    float: left;
+                                                    height: 50px;
+                                                    padding: 7px;
+                                                    line-height: 36px;
+                                                    width: auto;
+                                                }
+                                            }
+                                        }
+                                    }
                                     
                                     form#addArticle {  
                                         div.col-lg-6 {
@@ -235,7 +290,7 @@ body {
                                 overflow: auto;
                                 border-radius: 0;
                                 border-bottom-left-radius: 5px;
-                                border-bottom-right-radius: 5px;                                 
+                                border-bottom-right-radius: 5px; 
                                                                 
                                 div.search {
                                     input.search-query {
@@ -443,65 +498,6 @@ body {
                                             img {
                                                 display: block;
                                                 margin: auto;
-                                            }
-                                        }
-                                    }
-                                }
-                                
-                                &.gallery {
-                                    @media (max-width: $break - 1px) {
-                                        padding: 0;
-                                        width: 100%;
-                                    }
-                                    
-                                    @media (min-width: $break) {
-                                        &:nth-of-type(2n) {
-                                            padding-right: 0;
-                                            padding-left: 15px;
-                                        }
-                                        
-                                        &:nth-of-type(2n-1) {
-                                            padding-right: 15px;
-                                            padding-left: 0;
-                                        }
-                                    }
-                                    
-                                    @media (min-width: 992px) {                                        
-                                        &:nth-of-type(4n-3) {
-                                            padding-left: 0px;
-                                            padding-right: 22.5px; 
-                                        }
-                                        
-                                        &:nth-of-type(4n-2) {
-                                            padding-right: 15px;
-                                            padding-left: 7.5px;
-                                        }
-
-                                        &:nth-of-type(4n-1) {
-                                            padding-left: 15px;
-                                            padding-right: 7.5px;
-                                        }
-                                        
-                                        &:nth-of-type(4n) {
-                                            padding-left: 22.5px;
-                                            padding-right: 0px;
-                                        }
-                                    }
-                                    
-                                    div.content-box {
-                                        border-radius: 5px;
-                                        overflow: auto;
-                                        
-                                        div.gallery {
-                                            border-radius: 5px;
-                                            
-                                            a {
-                                                overflow: hidden;
-                                                
-                                                img {
-                                                    display: block;
-                                                    margin: auto;
-                                                }
                                             }
                                         }
                                     }

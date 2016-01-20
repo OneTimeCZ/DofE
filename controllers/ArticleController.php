@@ -25,7 +25,6 @@ class ArticleController extends Controller{
         $this->view('Article/all', 'base_template', [
             'active' => 'blog',
             'title' => 'Blog',
-            'page' => $articles->getPage(),
             'articles' => $articles,
             'recent' => ArticleQuery::recent()
         ]);

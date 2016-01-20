@@ -30,11 +30,29 @@ class AdminController extends Controller{
     }
     
     public function index(){  
-        //SQL
+        $users = UserQuery::create()
+            ->filterByCreatedAt(array('min' => 'yesterday'))
+            ->count();
+        
+        $comments = CommentQuery::create()
+            ->filterByCreatedAt(array('min' => 'yesterday'))
+            ->count();
+        
+        $articles = ArticleQuery::create()
+            ->filterByCreatedAt(array('min' => 'yesterday'))
+            ->count();
+        
+        $images = ImageQuery::create()
+            ->filterByCreatedAt(array('min' => 'yesterday'))
+            ->count();
         
         $this->view('Admin/index', 'admin_template', [
             'active' => 'main',
-            'title' => 'Administrace'
+            'title' => 'Administrace',
+            'new' => ['users' => $users,
+                      'comments' => $comments,
+                      'articles' => $articles,
+                      'images' => $images]
         ]);
     }
     
@@ -80,7 +98,7 @@ class AdminController extends Controller{
         $this->view('Admin/addArticle', 'admin_template', [
             'active' => 'addArticle',
             'title' => 'Přidat nový článek',
-            'js' => array('tinymce/tinymce.min', 'tinymceinit'),
+            'js' => array('plugins/tinymce/tinymce.min', 'scripts/tinymceinit'),
             'categories' => $categories
         ]);
     }
@@ -98,7 +116,7 @@ class AdminController extends Controller{
         $this->view('Admin/editArticle', 'admin_template', [
             'active' => 'addArticle',
             'title' => 'Upravit článek',
-            'js' => array('tinymce/tinymce.min', 'tinymceinit'),
+            'js' => array('plugins/tinymce/tinymce.min', 'scripts/tinymceinit'),
             'categories' => $categories,
             'article' => $article
         ]);
@@ -160,6 +178,10 @@ class AdminController extends Controller{
             ->filterByIdArticle($id)
             ->orderByCreatedAt("desc")
             ->find();
+        
+        if($comments->isEmpty()){
+            $this->addPopup('danger', 'K tomuto článku se v databázi nenachází žádný komentář.');
+        }
             
         $this->view('Admin/commentList', 'admin_template', [
             'active' => 'commentList',

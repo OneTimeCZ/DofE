@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Models\Article;
+use Models\ArticleQuery;
 
 class GalleryController extends Controller{
 
@@ -12,17 +13,9 @@ class GalleryController extends Controller{
         $this->view('Gallery/index', 'base_template', [
             'active' => 'gallery',
             'title' => 'Galerie',
-            'recent' => ArticleQuery::recent()
-        ]);
-    }
-
-    public function single($name){
-        //SQL for image route w/ $name
-        
-        $this->view('Gallery/single', 'gallery_template', [
-            'active' => 'gallery',
-            'title' => 'Galerie | '.$name,
-            'recent' => ArticleQuery::recent()
+            'recent' => ArticleQuery::recent(),
+            'js' => 'plugins/fotorama/fotorama',
+            'css' => 'plugins/fotorama/fotorama'
         ]);
     }
 }

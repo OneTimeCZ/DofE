@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Models\Article;
+use Models\ArticleQuery;
 
 class InfoController extends Controller{
 

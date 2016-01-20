@@ -1,3 +1,62 @@
-<div class="page-heading">
-    <h1>Hlavní stránka administrace</h1>
+<div class="section">
+    <div class="page-heading">
+        <h1>Hlavní stránka administrace</h1>
+    </div>
+</div>
+
+<div class="section">
+    <div class="column">
+        <div class="content-box">
+            <div class="admin-news">
+                <div class="news-item col-sm-6 col-lg-3">
+                    <div class="content">
+                        <div class="icon physical">
+                            <button class="icon" type="button">
+                                <span class="glyphicon glyphicon-user"></span>
+                            </button>
+                        </div>
+                        <div class="text">
+                            Noví uživatelé: <span class="badge"><?= $data["new"]["users"] ?></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="news-item col-sm-6 col-lg-3">
+                    <div class="content">
+                        <div class="icon skills">
+                            <button class="icon" type="button">
+                                <span class="glyphicon glyphicon-comment"></span>
+                            </button>
+                        </div>
+                        <div class="text">
+                            Nové komentáře: <span class="badge"><?= $data["new"]["comments"] ?></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="news-item col-sm-6 col-lg-3">
+                    <div class="content">
+                        <div class="icon volunteering">
+                            <button class="icon" type="button">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            </button>
+                        </div>
+                        <div class="text">
+                            Nové články: <span class="badge"><?= $data["new"]["articles"] ?></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="news-item col-sm-6 col-lg-3">
+                    <div class="content">
+                        <div class="icon expedition">
+                            <button class="icon" type="button">
+                                <span class="glyphicon glyphicon-picture"></span>
+                            </button>
+                        </div>
+                        <div class="text">
+                            Nové fotografie <span class="badge"><?= $data["new"]["images"] ?></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

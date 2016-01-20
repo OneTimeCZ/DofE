@@ -12,7 +12,9 @@ class LandingPageController extends Controller{
         $this->view('Landing/index', 'base_template', [
             'active' => 'landing',
             'title' => 'Hlavní stránka',
-            'recent' => ArticleQuery::recent()
+            'recent' => ArticleQuery::recent(),
+            'js' => 'plugins/fotorama/fotorama',
+            'css' => 'plugins/fotorama/fotorama'
         ]);
     }
 }

@@ -1,7 +1,7 @@
 <div class="content">    
     <div class="section">
         <div class="page-heading">
-            <h1>Blog - strana <?= $data['page'] ?></h1>
+            <h1>Blog - strana <?= $data['articles']->getPage() ?></h1>
         </div>
     </div>
     
@@ -45,7 +45,7 @@
                         <?php if($data["articles"]->getPage() != 1): ?>
                         <li>
                             <a class="newer" href="/clanky/<?= $data["articles"]->getPreviousPage() ?>">
-                                <span>&laquo;</span> Novější
+                                <span>&lt;&lt;</span> Novější
                             </a>
                         </li>
                         <?php endif; ?>
@@ -53,7 +53,7 @@
                         <?php if($data["articles"]->getPage() != $data["articles"]->getLastPage()): ?>
                         <li>
                             <a class="older" href="/clanky/<?= $data["articles"]->getNextPage() ?>">
-                                Starší <span>&raquo;</span>
+                                Starší <span>&gt;&gt;</span>
                             </a>
                         </li>
                         <?php endif; ?>
