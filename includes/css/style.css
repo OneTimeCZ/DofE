@@ -155,6 +155,21 @@ body {
               border-radius: 0;
               border-bottom-left-radius: 5px;
               border-bottom-right-radius: 5px; }
+              body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.social {
+                list-style-type: none;
+                margin: 0;
+                padding: 0; }
+                body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.social li.item {
+                  padding: 20px 10px; }
+                  body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.social li.item a {
+                    text-decoration: none;
+                    color: gray; }
+                    body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.social li.item a:hover, body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.social li.item a:focus {
+                      color: black; }
+                    body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.social li.item a i.fa {
+                      display: block !important;
+                      visibility: visible !important;
+                      text-align: center; }
               body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content div.search input.search-query {
                 padding-left: 15px;
                 border-top-right-radius: 0;
@@ -322,7 +337,27 @@ body {
               padding: 5px;
               background: white;
               border-bottom-right-radius: 5px;
-              border-bottom-left-radius: 5px; }
+              border-bottom-left-radius: 5px;
+              overflow: auto; }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side {
+                padding: 0; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.image {
+                  padding: 5px; }
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.image img {
+                    border-radius: 5px;
+                    width: 100%;
+                    margin: 0; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.menu {
+                  padding: 10px;
+                  margin: 0; }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info h1 {
+                margin: 0;
+                margin-top: 5px;
+                text-align: center;
+                font-size: 2em; }
+                @media (max-width: 767px) {
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info h1 {
+                    font-size: 1.2em; } }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.participants {
                 overflow: hidden;
                 padding-left: 10px;
@@ -431,25 +466,32 @@ body {
                     border-bottom-left-radius: 5px; }
                     body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment_form div.comment_form h3.heading {
                       margin-top: 10px;
-                      margin-bottom: 0;
+                      margin-bottom: 10px;
                       margin-left: 60px;
                       font-size: 1.4em;
                       color: #2c3e50; }
+                      @media (max-width: 767px) {
+                        body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment_form div.comment_form h3.heading {
+                          margin-left: 20px; } }
                     body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment_form div.comment_form form.comment_form {
                       margin-left: 60px;
                       margin-right: 60px;
                       margin-bottom: 15px; }
+                      @media (max-width: 767px) {
+                        body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment_form div.comment_form form.comment_form {
+                          margin-left: 20px;
+                          margin-right: 20px; } }
                       body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment_form div.comment_form form.comment_form textarea {
                         resize: none;
                         height: 120px;
                         width: 100%;
-                        background: lightgray;
-                        border: 1px solid lightgray;
+                        background: #e9eaed;
+                        border: 1px solid #e9eaed;
                         font-size: 1.2em;
                         padding: 5px 5px; }
                       body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment_form div.comment_form form.comment_form input.comment_submit {
-                        border: 1px solid lightgray;
-                        background: lightgray;
+                        border: 1px solid #e9eaed;
+                        background: #e9eaed;
                         color: #2c3e50;
                         height: 30px;
                         line-height: 26px;
@@ -529,6 +571,11 @@ body {
               height: 32px;
               margin-top: 4px;
               background: gray; }
+          body div.page-container header nav.navigation ul.login-menu li.active div.visible-xs a {
+            color: white;
+            font-weight: bold; }
+          body div.page-container header nav.navigation ul.login-menu li.active div.visible-xs div.divider {
+            background: white; }
           body div.page-container header nav.navigation ul.login-box {
             height: 40px;
             margin-top: 0;
@@ -554,7 +601,10 @@ body {
               body div.page-container header nav.navigation ul.login-box li.active a.borderless img.avatar {
                 margin-left: 0px;
                 margin-right: 10px; } }
-
+    @media (max-width: 767px) {
+            body div.page-container header nav.navigation ul.login-box li.active a {
+              color: white;
+              font-weight: bold; } }
     @media (min-width: 768px) {
       body div.page-container header {
         margin-bottom: 15px; }

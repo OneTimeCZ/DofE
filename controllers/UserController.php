@@ -46,7 +46,7 @@ class UserController extends Controller{
         redirectTo('/');
     }
     
-    public function profile($name){
+    public function profilePublic($name){
         //SQL /w $name
         
         $this->view('Profile/index', 'base_template', [
@@ -57,12 +57,25 @@ class UserController extends Controller{
         ]);
     }
     
+    public function profileSettings(){
+        if(!$this->isLogged()){
+            $this->addPopup('danger', 'Pro zobrazení vašeho profilu se musíte nejprve přihlásit.');
+            redirectTo('/');
+        }
+        
+        //SQL
+        
+        $this->view('Profile/settings', 'base_template', [
+            'active' => 'profile',
+            'title' => 'Nastavení profilu',
+            'recent' => ArticleQuery::recent()
+        ]);
+    }
+    
     public function create(){  
         $existing = UserQuery::create()
-            //->where('User.Username = ?', $_POST["regUsername"])
             ->filterByUsername($_POST["regUsername"])
             ->_or()
-            //->where('User.Email = ?', $_POST["regEmail"])
             ->filterByEmail($_POST["regEmail"])
             ->findOne();
         

@@ -291,6 +291,31 @@ body {
                                 border-radius: 0;
                                 border-bottom-left-radius: 5px;
                                 border-bottom-right-radius: 5px; 
+                                
+                                ul.social {
+                                    list-style-type: none;
+                                    margin: 0;
+                                    padding: 0;
+                                    
+                                    li.item {
+                                        padding: 20px 10px;
+                                        
+                                        a {
+                                            text-decoration: none;
+                                            color: gray;
+                                            
+                                            &:hover, &:focus {
+                                                color: black;
+                                            }
+                                            
+                                            i.fa {
+                                                display: block !important;
+                                                visibility: visible !important;
+                                                text-align: center;
+                                            }
+                                        }
+                                    }
+                                }
                                                                 
                                 div.search {
                                     input.search-query {
@@ -559,6 +584,41 @@ body {
                                 background: white;
                                 border-bottom-right-radius: 5px;
                                 border-bottom-left-radius: 5px;
+                                overflow: auto;
+                                
+                                &.profile {
+                                    div.side {
+                                        padding: 0;
+                                        
+                                        div.image {
+                                            padding: 5px;
+
+                                            img {
+                                                border-radius: 5px;
+                                                width: 100%;
+                                                margin: 0;
+                                            }
+                                        }
+
+                                        div.menu {
+                                            padding: 10px;
+                                            margin: 0;
+                                        }
+                                    }
+                                    
+                                    div.info {
+                                        h1 {
+                                            margin: 0;
+                                            margin-top: 5px;
+                                            text-align: center;
+                                            font-size: 2em;
+                                            
+                                            @media (max-width: $break - 1px) {
+                                                font-size: 1.2em;
+                                            }
+                                        }
+                                    }
+                                }
                                 
                                 &.participants {
                                     overflow: hidden;
@@ -738,8 +798,15 @@ body {
                                             div.comment_form {
                                                 h3.heading {
                                                     margin-top: 10px;
-                                                    margin-bottom: 0;
+                                                    margin-bottom: 10px;
                                                     margin-left: 60px;
+                                                    
+                                                    @media (max-width: $break - 1px) {
+                                                        & {
+                                                            margin-left: 20px;
+                                                        }
+                                                    }
+                                                    
                                                     font-size: 1.4em;
                                                     color: $blue;
                                                 }
@@ -749,19 +816,26 @@ body {
                                                     margin-right: 60px;
                                                     margin-bottom: 15px;
                                                     
+                                                    @media (max-width: $break - 1px) {
+                                                        & {
+                                                            margin-left: 20px;
+                                                            margin-right: 20px;
+                                                        }
+                                                    }
+                                                    
                                                     textarea {
                                                         resize: none;
                                                         height: 120px;
                                                         width: 100%;
-                                                        background: lightgray;
-                                                        border: 1px solid lightgray;
+                                                        background: $dnw;
+                                                        border: 1px solid $dnw;
                                                         font-size: 1.2em;
                                                         padding: 5px 5px;
                                                     }
                                                     
                                                     input.comment_submit {
-                                                        border: 1px solid lightgray;
-                                                        background: lightgray;
+                                                        border: 1px solid $dnw;
+                                                        background: $dnw;
                                                         color: $blue;
                                                         height: 30px;
                                                         line-height: 26px;
@@ -911,6 +985,19 @@ body {
                                     background: gray;
                                 }
                             }
+                        
+                            &.active {
+                                div.visible-xs {
+                                    a {
+                                        color: white;
+                                        font-weight: bold;
+                                    }
+                                    
+                                    div.divider {
+                                        background: white;
+                                    }
+                                }
+                            }
                         }
                     }
 
@@ -944,6 +1031,13 @@ body {
                                     }
                                 }
                             }    
+                        }
+                        
+                        li.active {
+                            a {
+                                color: white;
+                                font-weight: bold;
+                            }
                         }
                     }
                 }

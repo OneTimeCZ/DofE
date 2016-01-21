@@ -54,7 +54,7 @@
                             <a href="/profil/<?= $comment->getUser()->getUrl() ?>">
                                 <h4><?= $comment->getUser()->getUsername() ?></h4>
                             </a>
-                            <p><?= $comment->getCreatedAt()->format("d.m.Y H:m:s") ?></p>
+                            <p><?= $comment->getCreatedAt()->format("d.m.Y H:i:s") ?></p>
                         </div>
                         <div class="content_area">
                             <p class="comment">
@@ -69,8 +69,7 @@
                     <li class="comment_form">
                         <div class="comment_form">
                             <h3 class="heading">Sdílejte svůj názor</h3>
-                            <form class="comment_form" role="form" action="/clanek/<?= $data["article_url"] ?>/komentovat" method="post">
-                                <label for="comtxt"></label>
+                            <form class="comment_form" role="form" action="/clanek/<?= $data["article"]->getId() ?>/komentovat" method="post">
                                 <textarea placeholder="Text komentáře" name="comment_text" id="comtxt" required ></textarea>
                                 <input type="submit" value="Okomentovat" class="comment_submit" name="comment_submit" />
                             </form>

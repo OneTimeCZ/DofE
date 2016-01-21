@@ -1,1 +1,2 @@
-<h2>Kategorie: <i><?= $data['category'] ?></i></h2>
+<h1>Kategorie: <?= $data["articles"]->getFirst()->getCategory()->getName(); ?></h1>
+<?php foreach($data["articles"] as $article) echo $article->getContent(); ?>

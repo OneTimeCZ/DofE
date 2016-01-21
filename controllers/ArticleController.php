@@ -51,6 +51,7 @@ class ArticleController extends Controller{
             ->useUserQuery()
                 ->joinWith('Image')
             ->endUse()
+            ->orderByCreatedAt("desc")
             ->find();
         
         $this->view('Article/single', 'base_template', [
@@ -62,34 +63,42 @@ class ArticleController extends Controller{
         ]);
         
     }
-
-    public function showByCategory($category){
-        //SQL w/ $category
-        
-        $this->view('Article/category', 'base_template', [
-            'active' => 'blog',
-            'title' => 'Blog | '.ucfirst($category),
-            'category' => $category,
-            'recent' => ArticleQuery::recent()
-        ]);
-    }
     
     public function showByCategoryPage($category, $id){
-        //SQL w/ $category
+        $id = $id == 0  ? 1 : $id;
+        
+        $articles = ArticleQuery::create()
+            ->useCategoryQuery()
+                ->filterByUrl($category)
+            ->endUse()
+            ->joinWith("Category")
+            ->orderByCreatedAt("desc")
+            ->paginate($page = $id, $maxPerPage = 10);
         
         $this->view('Article/category', 'base_template', [
             'active' => 'blog',
-            'category' => $category,
-            'page' => $id,
-            'recent' => ArticleQuery::recent()
+            'title' => $articles->getFirst()->getCategory()->getName(),
+            'recent' => ArticleQuery::recent(),
+            'articles' => $articles
         ]);
     }
     
     public function comment($name){
-        //Check if logged
-        //SQL for comment
+        $id = explode('-', $name);
+        $id = $id[0];
         
-        //popup with comment/added or error
-        redirectTo('/clanek/'.$name."#komentare");
+        if(!$this->isLogged()) {
+            $this->addPopup('danger', 'Pro přidání komentáře musíte být přihlášeni.');
+            redirectTo('/clanek/'.$id);
+        }
+        
+        $comment = new Comment;
+        $comment->setIdUser($_SESSION["user"]->getId());
+        $comment->setIdArticle($id);
+        $comment->setContent($_POST["comment_text"]);
+        $comment->save();
+        
+        $this->addPopup('success', 'Váš komentář byl úspěšně přidán.');
+        redirectTo('/clanek/'.$id);
     }
 }

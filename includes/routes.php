@@ -8,13 +8,15 @@
         ->setTokens([
             'id' => '[1-9]\d*',
         ]);
-    $router->addGet('Article.showByCategory', '/clanky/{category}');
-    $router->addGet('Article.showByCategoryPage', '/clanky/{category}/{id}')
+    $router->addGet('Article.showByCategoryPage', '/clanky/{category}{/id}')
         ->setTokens([
             'id' => '[1-9]\d*',
         ]);
     $router->addGet('Article.showSingle', '/clanek/{id}');
-    $router->addPost('Article.comment', '/clanek/{id}/komentovat');
+    $router->addPost('Article.comment', '/clanek/{id}/komentovat')
+        ->setTokens([
+            'id' => '[1-9]\d*',
+        ]);
 
 //---GALLERY---
     $router->addGet('Gallery.index', '/galerie');
@@ -52,7 +54,8 @@
     $router->addGet('Admin.imageDelete', '/administrace/fotografie/{name}/odstranit');
 
 //---USER---
-    $router->addGet('User.profile', '/profil/{name}');
+    $router->addGet('User.profilePublic', '/profil/{name}');
+    $router->addGet('User.profileSettings', '/profil');
     $router->addGet('User.logout', '/odhlasit');
     $router->addPost('User.login', '/prihlasit');
     $router->addPost('User.create', '/registrovat');
