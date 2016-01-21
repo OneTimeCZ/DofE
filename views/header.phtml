@@ -42,7 +42,7 @@
                         <!-- Mobile phone -->
                         <div class="visible-xs">
                             <a class="borderless" href="/profil/<?= $_SESSION["user"]->getUrl() ?>">
-                                <img alt="profilepic" class="img img-responsive avatar" src="../includes/images/50x50/<?= $_SESSION["user"]->getImage()->getPath() ?>">
+                                <img alt="profilepic" class="img img-responsive avatar" src="../includes/images/50x50/<?= $_SESSION["user"]->getImage()->getThumbnailPath() ?>">
                             </a>
                             <a class="menu-item" href="/profil/<?= $_SESSION["user"]->getUrl() ?>">
                                 VÁŠ PROFIL
@@ -58,7 +58,7 @@
                         <!-- Tablet, PC -->
                         <div class="dropdown hidden-xs">
                             <button class="borderless dropdown-toggle" type="button" data-toggle="dropdown">
-                                <img alt="profilepic" class="img img-responsive avatar" src="../includes/images/50x50/<?= $_SESSION["user"]->getImage()->getPath() ?>">
+                                <img alt="profilepic" class="img img-responsive avatar" src="../includes/images/50x50/<?= $_SESSION["user"]->getImage()->getThumbnailPath() ?>">
                             </button>
                             <ul class="dropdown-menu">
                                 <li class="header">

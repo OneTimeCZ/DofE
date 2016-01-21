@@ -25,7 +25,7 @@
                 <?php foreach($data["recent"] as $recent): ?>
                 <li class="article">
                     <a href="/clanek/<?= $recent->getId() ?>" class="thumbnail">
-                        <img src="../includes/images/50x50/<?= $recent->getImage()->getPath() ?>" alt="" title="" />
+                        <img src="../includes/images/50x50/<?= $recent->getImage()->getThumbnailPath() ?>" alt="" title="" />
                     </a>
                     <div class="info">
                         <a href="/clanek/<?= $recent->getId() ?>" class="title"><?= $recent->getTitle() ?></a>

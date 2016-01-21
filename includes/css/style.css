@@ -340,24 +340,96 @@ body {
               border-bottom-left-radius: 5px;
               overflow: auto; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side {
-                padding: 0; }
+                padding: 0;
+                overflow: auto; }
                 body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.image {
                   padding: 5px; }
+                  @media (max-width: 767px) {
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.image {
+                      width: 50%;
+                      margin-left: 25%; } }
                   body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.image img {
                     border-radius: 5px;
                     width: 100%;
                     margin: 0; }
-                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.menu {
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.basic {
                   padding: 10px;
-                  margin: 0; }
-              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info h1 {
-                margin: 0;
-                margin-top: 5px;
-                text-align: center;
-                font-size: 2em; }
-                @media (max-width: 767px) {
-                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info h1 {
-                    font-size: 1.2em; } }
+                  margin: 0;
+                  overflow: auto; }
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.basic ul {
+                    margin: 0;
+                    padding: 0;
+                    list-style-type: none; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.basic ul li.item {
+                      padding: 5px;
+                      text-align: center; }
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.basic h1 {
+                    margin: 0;
+                    margin-bottom: 5px;
+                    text-align: center;
+                    font-size: 1.5em; }
+                    @media (max-width: 991px) {
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.basic h1 {
+                        font-size: 1.3em; } }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info {
+                padding: 0; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info h2 {
+                  margin: 0;
+                  margin-bottom: 5px;
+                  padding: 5px;
+                  font-weight: bold;
+                  text-align: center;
+                  font-size: 1.2em;
+                  background: #2c3e50;
+                  border-top-left-radius: 5px;
+                  border-top-right-radius: 5px;
+                  color: white; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.dofe ul {
+                  margin: 0;
+                  margin-bottom: 20px;
+                  padding: 0;
+                  list-style-type: none; }
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.dofe ul li.item {
+                    padding: 5px; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.dofe ul li.item div.progress {
+                      margin-bottom: 5px; }
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.dofe ul li.item div.progress div.progress-bar {
+                        font-weight: bolder; }
+                        body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.dofe ul li.item div.progress div.progress-bar.skills {
+                          background: #009edc; }
+                        body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.dofe ul li.item div.progress div.progress-bar.physical {
+                          background: #e1c72c; }
+                        body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.dofe ul li.item div.progress div.progress-bar.volunteering {
+                          background: #e40046; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.achievements {
+                  overflow: auto; }
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.achievements div.achievement-item {
+                    margin: auto;
+                    margin-top: 0;
+                    margin-bottom: 5px;
+                    padding: 10px;
+                    text-align: center;
+                    overflow: auto;
+                    color: gray; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.achievements div.achievement-item.completed {
+                      color: goldenrod;
+                      font-weight: bold; }
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.achievements div.achievement-item.completed span {
+                        background: khaki;
+                        color: goldenrod; }
+                    @media (min-width: 992px) {
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.achievements div.achievement-item:nth-of-type(4n-3) {
+                        clear: left; } }
+                    @media (max-width: 991px) {
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.achievements div.achievement-item:nth-of-type(3n-2) {
+                        clear: left; } }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.achievements div.achievement-item span {
+                      padding: 15px;
+                      margin-bottom: 5px;
+                      border-radius: 50%;
+                      background: lightgray;
+                      color: gray;
+                      text-align: center; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.participants {
                 overflow: hidden;
                 padding-left: 10px;

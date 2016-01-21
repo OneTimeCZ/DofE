@@ -23,6 +23,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildImageQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildImageQuery orderByDescription($order = Criteria::ASC) Order by the description column
  * @method     ChildImageQuery orderByPath($order = Criteria::ASC) Order by the path column
+ * @method     ChildImageQuery orderByThumbnailPath($order = Criteria::ASC) Order by the thumbnail_path column
  * @method     ChildImageQuery orderByType($order = Criteria::ASC) Order by the type column
  * @method     ChildImageQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildImageQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
@@ -30,6 +31,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildImageQuery groupById() Group by the id column
  * @method     ChildImageQuery groupByDescription() Group by the description column
  * @method     ChildImageQuery groupByPath() Group by the path column
+ * @method     ChildImageQuery groupByThumbnailPath() Group by the thumbnail_path column
  * @method     ChildImageQuery groupByType() Group by the type column
  * @method     ChildImageQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildImageQuery groupByUpdatedAt() Group by the updated_at column
@@ -70,6 +72,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildImage findOneById(int $id) Return the first ChildImage filtered by the id column
  * @method     ChildImage findOneByDescription(string $description) Return the first ChildImage filtered by the description column
  * @method     ChildImage findOneByPath(string $path) Return the first ChildImage filtered by the path column
+ * @method     ChildImage findOneByThumbnailPath(string $thumbnail_path) Return the first ChildImage filtered by the thumbnail_path column
  * @method     ChildImage findOneByType(string $type) Return the first ChildImage filtered by the type column
  * @method     ChildImage findOneByCreatedAt(string $created_at) Return the first ChildImage filtered by the created_at column
  * @method     ChildImage findOneByUpdatedAt(string $updated_at) Return the first ChildImage filtered by the updated_at column *
@@ -80,6 +83,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildImage requireOneById(int $id) Return the first ChildImage filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildImage requireOneByDescription(string $description) Return the first ChildImage filtered by the description column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildImage requireOneByPath(string $path) Return the first ChildImage filtered by the path column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildImage requireOneByThumbnailPath(string $thumbnail_path) Return the first ChildImage filtered by the thumbnail_path column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildImage requireOneByType(string $type) Return the first ChildImage filtered by the type column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildImage requireOneByCreatedAt(string $created_at) Return the first ChildImage filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildImage requireOneByUpdatedAt(string $updated_at) Return the first ChildImage filtered by the updated_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -88,6 +92,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildImage[]|ObjectCollection findById(int $id) Return ChildImage objects filtered by the id column
  * @method     ChildImage[]|ObjectCollection findByDescription(string $description) Return ChildImage objects filtered by the description column
  * @method     ChildImage[]|ObjectCollection findByPath(string $path) Return ChildImage objects filtered by the path column
+ * @method     ChildImage[]|ObjectCollection findByThumbnailPath(string $thumbnail_path) Return ChildImage objects filtered by the thumbnail_path column
  * @method     ChildImage[]|ObjectCollection findByType(string $type) Return ChildImage objects filtered by the type column
  * @method     ChildImage[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildImage objects filtered by the created_at column
  * @method     ChildImage[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildImage objects filtered by the updated_at column
@@ -183,7 +188,7 @@ abstract class ImageQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, description, path, type, created_at, updated_at FROM images WHERE id = :p0';
+        $sql = 'SELECT id, description, path, thumbnail_path, type, created_at, updated_at FROM images WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -370,6 +375,35 @@ abstract class ImageQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(ImageTableMap::COL_PATH, $path, $comparison);
+    }
+
+    /**
+     * Filter the query on the thumbnail_path column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByThumbnailPath('fooValue');   // WHERE thumbnail_path = 'fooValue'
+     * $query->filterByThumbnailPath('%fooValue%'); // WHERE thumbnail_path LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $thumbnailPath The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildImageQuery The current query, for fluid interface
+     */
+    public function filterByThumbnailPath($thumbnailPath = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($thumbnailPath)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $thumbnailPath)) {
+                $thumbnailPath = str_replace('*', '%', $thumbnailPath);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(ImageTableMap::COL_THUMBNAIL_PATH, $thumbnailPath, $comparison);
     }
 
     /**

@@ -57,6 +57,7 @@
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="description" type="varchar" size="150"/>
         <column name="path" type="varchar" size="150"/>
+        <column name="thumbnail_path" type="varchar" size="150"/>
         <column name="type" type="varchar" size="50"/>
         
         <behavior name="timestampable" />

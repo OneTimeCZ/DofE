@@ -36,7 +36,7 @@
                                 <li class="profile">
                                     <p>Jste přihlášeni jako: </p>
                                     <a href="/profil/<?= $_SESSION["user"]->getUrl() ?>">
-                                        <img class="img img-responsive" src="../includes/images/50x50/<?= $_SESSION["user"]->getImage()->getPath() ?>">
+                                        <img class="img img-responsive" src="../includes/images/50x50/<?= $_SESSION["user"]->getImage()->getThumbnailPath() ?>">
                                         <?= $_SESSION["user"]->getUsername() ?>
                                     </a>
                                 </li>

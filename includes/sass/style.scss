@@ -589,9 +589,15 @@ body {
                                 &.profile {
                                     div.side {
                                         padding: 0;
+                                        overflow: auto;
                                         
                                         div.image {
                                             padding: 5px;
+                                            
+                                            @media (max-width: $break - 1px) {
+                                                width: 50%;
+                                                margin-left: 25%;
+                                            }
 
                                             img {
                                                 border-radius: 5px;
@@ -600,21 +606,126 @@ body {
                                             }
                                         }
 
-                                        div.menu {
+                                        div.basic {
                                             padding: 10px;
                                             margin: 0;
+                                            overflow: auto;
+                                            
+                                            ul {
+                                                margin: 0;
+                                                padding: 0;
+                                                list-style-type: none;
+                                                
+                                                li.item {
+                                                    padding: 5px;
+                                                    text-align: center;
+                                                }
+                                            }
+                                            
+                                            h1 {
+                                                margin: 0;
+                                                margin-bottom: 5px;
+                                                text-align: center;
+                                                font-size: 1.5em;
+
+                                                @media (max-width: 991px) {
+                                                    font-size: 1.3em;
+                                                }
+                                            }
                                         }
                                     }
                                     
                                     div.info {
-                                        h1 {
+                                        padding: 0;
+                                        
+                                        h2 {
                                             margin: 0;
-                                            margin-top: 5px;
+                                            margin-bottom: 5px;
+                                            padding: 5px;
+                                            font-weight: bold;
                                             text-align: center;
-                                            font-size: 2em;
+                                            font-size: 1.2em;
+                                            background: $blue;
+                                            border-top-left-radius: 5px;
+                                            border-top-right-radius: 5px;
+                                            color: white;
+                                        }
+                                        
+                                        div.dofe {
+                                            ul {
+                                                margin: 0;
+                                                margin-bottom: 20px;
+                                                padding: 0;
+                                                list-style-type: none;
+
+                                                li.item {
+                                                    padding: 5px;
+
+                                                    div.progress {
+                                                        margin-bottom: 5px;
+
+                                                        div.progress-bar {
+                                                            font-weight: bolder;
+
+                                                            &.skills {
+                                                                background: $skills;
+                                                            }
+
+                                                            &.physical {
+                                                                background: $physical;
+                                                            }
+
+                                                            &.volunteering {
+                                                                background: $volunteering;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        
+                                        div.achievements {
+                                            overflow: auto;
                                             
-                                            @media (max-width: $break - 1px) {
-                                                font-size: 1.2em;
+                                            div.achievement-item {
+                                                margin: auto;
+                                                margin-top: 0;
+                                                margin-bottom: 5px;
+                                                padding: 10px;
+                                                text-align: center;
+                                                overflow: auto;
+                                                color: gray;
+                                                
+                                                &.completed {
+                                                    color: goldenrod;
+                                                    font-weight: bold;
+                                                    
+                                                    span {
+                                                        background: khaki;
+                                                        color: goldenrod;
+                                                    }
+                                                }
+                                                
+                                                @media (min-width: 992px) {
+                                                    &:nth-of-type(4n-3) {
+                                                        clear: left;
+                                                    }
+                                                }
+                                                
+                                                @media (max-width: 991px) {
+                                                    &:nth-of-type(3n-2) {
+                                                        clear: left;
+                                                    }
+                                                }
+                                                
+                                                span {
+                                                    padding: 15px;
+                                                    margin-bottom: 5px;
+                                                    border-radius: 50%;
+                                                    background: lightgray;
+                                                    color: gray;
+                                                    text-align: center;
+                                                }
                                             }
                                         }
                                     }
