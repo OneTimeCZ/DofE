@@ -46,13 +46,22 @@ class UserController extends Controller{
         redirectTo('/');
     }
     
-    public function profilePublic($name){
-        //SQL /w $name
+    public function profilePublic($url){
+        $user = UserQuery::create()
+            ->joinWith('Image')
+            ->filterByUrl($url)
+            ->findOne();
+        
+        if(!$user){
+            $this->addPopup('danger', 'Hledaný uživatel nebyl nalezen.');
+            redirectTo('/');
+        }
         
         $this->view('Profile/index', 'base_template', [
             'active' => 'profile',
-            'title' => 'Profil | '.$name,
-            'name' => $name,
+            'title' => 'Profil | '.$user->getUsername(),
+            'user' => $user,
+            'js' => 'scripts/collapse',
             'recent' => ArticleQuery::recent()
         ]);
     }

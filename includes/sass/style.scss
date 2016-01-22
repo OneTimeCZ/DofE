@@ -586,10 +586,65 @@ body {
                                 border-bottom-left-radius: 5px;
                                 overflow: auto;
                                 
-                                &.profile {
-                                    div.side {
-                                        padding: 0;
+                                &.settings {
+                                    padding: 0;
+                                    background: $dnw;
+                                    
+                                    h2.settings-heading {
+                                        margin: 0;
+                                        margin-bottom: 5px;
+                                        padding: 5px;
+                                        font-weight: bold;
+                                        text-align: center;
+                                        font-size: 1.2em;
+                                        background: $blue;
+                                        border-top-left-radius: 5px;
+                                        border-top-right-radius: 5px;
+                                        color: white;
+                                    }
+                                    
+                                    div.general,
+                                    div.dofe,
+                                    div.personal {
+                                        background: white;
+                                        margin-bottom: 30px;
+                                        border-bottom-right-radius: 5px;
+                                        border-bottom-left-radius: 5px;
                                         overflow: auto;
+                                    }
+                                    
+                                    ul.settings {
+                                        list-style-type: none;
+                                        margin: 0;
+                                        padding: 0;
+                                            
+                                        li.item {
+                                            padding: 10px;
+                                                
+                                            a {
+                                                text-decoration: none;
+                                                text-align: center;
+                                                display: block;
+                                                margin: auto;
+                                                color: gray;
+                                                    
+                                                &:hover, &:focus {
+                                                    color: black;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                &.profile {
+                                    background: $dnw;
+                                    padding: 0;
+                                    
+                                    div.side {
+                                        padding: 10px;
+                                        background: white;
+                                        overflow: auto;
+                                        border-radius: 5px;
                                         
                                         div.image {
                                             padding: 5px;
@@ -637,6 +692,9 @@ body {
                                     
                                     div.info {
                                         padding: 0;
+                                        border-top-right-radius: 5px;
+                                        border-top-left-radius: 5px;
+                                        background: $dnw;
                                         
                                         h2 {
                                             margin: 0;
@@ -646,24 +704,41 @@ body {
                                             text-align: center;
                                             font-size: 1.2em;
                                             background: $blue;
-                                            border-top-left-radius: 5px;
-                                            border-top-right-radius: 5px;
+                                            border-radius: 5px;
                                             color: white;
+                                            
+                                            &.normal {
+                                                border-top-left-radius: 5px;
+                                                border-top-right-radius: 5px;
+                                                border-bottom-right-radius: 0;
+                                                border-bottom-left-radius: 0;
+                                            }
+                                            
+                                            a.see-more {
+                                                color: white;
+                                                padding: 2px;
+                                            }
                                         }
                                         
                                         div.dofe {
+                                            background: white;
+                                            border-radius: 5px;
+                                            margin-bottom: 30px;
+                                            
                                             ul {
                                                 margin: 0;
-                                                margin-bottom: 20px;
-                                                padding: 0;
+                                                padding: 15px;
+                                                padding-top: 0;
+                                                padding-bottom: 5px;
                                                 list-style-type: none;
 
                                                 li.item {
                                                     padding: 5px;
+                                                    margin-bottom: 10px;
 
                                                     div.progress {
-                                                        margin-bottom: 5px;
-
+                                                        margin-bottom: 0;
+                                                        
                                                         div.progress-bar {
                                                             font-weight: bolder;
 
@@ -686,6 +761,8 @@ body {
                                         
                                         div.achievements {
                                             overflow: auto;
+                                            border-radius: 5px;
+                                            background: white;
                                             
                                             div.achievement-item {
                                                 margin: auto;
@@ -1038,9 +1115,12 @@ body {
                         }
                     }
 
-                    img[alt="DofE logo"] {
-                        padding:5px;
-                        padding-bottom: 15px;    
+                    img.dofe_logo {
+                        padding-top: 15px;
+                        padding-bottom: 15px;
+                        width: 250px;
+                        height: 103px;
+                        
                     }
 
                     ul.navigation {
@@ -1160,7 +1240,7 @@ body {
                 }    
                 
                 nav.navigation {
-                    img[alt="DofE logo"] {
+                    img.dofe_logo {
                         padding: 10px;
                         padding-left: 15px;
                     }

@@ -41,7 +41,7 @@ class ArticleController extends Controller{
             ->findPk($id);
         
         if($post == NULL){
-            //popup for nonexistent article
+            $this->addPopup('danger', 'Hledaný článek neexistuje.');
             redirectTo('/clanky');
         }
         

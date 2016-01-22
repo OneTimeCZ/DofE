@@ -21,7 +21,7 @@ class AdminController extends Controller{
     public function __construct(){
         parent::__construct();
         if(!$this->isLogged()){
-            $this->addPopup('danger', 'Do sekce této mají přístup pouze někteří přihlášení uživatelé. Pro vstup se prosíme přihlašte.');
+            $this->addPopup('danger', 'Do této sekce mají přístup pouze někteří přihlášení uživatelé. Pro vstup se prosíme přihlašte.');
             redirectTo('/');
         } elseif(!$this->isAdmin() && !$this->isEditor()){
             $this->addPopup('danger', 'Do této sekce bohužel nemáte přístup.');

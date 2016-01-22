@@ -4,21 +4,24 @@
             <div class="section-content profile">
                 <div class="col-sm-4 side">
                     <div class="image">
-                        <img class="img-thumbnail img img-responsive" src="includes/images/200x200/profilepic01.png" alt="Profilový obrázek" title="Profilový obrázek uživatele aaaaaaa" >
+                        <img class="img-thumbnail img img-responsive" src="includes/images/200x200/<?= $data["user"]->getImage()->getPath() ?>" alt="Profilový obrázek" title="Profilový obrázek uživatele <?= $data["user"]->getUsername() ?>" >
                     </div>
                     <div class="basic">
-                    <h1>Martin Brom</h1>
+                    <h1><?= $data["user"]->getUsername() ?></h1>
                         <ul class="">
                             <li class="item">
                                 Členem DofE VOŠ a SPŠE Plzeň od: 11.1.2015
+                            </li>
+                            <li class="item text-center">
+                                Dokončené úrovně: Bronzová
                             </li>
                         </ul>
                     </div>
                 </div>
                 <div class="col-sm-7 col-sm-offset-1 info">
-                    <div class="dofe">
-                        <h2 class="info-heading">O PROGRAMU</h2>
-                        <ul class="">
+                    <div class="dofe" id="silver">
+                        <h2 class="info-heading silver normal">ÚROVEŇ - STŘÍBRNÁ</h2>
+                        <ul class="collapsed collapse-silver">
                             <li class="item">
                                 <h4>Rozvoj talentu: <small>Něměcký jazyk</small></h4>
                                 <div class="progress">
@@ -43,16 +46,39 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="item text-center">
-                                Úroveň: Stříbrná
+                        </ul>
+                    </div>
+                    <div class="dofe" id="bronze">
+                        <h2 class="info-heading bronze">ÚROVEŇ - BRONZOVÁ <a class="pull-right see-more bronze" data-toggle="collapse" href=".collapse-bronze" ><span class="fa fa-plus"></span></a></h2>
+                        <ul class="collapse collapse-bronze">
+                            <li class="item">
+                                <h4>Rozvoj talentu: <small>Japonština</small></h4>
+                                <div class="progress">
+                                    <div class="progress-bar skills" role="progressbar" aria-valuenow="13" aria-valuemin="0" aria-valuemax="13" style="width: <?= ceil((13/13)*100) ?>%;min-width: 2em;">
+                                        <?= ceil((13/13)*100) ?>%
+                                    </div>
+                                </div>
                             </li>
-                            <li class="item text-center">
-                                Hotové úrovně: Bronzová
+                            <li class="item">
+                                <h4>Sportovní aktivita: <small>Kondiční posilování</small></h4>
+                                <div class="progress">
+                                    <div class="progress-bar physical" role="progressbar" aria-valuenow="26" aria-valuemin="0" aria-valuemax="26" style="width: <?= ceil((26/26)*100) ?>%;min-width: 2em;">
+                                        <?= ceil((26/26)*100) ?>%
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="item">
+                                <h4>Dobrovolnictví: <small>Doučování anglického jazyka</small></h4>
+                                <div class="progress">
+                                    <div class="progress-bar volunteering" role="progressbar" aria-valuenow="13" aria-valuemin="0" aria-valuemax="13" style="width: <?= ceil((13/13)*100) ?>%;min-width: 2em;">
+                                        <?= ceil((13/13)*100) ?>%
+                                    </div>
+                                </div>
                             </li>
                         </ul>
                     </div>
                     <div class="achievements">
-                        <h2 class="info-heading">OCENĚNÍ</h2>
+                        <h2 class="info-heading normal">OCENĚNÍ</h2>
                         <div class="achievement-grid">
                             <div class="achievement-item completed col-xs-4 col-md-3">
                                 <span class="fa fa-trophy"></span><br>
@@ -68,15 +94,15 @@
                             </div>
                             <div class="achievement-item completed col-xs-4 col-md-3">
                                 <span class="fa fa-trophy"></span><br>
-                                Splň 3 týdny bez vynechání!
+                                Splň 3 týdny v řadě!
                             </div>
                             <div class="achievement-item completed col-xs-4 col-md-3">
                                 <span class="fa fa-trophy"></span><br>
-                                Splň 5 týdnů bez vynechání!
+                                Splň 5 týdnů v řadě!
                             </div>
                             <div class="achievement-item completed col-xs-4 col-md-3">
                                 <span class="fa fa-trophy"></span><br>
-                                Splň 10 týdnů bez vynechání!
+                                Splň 10 týdnů v řadě!
                             </div>
                             <div class="achievement-item completed col-xs-4 col-md-3">
                                 <span class="fa fa-trophy"></span><br>

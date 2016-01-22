@@ -339,41 +339,10 @@ body {
               border-bottom-right-radius: 5px;
               border-bottom-left-radius: 5px;
               overflow: auto; }
-              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side {
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.settings {
                 padding: 0;
-                overflow: auto; }
-                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.image {
-                  padding: 5px; }
-                  @media (max-width: 767px) {
-                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.image {
-                      width: 50%;
-                      margin-left: 25%; } }
-                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.image img {
-                    border-radius: 5px;
-                    width: 100%;
-                    margin: 0; }
-                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.basic {
-                  padding: 10px;
-                  margin: 0;
-                  overflow: auto; }
-                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.basic ul {
-                    margin: 0;
-                    padding: 0;
-                    list-style-type: none; }
-                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.basic ul li.item {
-                      padding: 5px;
-                      text-align: center; }
-                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.basic h1 {
-                    margin: 0;
-                    margin-bottom: 5px;
-                    text-align: center;
-                    font-size: 1.5em; }
-                    @media (max-width: 991px) {
-                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.basic h1 {
-                        font-size: 1.3em; } }
-              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info {
-                padding: 0; }
-                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info h2 {
+                background: #e9eaed; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.settings h2.settings-heading {
                   margin: 0;
                   margin-bottom: 5px;
                   padding: 5px;
@@ -384,52 +353,142 @@ body {
                   border-top-left-radius: 5px;
                   border-top-right-radius: 5px;
                   color: white; }
-                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.dofe ul {
-                  margin: 0;
-                  margin-bottom: 20px;
-                  padding: 0;
-                  list-style-type: none; }
-                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.dofe ul li.item {
-                    padding: 5px; }
-                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.dofe ul li.item div.progress {
-                      margin-bottom: 5px; }
-                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.dofe ul li.item div.progress div.progress-bar {
-                        font-weight: bolder; }
-                        body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.dofe ul li.item div.progress div.progress-bar.skills {
-                          background: #009edc; }
-                        body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.dofe ul li.item div.progress div.progress-bar.physical {
-                          background: #e1c72c; }
-                        body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.dofe ul li.item div.progress div.progress-bar.volunteering {
-                          background: #e40046; }
-                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.achievements {
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.settings div.general,
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.settings div.dofe,
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.settings div.personal {
+                  background: white;
+                  margin-bottom: 30px;
+                  border-bottom-right-radius: 5px;
+                  border-bottom-left-radius: 5px;
                   overflow: auto; }
-                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.achievements div.achievement-item {
-                    margin: auto;
-                    margin-top: 0;
-                    margin-bottom: 5px;
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.settings ul.settings {
+                  list-style-type: none;
+                  margin: 0;
+                  padding: 0; }
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.settings ul.settings li.item {
+                    padding: 10px; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.settings ul.settings li.item a {
+                      text-decoration: none;
+                      text-align: center;
+                      display: block;
+                      margin: auto;
+                      color: gray; }
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.settings ul.settings li.item a:hover, body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.settings ul.settings li.item a:focus {
+                        color: black; }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile {
+                background: #e9eaed;
+                padding: 0; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side {
+                  padding: 10px;
+                  background: white;
+                  overflow: auto;
+                  border-radius: 5px; }
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.image {
+                    padding: 5px; }
+                    @media (max-width: 767px) {
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.image {
+                        width: 50%;
+                        margin-left: 25%; } }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.image img {
+                      border-radius: 5px;
+                      width: 100%;
+                      margin: 0; }
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.basic {
                     padding: 10px;
-                    text-align: center;
-                    overflow: auto;
-                    color: gray; }
-                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.achievements div.achievement-item.completed {
-                      color: goldenrod;
-                      font-weight: bold; }
-                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.achievements div.achievement-item.completed span {
-                        background: khaki;
-                        color: goldenrod; }
-                    @media (min-width: 992px) {
-                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.achievements div.achievement-item:nth-of-type(4n-3) {
-                        clear: left; } }
-                    @media (max-width: 991px) {
-                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.achievements div.achievement-item:nth-of-type(3n-2) {
-                        clear: left; } }
-                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.achievements div.achievement-item span {
-                      padding: 15px;
+                    margin: 0;
+                    overflow: auto; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.basic ul {
+                      margin: 0;
+                      padding: 0;
+                      list-style-type: none; }
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.basic ul li.item {
+                        padding: 5px;
+                        text-align: center; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.basic h1 {
+                      margin: 0;
                       margin-bottom: 5px;
-                      border-radius: 50%;
-                      background: lightgray;
-                      color: gray;
-                      text-align: center; }
+                      text-align: center;
+                      font-size: 1.5em; }
+                      @media (max-width: 991px) {
+                        body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.side div.basic h1 {
+                          font-size: 1.3em; } }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info {
+                  padding: 0;
+                  border-top-right-radius: 5px;
+                  border-top-left-radius: 5px;
+                  background: #e9eaed; }
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info h2 {
+                    margin: 0;
+                    margin-bottom: 5px;
+                    padding: 5px;
+                    font-weight: bold;
+                    text-align: center;
+                    font-size: 1.2em;
+                    background: #2c3e50;
+                    border-radius: 5px;
+                    color: white; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info h2.normal {
+                      border-top-left-radius: 5px;
+                      border-top-right-radius: 5px;
+                      border-bottom-right-radius: 0;
+                      border-bottom-left-radius: 0; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info h2 a.see-more {
+                      color: white;
+                      padding: 2px; }
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.dofe {
+                    background: white;
+                    border-radius: 5px;
+                    margin-bottom: 30px; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.dofe ul {
+                      margin: 0;
+                      padding: 15px;
+                      padding-top: 0;
+                      padding-bottom: 5px;
+                      list-style-type: none; }
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.dofe ul li.item {
+                        padding: 5px;
+                        margin-bottom: 10px; }
+                        body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.dofe ul li.item div.progress {
+                          margin-bottom: 0; }
+                          body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.dofe ul li.item div.progress div.progress-bar {
+                            font-weight: bolder; }
+                            body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.dofe ul li.item div.progress div.progress-bar.skills {
+                              background: #009edc; }
+                            body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.dofe ul li.item div.progress div.progress-bar.physical {
+                              background: #e1c72c; }
+                            body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.dofe ul li.item div.progress div.progress-bar.volunteering {
+                              background: #e40046; }
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.achievements {
+                    overflow: auto;
+                    border-radius: 5px;
+                    background: white; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.achievements div.achievement-item {
+                      margin: auto;
+                      margin-top: 0;
+                      margin-bottom: 5px;
+                      padding: 10px;
+                      text-align: center;
+                      overflow: auto;
+                      color: gray; }
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.achievements div.achievement-item.completed {
+                        color: goldenrod;
+                        font-weight: bold; }
+                        body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.achievements div.achievement-item.completed span {
+                          background: khaki;
+                          color: goldenrod; }
+                      @media (min-width: 992px) {
+                        body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.achievements div.achievement-item:nth-of-type(4n-3) {
+                          clear: left; } }
+                      @media (max-width: 991px) {
+                        body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.achievements div.achievement-item:nth-of-type(3n-2) {
+                          clear: left; } }
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.profile div.info div.achievements div.achievement-item span {
+                        padding: 15px;
+                        margin-bottom: 5px;
+                        border-radius: 50%;
+                        background: lightgray;
+                        color: gray;
+                        text-align: center; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.participants {
                 overflow: hidden;
                 padding-left: 10px;
@@ -612,9 +671,11 @@ body {
             margin-top: 35px; }
           body div.page-container header nav.navigation button.menu span.icon-bar {
             background: #2c3e50; }
-          body div.page-container header nav.navigation img[alt="DofE logo"] {
-            padding: 5px;
-            padding-bottom: 15px; }
+          body div.page-container header nav.navigation img.dofe_logo {
+            padding-top: 15px;
+            padding-bottom: 15px;
+            width: 250px;
+            height: 103px; }
           body div.page-container header nav.navigation ul.navigation {
             margin-bottom: 0; }
             body div.page-container header nav.navigation ul.navigation li.active {
@@ -680,7 +741,7 @@ body {
     @media (min-width: 768px) {
       body div.page-container header {
         margin-bottom: 15px; }
-      body div.page-container header nav.navigation img[alt="DofE logo"] {
+      body div.page-container header nav.navigation img.dofe_logo {
         padding: 10px;
         padding-left: 15px; }
       body div.page-container header nav.navigation ul.navigation {
