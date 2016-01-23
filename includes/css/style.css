@@ -311,6 +311,16 @@ body {
               font-size: 1.2em; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header.striped {
                 line-height: 45px; }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header.smaller {
+                height: auto; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header.smaller h2 {
+                  margin: 0;
+                  margin-bottom: 5px;
+                  padding: 5px;
+                  font-weight: bold;
+                  text-align: center;
+                  font-size: 1.2em;
+                  color: white; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header.comments {
                 height: 35px;
                 line-height: 35px;
@@ -563,17 +573,34 @@ body {
                     body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info {
                       margin-left: 60px;
                       margin-bottom: 5px;
-                      height: 25px; }
+                      overflow: auto; }
                       body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info a {
                         color: #2c3e50;
                         text-decoration: none;
-                        margin-right: 5px; }
+                        margin-right: 5px;
+                        overflow: auto; }
                         body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info a:hover, body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info a:focus {
                           color: black; }
                       body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info h4,
                       body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info p {
                         display: inline;
                         line-height: 25px; }
+                        body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info h4.rating,
+                        body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info p.rating {
+                          margin-bottom: 0; }
+                        body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info h4 button.rating,
+                        body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info p button.rating {
+                          border: 0;
+                          background: none;
+                          padding: 0; }
+                          body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info h4 button.rating:hover.like i.fa, body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info h4 button.rating:focus.like i.fa,
+                          body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info p button.rating:hover.like i.fa,
+                          body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info p button.rating:focus.like i.fa {
+                            color: #71a100; }
+                          body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info h4 button.rating:hover.dislike i.fa, body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info h4 button.rating:focus.dislike i.fa,
+                          body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info p button.rating:hover.dislike i.fa,
+                          body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info p button.rating:focus.dislike i.fa {
+                            color: red; }
                       body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info h4 {
                         font-size: 1.4em; }
                       body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.comments ul.comments li.comment div.info p {

@@ -55,6 +55,10 @@
                                 <h4><?= $comment->getUser()->getUsername() ?></h4>
                             </a>
                             <p><?= $comment->getCreatedAt()->format("d.m.Y H:i:s") ?></p>
+                            <p class="pull-right rating">
+                                3 <button class="rating like"><i class="fa fa-thumbs-up"></i></button>&nbsp;
+                                0 <button class="rating dislike"><i class="fa fa-thumbs-down"></i></button>
+                            </p>
                         </div>
                         <div class="content_area">
                             <p class="comment">

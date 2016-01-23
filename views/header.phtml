@@ -45,11 +45,15 @@
                                 <img alt="profilepic" class="img img-responsive avatar" src="../includes/images/50x50/<?= $_SESSION["user"]->getImage()->getThumbnailPath() ?>">
                             </a>
                             <a class="menu-item" href="/profil/<?= $_SESSION["user"]->getUrl() ?>">
-                                VÁŠ PROFIL
+                                <i class="fa fa-user"></i>
                             </a>
                             <div class="divider"></div>
-                            <a class="menu-item" href="/profil">
-                                NASTAVENÍ
+                            <a class="menu-item" href="/nastaveni">
+                                <i class="fa fa-cog"></i>
+                            </a>
+                            <div class="divider"></div>
+                            <a class="menu-item" href="/nahlasit-aktivitu">
+                                <i class="fa fa-check"></i>
                             </a>
                             <a class="menu-item pull-right" href="/odhlasit">
                                 ODHLÁSIT SE
@@ -65,9 +69,11 @@
                                     <?= $_SESSION["user"]->getUsername() ?>
                                 </li>
                                 <li class="divider"></li>
-                                <li><a href="/profil/<?= $_SESSION["user"]->getUrl() ?>">Váš Profil</a></li>
+                                <li><a href="/profil/<?= $_SESSION["user"]->getUrl() ?>">Váš profil</a></li>
                                 <li class="divider"></li>
-                                <li><a href="/profil">Nastavení</a></li>
+                                <li><a href="/nastaveni">Nastavení</a></li>
+                                <li class="divider"></li>
+                                <li><a href="/nahlasit-aktivitu">Nahlásit aktivitu</a></li>
                                 <li class="divider"></li>
                                 <li><a href="/odhlasit">Odhlásit</a></li>
                             </ul>

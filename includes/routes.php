@@ -55,7 +55,15 @@
 
 //---USER---
     $router->addGet('User.profilePublic', '/profil/{name}');
-    $router->addGet('User.profileSettings', '/profil');
+    $router->addGet('User.profileSettings', '/nastaveni');
     $router->addGet('User.logout', '/odhlasit');
     $router->addPost('User.login', '/prihlasit');
     $router->addPost('User.create', '/registrovat');
+    $router->addGet('User.changePersonalForm', '/nastaveni/zmenit-udaje');
+    $router->addPost('User.changePersonal', '/nastaveni/ulozit-udaje');
+    $router->addGet('User.changeAvatarForm', '/nastaveni/zmenit-avatar');
+    $router->addPost('User.changeAvatar', '/nastaveni/ulozit-avatar');
+    $router->addGet('User.changeDofeForm', '/nastaveni/zmenit-dofe');
+    $router->addPost('User.changeDofe', '/nastaveni/ulozit-dofe');
+    $router->addGet('User.logDofeActivityForm', '/nahlasit-aktivitu');
+    $router->addPost('User.logDofeActivity', '/ulozit-aktivitu');

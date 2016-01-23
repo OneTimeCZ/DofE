@@ -544,6 +544,20 @@ body {
                                     line-height: 45px;    
                                 }
                                 
+                                &.smaller {
+                                    height: auto;
+                                    
+                                    h2 {
+                                        margin: 0;
+                                        margin-bottom: 5px;
+                                        padding: 5px;
+                                        font-weight: bold;
+                                        text-align: center;
+                                        font-size: 1.2em;
+                                        color: white;
+                                    }
+                                }
+                                
                                 &.comments {
                                     height: 35px;
                                     line-height: 35px;
@@ -929,12 +943,13 @@ body {
                                             div.info {
                                                 margin-left: 60px;
                                                 margin-bottom: 5px;
-                                                height: 25px;
+                                                overflow: auto;
                                                 
                                                 a {
                                                     color: $blue;
                                                     text-decoration: none;
                                                     margin-right: 5px;
+                                                    overflow: auto;
                                                     
                                                     &:hover, &:focus {
                                                         color: black;
@@ -945,6 +960,30 @@ body {
                                                 p {
                                                     display: inline;
                                                     line-height: 25px;
+                                                    
+                                                    &.rating {
+                                                        margin-bottom: 0;
+                                                    }
+                                                    
+                                                    button.rating {
+                                                        border: 0;
+                                                        background: none;
+                                                        padding: 0;
+                                                        
+                                                        &:hover, &:focus {
+                                                            &.like {
+                                                                i.fa {
+                                                                    color: $expedition;    
+                                                                }
+                                                            }
+                                                            
+                                                            &.dislike {
+                                                                i.fa {
+                                                                    color: red;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
                                                 }
                                                 
                                                 h4 {

@@ -1,0 +1,81 @@
+<div class="content">    
+    <div class="section">
+        <div class="page-heading">
+            <h1>Změna údajů</h1>
+        </div>
+    </div>
+    
+    <div class="section">
+        <div class="column single">
+            <div class="content-box">
+                <div class="section-header smaller">
+                    <h2 id="jmeno">Změna uživatelského jména</h2>
+                </div>
+                <div class="section-content">
+                    <form class="col-xs-offset-1 col-xs-10" role="form" action="/nastaveni/ulozit-udaje" method="post">
+                        <div class="form-group">
+                            <label for="username">Nové uživatelské jméno</label>
+                            <input class="form-control" id="username" type="text" name="username" placeholder="Zadejte prosím nové uživatelské jméno." required />
+                        </div>
+
+                        <div class="form-group">
+                            <input class="btn btn-default" type="submit" name="save" value="Změnit jméno" >
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <div class="column single">
+            <div class="content-box">
+                <div class="section-header smaller">
+                    <h2 id="heslo">Změna hesla</h2>
+                </div>
+                <div class="section-content">
+                    <form class="col-xs-offset-1 col-xs-10" role="form" action="/nastaveni/ulozit-udaje" method="post">
+                        <div class="form-group">
+                            <label for="old_password">Staré heslo</label>
+                            <input class="form-control" id="old_password" type="password" name="old_password" placeholder="Zadejte prosím staré heslo." required />
+                        </div>
+                        <div class="form-group">
+                            <label for="new_password1">Nové heslo</label>
+                            <input class="form-control" id="new_password1" type="password" name="new_password1" placeholder="Zadejte prosím nové heslo." required />
+                        </div>
+                        <div class="form-group">
+                            <label for="new_password2">Nové heslo znovu</label>
+                            <input class="form-control" id="new_password2" type="password" name="new_password2" placeholder="Zadejte prosím nové heslo znovu." required />
+                        </div>
+
+                        <div class="form-group">
+                            <input class="btn btn-default" type="submit" name="save" value="Změnit heslo" >
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <div class="column single">
+            <div class="content-box">
+                <div class="section-header smaller">
+                    <h2 id="email">Změna emailu</h2>
+                </div>
+                <div class="section-content">
+                    <form class="col-xs-offset-1 col-xs-10" role="form" action="/nastaveni/ulozit-udaje" method="post">
+                        <div class="form-group">
+                            <label for="e-mail">Nový email</label>
+                            <input class="form-control" id="e-mail" type="text" name="e-mail" placeholder="Zadejte prosím nový email." required />
+                        </div>
+
+                        <div class="form-group">
+                            <input class="btn btn-default" type="submit" name="save" value="Změnit email" >
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
