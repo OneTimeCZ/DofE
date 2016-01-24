@@ -68,7 +68,6 @@
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="id_user" type="integer" required="true"/>
         <column name="id_article" type="integer" required="true"/>
-        <column name="rating" type="integer" />
         <column name="content" type="varchar" size="500" required="true"/>
         
         <behavior name="timestampable" />
@@ -105,14 +104,30 @@
         <column name="short_length" type="integer"/>
         <column name="normal_length" type="integer" required="true"/>
         <column name="long_length" type="integer" required="true"/>
+        <column name="color" type="varchar" size="10" required="true"/>
     </table>
     
     <!-- DofE Activities(name+description with a goal) -->
     <table name="activities" phpName="Activity">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="id_user" type="integer" required="true"/>
+        <column name="id_level" type="integer" required="true"/>
+        <column name="id_activity_type" type="integer" required="true"/>
         <column name="name" type="varchar" size="100" required="true"/>
         <column name="description" type="varchar" size="250"/>
         <column name="goal" type="varchar" size="250" required="true"/>
+        
+        <foreign-key foreignTable="users">
+            <reference local="id_user" foreign="id"/>
+        </foreign-key>
+    
+        <foreign-key foreignTable="levels">
+            <reference local="id_level" foreign="id"/>
+        </foreign-key>
+        
+        <foreign-key foreignTable="activity_types">
+            <reference local="id_activity_type" foreign="id"/>
+        </foreign-key>
     </table>
     
     <!-- DofE Activity Types(volunteering,physical,skill) -->
@@ -126,6 +141,11 @@
     <table name="activity_logs" phpName="ActivityLog">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="id_week" type="integer" required="true"/>
+        <column name="id_activity" type="integer" required="true"/>
+        
+        <foreign-key foreignTable="activities">
+            <reference local="id_activity" foreign="id"/>
+        </foreign-key>
     </table>
     
     <!-- Categories -->

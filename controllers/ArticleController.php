@@ -12,6 +12,8 @@ use Models\Image;
 use Models\ImageQuery;
 use Models\User;
 use Models\UserQuery;
+use Models\Rating;
+use Models\RatingQuery;
 
 class ArticleController extends Controller{
     
@@ -51,6 +53,7 @@ class ArticleController extends Controller{
             ->useUserQuery()
                 ->joinWith('Image')
             ->endUse()
+            ->leftJoinWith('Rating')
             ->orderByCreatedAt("desc")
             ->find();
         

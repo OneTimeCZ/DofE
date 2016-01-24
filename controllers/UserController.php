@@ -9,6 +9,14 @@ use Models\User;
 use Models\UserQuery;
 use Models\Image;
 use Models\ImageQuery;
+use Models\Activity;
+use Models\ActivityQuery;
+use Models\ActivityLog;
+use Models\ActivityLogQuery;
+use Models\ActivityType;
+use Models\ActivityTypeQuery;
+use Models\Level;
+use Models\LevelQuery;
 use \DateTime;
 
 require_once '/helpers/helper.php';
@@ -57,12 +65,29 @@ class UserController extends Controller{
             redirectTo('/');
         }
         
+        //CHECK IF USER IS A DOFE MEMBER WITH SET ACTIVITIES ELSE ERROR 
+          
+        $activities = ActivityQuery::create()
+            ->filterByIdUser($user->getId())
+            ->joinWith("ActivityType")
+            ->joinWith("Level")
+            ->leftJoinWith("ActivityLog")
+            ->orderByIdActivityType()
+            ->orderByIdLevel("desc")
+            ->find();
+        
+        if(count($activities) % 3 != 0 || count($activities) > 9){
+            $this->addPopup('danger', 'Při zobrazování veřejného profilu uživatele ' . $user->getUsername() . ' nastala neočekávaná chyba.');
+            redirectTo('/');
+        }
+        
         $this->view('Profile/index', 'base_template', [
             'active' => 'profile',
             'title' => 'Profil | '.$user->getUsername(),
             'user' => $user,
             'js' => 'scripts/collapse',
-            'recent' => ArticleQuery::recent()
+            'recent' => ArticleQuery::recent(),
+            'activities' => $activities
         ]);
     }
     
@@ -133,8 +158,14 @@ class UserController extends Controller{
     
     }
     
-    public function logDofeActivityForm(){
-    
+    public function logDofeActivityForm($date = ''){
+        //SQL w/ $date["year"]/["month"]/["day"]
+        
+        $this->view('Profile/logDofe', 'base_template', [
+            'active' => 'logActivity',
+            'title' => 'Nahlášení aktivit',
+            'recent' => ArticleQuery::recent()
+        ]);
     }
     
     public function changeDofeForm(){

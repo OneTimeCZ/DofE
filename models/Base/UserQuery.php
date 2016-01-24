@@ -88,7 +88,27 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoinWithComment() Adds a RIGHT JOIN clause and with to the query using the Comment relation
  * @method     ChildUserQuery innerJoinWithComment() Adds a INNER JOIN clause and with to the query using the Comment relation
  *
- * @method     \Models\ImageQuery|\Models\ArticleQuery|\Models\CommentQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     ChildUserQuery leftJoinRating($relationAlias = null) Adds a LEFT JOIN clause to the query using the Rating relation
+ * @method     ChildUserQuery rightJoinRating($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Rating relation
+ * @method     ChildUserQuery innerJoinRating($relationAlias = null) Adds a INNER JOIN clause to the query using the Rating relation
+ *
+ * @method     ChildUserQuery joinWithRating($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Rating relation
+ *
+ * @method     ChildUserQuery leftJoinWithRating() Adds a LEFT JOIN clause and with to the query using the Rating relation
+ * @method     ChildUserQuery rightJoinWithRating() Adds a RIGHT JOIN clause and with to the query using the Rating relation
+ * @method     ChildUserQuery innerJoinWithRating() Adds a INNER JOIN clause and with to the query using the Rating relation
+ *
+ * @method     ChildUserQuery leftJoinActivity($relationAlias = null) Adds a LEFT JOIN clause to the query using the Activity relation
+ * @method     ChildUserQuery rightJoinActivity($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Activity relation
+ * @method     ChildUserQuery innerJoinActivity($relationAlias = null) Adds a INNER JOIN clause to the query using the Activity relation
+ *
+ * @method     ChildUserQuery joinWithActivity($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Activity relation
+ *
+ * @method     ChildUserQuery leftJoinWithActivity() Adds a LEFT JOIN clause and with to the query using the Activity relation
+ * @method     ChildUserQuery rightJoinWithActivity() Adds a RIGHT JOIN clause and with to the query using the Activity relation
+ * @method     ChildUserQuery innerJoinWithActivity() Adds a INNER JOIN clause and with to the query using the Activity relation
+ *
+ * @method     \Models\ImageQuery|\Models\ArticleQuery|\Models\CommentQuery|\Models\RatingQuery|\Models\ActivityQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUser findOne(ConnectionInterface $con = null) Return the first ChildUser matching the query
  * @method     ChildUser findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUser matching the query, or a new ChildUser object populated from the query conditions when no match is found
@@ -1056,6 +1076,152 @@ abstract class UserQuery extends ModelCriteria
         return $this
             ->joinComment($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Comment', '\Models\CommentQuery');
+    }
+
+    /**
+     * Filter the query by a related \Models\Rating object
+     *
+     * @param \Models\Rating|ObjectCollection $rating the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByRating($rating, $comparison = null)
+    {
+        if ($rating instanceof \Models\Rating) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $rating->getIdUser(), $comparison);
+        } elseif ($rating instanceof ObjectCollection) {
+            return $this
+                ->useRatingQuery()
+                ->filterByPrimaryKeys($rating->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByRating() only accepts arguments of type \Models\Rating or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Rating relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinRating($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Rating');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Rating');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Rating relation Rating object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Models\RatingQuery A secondary query class using the current class as primary query
+     */
+    public function useRatingQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinRating($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Rating', '\Models\RatingQuery');
+    }
+
+    /**
+     * Filter the query by a related \Models\Activity object
+     *
+     * @param \Models\Activity|ObjectCollection $activity the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByActivity($activity, $comparison = null)
+    {
+        if ($activity instanceof \Models\Activity) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $activity->getIdUser(), $comparison);
+        } elseif ($activity instanceof ObjectCollection) {
+            return $this
+                ->useActivityQuery()
+                ->filterByPrimaryKeys($activity->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByActivity() only accepts arguments of type \Models\Activity or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Activity relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinActivity($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Activity');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Activity');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Activity relation Activity object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Models\ActivityQuery A secondary query class using the current class as primary query
+     */
+    public function useActivityQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinActivity($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Activity', '\Models\ActivityQuery');
     }
 
     /**

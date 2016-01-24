@@ -56,8 +56,8 @@
                             </a>
                             <p><?= $comment->getCreatedAt()->format("d.m.Y H:i:s") ?></p>
                             <p class="pull-right rating">
-                                3 <button class="rating like"><i class="fa fa-thumbs-up"></i></button>&nbsp;
-                                0 <button class="rating dislike"><i class="fa fa-thumbs-down"></i></button>
+                                <?php $likes = 0; foreach($comment->getRatings() as $rating){if($rating->getType() == 1)$likes++;} echo $likes; ?> <button class="rating like"><i class="fa fa-thumbs-up"></i></button>&nbsp;
+                                <?php $dislikes = 0; foreach($comment->getRatings() as $rating){if($rating->getType() == 0)$dislikes++;} echo $dislikes; ?> <button class="rating dislike"><i class="fa fa-thumbs-down"></i></button>
                             </p>
                         </div>
                         <div class="content_area">

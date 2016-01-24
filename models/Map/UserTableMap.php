@@ -233,6 +233,20 @@ class UserTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, 'Comments', false);
+        $this->addRelation('Rating', '\\Models\\Rating', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':id_user',
+    1 => ':id',
+  ),
+), null, null, 'Ratings', false);
+        $this->addRelation('Activity', '\\Models\\Activity', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':id_user',
+    1 => ':id',
+  ),
+), null, null, 'Activities', false);
     } // buildRelations()
 
     /**

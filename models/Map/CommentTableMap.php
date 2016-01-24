@@ -178,6 +178,13 @@ class CommentTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, null, false);
+        $this->addRelation('Rating', '\\Models\\Rating', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':id_comment',
+    1 => ':id',
+  ),
+), null, null, 'Ratings', false);
     } // buildRelations()
 
     /**

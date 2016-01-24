@@ -309,6 +309,15 @@ body {
               text-align: center;
               color: white;
               font-size: 1.2em; }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header.log-dofe a {
+                text-decoration: none;
+                color: white; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header.log-dofe a:hover, body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header.log-dofe a:focus {
+                  color: white; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header.log-dofe a.pull-right {
+                  margin-right: 5px; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header.log-dofe a.pull-left {
+                  margin-left: 5px; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header.striped {
                 line-height: 45px; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header.smaller {
@@ -349,6 +358,8 @@ body {
               border-bottom-right-radius: 5px;
               border-bottom-left-radius: 5px;
               overflow: auto; }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.log-dofe {
+                padding: 15px; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.settings {
                 padding: 0;
                 background: #e9eaed; }

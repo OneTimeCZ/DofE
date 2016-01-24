@@ -66,4 +66,9 @@
     $router->addGet('User.changeDofeForm', '/nastaveni/zmenit-dofe');
     $router->addPost('User.changeDofe', '/nastaveni/ulozit-dofe');
     $router->addGet('User.logDofeActivityForm', '/nahlasit-aktivitu');
-    $router->addPost('User.logDofeActivity', '/ulozit-aktivitu');
+    $router->addPost('User.logDofeActivity', '/ulozit-aktivitu{/year,month,day}')
+        ->setTokens([
+            'year' => '/d{4}',
+            'month' => '/d{2}',
+            'day' => '/d{2}'
+        ]);

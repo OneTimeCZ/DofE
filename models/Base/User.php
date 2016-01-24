@@ -5,12 +5,16 @@ namespace Models\Base;
 use \DateTime;
 use \Exception;
 use \PDO;
+use Models\Activity as ChildActivity;
+use Models\ActivityQuery as ChildActivityQuery;
 use Models\Article as ChildArticle;
 use Models\ArticleQuery as ChildArticleQuery;
 use Models\Comment as ChildComment;
 use Models\CommentQuery as ChildCommentQuery;
 use Models\Image as ChildImage;
 use Models\ImageQuery as ChildImageQuery;
+use Models\Rating as ChildRating;
+use Models\RatingQuery as ChildRatingQuery;
 use Models\User as ChildUser;
 use Models\UserQuery as ChildUserQuery;
 use Models\Map\UserTableMap;
@@ -185,6 +189,18 @@ abstract class User implements ActiveRecordInterface
     protected $collCommentsPartial;
 
     /**
+     * @var        ObjectCollection|ChildRating[] Collection to store aggregation of ChildRating objects.
+     */
+    protected $collRatings;
+    protected $collRatingsPartial;
+
+    /**
+     * @var        ObjectCollection|ChildActivity[] Collection to store aggregation of ChildActivity objects.
+     */
+    protected $collActivities;
+    protected $collActivitiesPartial;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
@@ -203,6 +219,18 @@ abstract class User implements ActiveRecordInterface
      * @var ObjectCollection|ChildComment[]
      */
     protected $commentsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildRating[]
+     */
+    protected $ratingsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildActivity[]
+     */
+    protected $activitiesScheduledForDeletion = null;
 
     /**
      * Initializes internal state of Models\Base\User object.
@@ -1059,6 +1087,10 @@ abstract class User implements ActiveRecordInterface
 
             $this->collComments = null;
 
+            $this->collRatings = null;
+
+            $this->collActivities = null;
+
         } // if (deep)
     }
 
@@ -1221,6 +1253,40 @@ abstract class User implements ActiveRecordInterface
 
             if ($this->collComments !== null) {
                 foreach ($this->collComments as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->ratingsScheduledForDeletion !== null) {
+                if (!$this->ratingsScheduledForDeletion->isEmpty()) {
+                    \Models\RatingQuery::create()
+                        ->filterByPrimaryKeys($this->ratingsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->ratingsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collRatings !== null) {
+                foreach ($this->collRatings as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->activitiesScheduledForDeletion !== null) {
+                if (!$this->activitiesScheduledForDeletion->isEmpty()) {
+                    \Models\ActivityQuery::create()
+                        ->filterByPrimaryKeys($this->activitiesScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->activitiesScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collActivities !== null) {
+                foreach ($this->collActivities as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1563,6 +1629,36 @@ abstract class User implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->collComments->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collRatings) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'ratings';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'ratingss';
+                        break;
+                    default:
+                        $key = 'Ratings';
+                }
+
+                $result[$key] = $this->collRatings->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collActivities) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'activities';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'activitiess';
+                        break;
+                    default:
+                        $key = 'Activities';
+                }
+
+                $result[$key] = $this->collActivities->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1908,6 +2004,18 @@ abstract class User implements ActiveRecordInterface
                 }
             }
 
+            foreach ($this->getRatings() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addRating($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getActivities() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addActivity($relObj->copy($deepCopy));
+                }
+            }
+
         } // if ($deepCopy)
 
         if ($makeNew) {
@@ -2005,6 +2113,12 @@ abstract class User implements ActiveRecordInterface
         }
         if ('Comment' == $relationName) {
             return $this->initComments();
+        }
+        if ('Rating' == $relationName) {
+            return $this->initRatings();
+        }
+        if ('Activity' == $relationName) {
+            return $this->initActivities();
         }
     }
 
@@ -2528,6 +2642,525 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
+     * Clears out the collRatings collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addRatings()
+     */
+    public function clearRatings()
+    {
+        $this->collRatings = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collRatings collection loaded partially.
+     */
+    public function resetPartialRatings($v = true)
+    {
+        $this->collRatingsPartial = $v;
+    }
+
+    /**
+     * Initializes the collRatings collection.
+     *
+     * By default this just sets the collRatings collection to an empty array (like clearcollRatings());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initRatings($overrideExisting = true)
+    {
+        if (null !== $this->collRatings && !$overrideExisting) {
+            return;
+        }
+        $this->collRatings = new ObjectCollection();
+        $this->collRatings->setModel('\Models\Rating');
+    }
+
+    /**
+     * Gets an array of ChildRating objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildRating[] List of ChildRating objects
+     * @throws PropelException
+     */
+    public function getRatings(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collRatingsPartial && !$this->isNew();
+        if (null === $this->collRatings || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collRatings) {
+                // return empty collection
+                $this->initRatings();
+            } else {
+                $collRatings = ChildRatingQuery::create(null, $criteria)
+                    ->filterByUser($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collRatingsPartial && count($collRatings)) {
+                        $this->initRatings(false);
+
+                        foreach ($collRatings as $obj) {
+                            if (false == $this->collRatings->contains($obj)) {
+                                $this->collRatings->append($obj);
+                            }
+                        }
+
+                        $this->collRatingsPartial = true;
+                    }
+
+                    return $collRatings;
+                }
+
+                if ($partial && $this->collRatings) {
+                    foreach ($this->collRatings as $obj) {
+                        if ($obj->isNew()) {
+                            $collRatings[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collRatings = $collRatings;
+                $this->collRatingsPartial = false;
+            }
+        }
+
+        return $this->collRatings;
+    }
+
+    /**
+     * Sets a collection of ChildRating objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $ratings A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setRatings(Collection $ratings, ConnectionInterface $con = null)
+    {
+        /** @var ChildRating[] $ratingsToDelete */
+        $ratingsToDelete = $this->getRatings(new Criteria(), $con)->diff($ratings);
+
+
+        $this->ratingsScheduledForDeletion = $ratingsToDelete;
+
+        foreach ($ratingsToDelete as $ratingRemoved) {
+            $ratingRemoved->setUser(null);
+        }
+
+        $this->collRatings = null;
+        foreach ($ratings as $rating) {
+            $this->addRating($rating);
+        }
+
+        $this->collRatings = $ratings;
+        $this->collRatingsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Rating objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Rating objects.
+     * @throws PropelException
+     */
+    public function countRatings(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collRatingsPartial && !$this->isNew();
+        if (null === $this->collRatings || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collRatings) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getRatings());
+            }
+
+            $query = ChildRatingQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUser($this)
+                ->count($con);
+        }
+
+        return count($this->collRatings);
+    }
+
+    /**
+     * Method called to associate a ChildRating object to this object
+     * through the ChildRating foreign key attribute.
+     *
+     * @param  ChildRating $l ChildRating
+     * @return $this|\Models\User The current object (for fluent API support)
+     */
+    public function addRating(ChildRating $l)
+    {
+        if ($this->collRatings === null) {
+            $this->initRatings();
+            $this->collRatingsPartial = true;
+        }
+
+        if (!$this->collRatings->contains($l)) {
+            $this->doAddRating($l);
+
+            if ($this->ratingsScheduledForDeletion and $this->ratingsScheduledForDeletion->contains($l)) {
+                $this->ratingsScheduledForDeletion->remove($this->ratingsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildRating $rating The ChildRating object to add.
+     */
+    protected function doAddRating(ChildRating $rating)
+    {
+        $this->collRatings[]= $rating;
+        $rating->setUser($this);
+    }
+
+    /**
+     * @param  ChildRating $rating The ChildRating object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removeRating(ChildRating $rating)
+    {
+        if ($this->getRatings()->contains($rating)) {
+            $pos = $this->collRatings->search($rating);
+            $this->collRatings->remove($pos);
+            if (null === $this->ratingsScheduledForDeletion) {
+                $this->ratingsScheduledForDeletion = clone $this->collRatings;
+                $this->ratingsScheduledForDeletion->clear();
+            }
+            $this->ratingsScheduledForDeletion[]= clone $rating;
+            $rating->setUser(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this User is new, it will return
+     * an empty collection; or if this User has previously
+     * been saved, it will retrieve related Ratings from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in User.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildRating[] List of ChildRating objects
+     */
+    public function getRatingsJoinComment(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildRatingQuery::create(null, $criteria);
+        $query->joinWith('Comment', $joinBehavior);
+
+        return $this->getRatings($query, $con);
+    }
+
+    /**
+     * Clears out the collActivities collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addActivities()
+     */
+    public function clearActivities()
+    {
+        $this->collActivities = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collActivities collection loaded partially.
+     */
+    public function resetPartialActivities($v = true)
+    {
+        $this->collActivitiesPartial = $v;
+    }
+
+    /**
+     * Initializes the collActivities collection.
+     *
+     * By default this just sets the collActivities collection to an empty array (like clearcollActivities());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initActivities($overrideExisting = true)
+    {
+        if (null !== $this->collActivities && !$overrideExisting) {
+            return;
+        }
+        $this->collActivities = new ObjectCollection();
+        $this->collActivities->setModel('\Models\Activity');
+    }
+
+    /**
+     * Gets an array of ChildActivity objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildActivity[] List of ChildActivity objects
+     * @throws PropelException
+     */
+    public function getActivities(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collActivitiesPartial && !$this->isNew();
+        if (null === $this->collActivities || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collActivities) {
+                // return empty collection
+                $this->initActivities();
+            } else {
+                $collActivities = ChildActivityQuery::create(null, $criteria)
+                    ->filterByUser($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collActivitiesPartial && count($collActivities)) {
+                        $this->initActivities(false);
+
+                        foreach ($collActivities as $obj) {
+                            if (false == $this->collActivities->contains($obj)) {
+                                $this->collActivities->append($obj);
+                            }
+                        }
+
+                        $this->collActivitiesPartial = true;
+                    }
+
+                    return $collActivities;
+                }
+
+                if ($partial && $this->collActivities) {
+                    foreach ($this->collActivities as $obj) {
+                        if ($obj->isNew()) {
+                            $collActivities[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collActivities = $collActivities;
+                $this->collActivitiesPartial = false;
+            }
+        }
+
+        return $this->collActivities;
+    }
+
+    /**
+     * Sets a collection of ChildActivity objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $activities A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setActivities(Collection $activities, ConnectionInterface $con = null)
+    {
+        /** @var ChildActivity[] $activitiesToDelete */
+        $activitiesToDelete = $this->getActivities(new Criteria(), $con)->diff($activities);
+
+
+        $this->activitiesScheduledForDeletion = $activitiesToDelete;
+
+        foreach ($activitiesToDelete as $activityRemoved) {
+            $activityRemoved->setUser(null);
+        }
+
+        $this->collActivities = null;
+        foreach ($activities as $activity) {
+            $this->addActivity($activity);
+        }
+
+        $this->collActivities = $activities;
+        $this->collActivitiesPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Activity objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Activity objects.
+     * @throws PropelException
+     */
+    public function countActivities(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collActivitiesPartial && !$this->isNew();
+        if (null === $this->collActivities || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collActivities) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getActivities());
+            }
+
+            $query = ChildActivityQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUser($this)
+                ->count($con);
+        }
+
+        return count($this->collActivities);
+    }
+
+    /**
+     * Method called to associate a ChildActivity object to this object
+     * through the ChildActivity foreign key attribute.
+     *
+     * @param  ChildActivity $l ChildActivity
+     * @return $this|\Models\User The current object (for fluent API support)
+     */
+    public function addActivity(ChildActivity $l)
+    {
+        if ($this->collActivities === null) {
+            $this->initActivities();
+            $this->collActivitiesPartial = true;
+        }
+
+        if (!$this->collActivities->contains($l)) {
+            $this->doAddActivity($l);
+
+            if ($this->activitiesScheduledForDeletion and $this->activitiesScheduledForDeletion->contains($l)) {
+                $this->activitiesScheduledForDeletion->remove($this->activitiesScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildActivity $activity The ChildActivity object to add.
+     */
+    protected function doAddActivity(ChildActivity $activity)
+    {
+        $this->collActivities[]= $activity;
+        $activity->setUser($this);
+    }
+
+    /**
+     * @param  ChildActivity $activity The ChildActivity object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removeActivity(ChildActivity $activity)
+    {
+        if ($this->getActivities()->contains($activity)) {
+            $pos = $this->collActivities->search($activity);
+            $this->collActivities->remove($pos);
+            if (null === $this->activitiesScheduledForDeletion) {
+                $this->activitiesScheduledForDeletion = clone $this->collActivities;
+                $this->activitiesScheduledForDeletion->clear();
+            }
+            $this->activitiesScheduledForDeletion[]= clone $activity;
+            $activity->setUser(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this User is new, it will return
+     * an empty collection; or if this User has previously
+     * been saved, it will retrieve related Activities from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in User.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildActivity[] List of ChildActivity objects
+     */
+    public function getActivitiesJoinLevel(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildActivityQuery::create(null, $criteria);
+        $query->joinWith('Level', $joinBehavior);
+
+        return $this->getActivities($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this User is new, it will return
+     * an empty collection; or if this User has previously
+     * been saved, it will retrieve related Activities from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in User.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildActivity[] List of ChildActivity objects
+     */
+    public function getActivitiesJoinActivityType(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildActivityQuery::create(null, $criteria);
+        $query->joinWith('ActivityType', $joinBehavior);
+
+        return $this->getActivities($query, $con);
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -2579,10 +3212,22 @@ abstract class User implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collRatings) {
+                foreach ($this->collRatings as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collActivities) {
+                foreach ($this->collActivities as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
         $this->collArticles = null;
         $this->collComments = null;
+        $this->collRatings = null;
+        $this->collActivities = null;
         $this->aImage = null;
     }
 
