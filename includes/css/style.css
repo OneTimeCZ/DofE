@@ -956,4 +956,8 @@ div.main-alert {
       margin-left: 5px;
       margin-right: 5px; } }
 
+.hidden {
+  display: none;
+  visibility: hidden; }
+
 /*# sourceMappingURL=style.css.map */

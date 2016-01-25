@@ -22,6 +22,8 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildUserQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildUserQuery orderByUsername($order = Criteria::ASC) Order by the username column
+ * @method     ChildUserQuery orderByName($order = Criteria::ASC) Order by the name column
+ * @method     ChildUserQuery orderBySurname($order = Criteria::ASC) Order by the surname column
  * @method     ChildUserQuery orderByUrl($order = Criteria::ASC) Order by the url column
  * @method     ChildUserQuery orderByEmail($order = Criteria::ASC) Order by the email column
  * @method     ChildUserQuery orderByEmailConfirmedAt($order = Criteria::ASC) Order by the email_confirmed_at column
@@ -37,6 +39,8 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildUserQuery groupById() Group by the id column
  * @method     ChildUserQuery groupByUsername() Group by the username column
+ * @method     ChildUserQuery groupByName() Group by the name column
+ * @method     ChildUserQuery groupBySurname() Group by the surname column
  * @method     ChildUserQuery groupByUrl() Group by the url column
  * @method     ChildUserQuery groupByEmail() Group by the email column
  * @method     ChildUserQuery groupByEmailConfirmedAt() Group by the email_confirmed_at column
@@ -108,13 +112,25 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoinWithActivity() Adds a RIGHT JOIN clause and with to the query using the Activity relation
  * @method     ChildUserQuery innerJoinWithActivity() Adds a INNER JOIN clause and with to the query using the Activity relation
  *
- * @method     \Models\ImageQuery|\Models\ArticleQuery|\Models\CommentQuery|\Models\RatingQuery|\Models\ActivityQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     ChildUserQuery leftJoinQuote($relationAlias = null) Adds a LEFT JOIN clause to the query using the Quote relation
+ * @method     ChildUserQuery rightJoinQuote($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Quote relation
+ * @method     ChildUserQuery innerJoinQuote($relationAlias = null) Adds a INNER JOIN clause to the query using the Quote relation
+ *
+ * @method     ChildUserQuery joinWithQuote($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Quote relation
+ *
+ * @method     ChildUserQuery leftJoinWithQuote() Adds a LEFT JOIN clause and with to the query using the Quote relation
+ * @method     ChildUserQuery rightJoinWithQuote() Adds a RIGHT JOIN clause and with to the query using the Quote relation
+ * @method     ChildUserQuery innerJoinWithQuote() Adds a INNER JOIN clause and with to the query using the Quote relation
+ *
+ * @method     \Models\ImageQuery|\Models\ArticleQuery|\Models\CommentQuery|\Models\RatingQuery|\Models\ActivityQuery|\Models\QuoteQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUser findOne(ConnectionInterface $con = null) Return the first ChildUser matching the query
  * @method     ChildUser findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUser matching the query, or a new ChildUser object populated from the query conditions when no match is found
  *
  * @method     ChildUser findOneById(int $id) Return the first ChildUser filtered by the id column
  * @method     ChildUser findOneByUsername(string $username) Return the first ChildUser filtered by the username column
+ * @method     ChildUser findOneByName(string $name) Return the first ChildUser filtered by the name column
+ * @method     ChildUser findOneBySurname(string $surname) Return the first ChildUser filtered by the surname column
  * @method     ChildUser findOneByUrl(string $url) Return the first ChildUser filtered by the url column
  * @method     ChildUser findOneByEmail(string $email) Return the first ChildUser filtered by the email column
  * @method     ChildUser findOneByEmailConfirmedAt(string $email_confirmed_at) Return the first ChildUser filtered by the email_confirmed_at column
@@ -133,6 +149,8 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildUser requireOneById(int $id) Return the first ChildUser filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByUsername(string $username) Return the first ChildUser filtered by the username column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByName(string $name) Return the first ChildUser filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneBySurname(string $surname) Return the first ChildUser filtered by the surname column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByUrl(string $url) Return the first ChildUser filtered by the url column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByEmail(string $email) Return the first ChildUser filtered by the email column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByEmailConfirmedAt(string $email_confirmed_at) Return the first ChildUser filtered by the email_confirmed_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -149,6 +167,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUser[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildUser objects based on current ModelCriteria
  * @method     ChildUser[]|ObjectCollection findById(int $id) Return ChildUser objects filtered by the id column
  * @method     ChildUser[]|ObjectCollection findByUsername(string $username) Return ChildUser objects filtered by the username column
+ * @method     ChildUser[]|ObjectCollection findByName(string $name) Return ChildUser objects filtered by the name column
+ * @method     ChildUser[]|ObjectCollection findBySurname(string $surname) Return ChildUser objects filtered by the surname column
  * @method     ChildUser[]|ObjectCollection findByUrl(string $url) Return ChildUser objects filtered by the url column
  * @method     ChildUser[]|ObjectCollection findByEmail(string $email) Return ChildUser objects filtered by the email column
  * @method     ChildUser[]|ObjectCollection findByEmailConfirmedAt(string $email_confirmed_at) Return ChildUser objects filtered by the email_confirmed_at column
@@ -253,7 +273,7 @@ abstract class UserQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, username, url, email, email_confirmed_at, email_confirm_token, password, password_reset_token, permissions, signin_count, id_image, last_signin_at, created_at, updated_at FROM users WHERE id = :p0';
+        $sql = 'SELECT id, username, name, surname, url, email, email_confirmed_at, email_confirm_token, password, password_reset_token, permissions, signin_count, id_image, last_signin_at, created_at, updated_at FROM users WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -411,6 +431,64 @@ abstract class UserQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(UserTableMap::COL_USERNAME, $username, $comparison);
+    }
+
+    /**
+     * Filter the query on the name column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByName('fooValue');   // WHERE name = 'fooValue'
+     * $query->filterByName('%fooValue%'); // WHERE name LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $name The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByName($name = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($name)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $name)) {
+                $name = str_replace('*', '%', $name);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(UserTableMap::COL_NAME, $name, $comparison);
+    }
+
+    /**
+     * Filter the query on the surname column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterBySurname('fooValue');   // WHERE surname = 'fooValue'
+     * $query->filterBySurname('%fooValue%'); // WHERE surname LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $surname The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function filterBySurname($surname = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($surname)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $surname)) {
+                $surname = str_replace('*', '%', $surname);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(UserTableMap::COL_SURNAME, $surname, $comparison);
     }
 
     /**
@@ -1222,6 +1300,79 @@ abstract class UserQuery extends ModelCriteria
         return $this
             ->joinActivity($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Activity', '\Models\ActivityQuery');
+    }
+
+    /**
+     * Filter the query by a related \Models\Quote object
+     *
+     * @param \Models\Quote|ObjectCollection $quote the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByQuote($quote, $comparison = null)
+    {
+        if ($quote instanceof \Models\Quote) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $quote->getIdUser(), $comparison);
+        } elseif ($quote instanceof ObjectCollection) {
+            return $this
+                ->useQuoteQuery()
+                ->filterByPrimaryKeys($quote->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByQuote() only accepts arguments of type \Models\Quote or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Quote relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinQuote($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Quote');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Quote');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Quote relation Quote object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Models\QuoteQuery A secondary query class using the current class as primary query
+     */
+    public function useQuoteQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinQuote($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Quote', '\Models\QuoteQuery');
     }
 
     /**

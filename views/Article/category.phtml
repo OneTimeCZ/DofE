@@ -1,2 +1,65 @@
-<h1>Kategorie: <?= $data["articles"]->getFirst()->getCategory()->getName(); ?></h1>
-<?php foreach($data["articles"] as $article) echo $article->getContent(); ?>
+<div class="content">    
+    <div class="section">
+        <div class="page-heading">
+            <h1>Kategorie: <?= $data['articles']->getFirst()->getCategory()->getName() ?></h1>
+        </div>
+    </div>
+    
+    <div class="section">
+    <?php foreach($data["articles"] as $article): ?>
+        <div class="col-md-6 column double">
+            <div class="content-box">
+                <div class="section-header image">
+                    <div class="thumbnail">
+                        <img src="../../includes/images/960x540/<?= $article->getImage()->getPath() ?>" alt="" title="" />
+                    </div>
+                </div>
+                <div class="section-content post">
+                    <h2 class="title"><?= $article->getTitle() ?></h2>
+                    <div class="meta">
+                        <p>
+                            Autor:
+                            <a href="/profil/<?= $article->getUser()->getUrl() ?>" rel="author" title="Profil uživatele <?= $article->getUser()->getUsername() ?>"><?= $article->getUser()->getUsername() ?></a>
+                            | <?= $article->getCreatedAt()->format("d.m.Y H:i:s") ?>
+                        </p>
+                    </div>
+                    <div class="description">
+                        <p class="description">
+                            <?= substr(strip_tags($article->getContent()), 0, 250)."..." ?>
+                        </p>
+                    </div>
+                    <a class="read_more btn btn-default" href="/clanek/<?= $article->getUrl() ?>">Více...</a>
+                </div>
+            </div>
+        </div>
+    <?php endforeach; ?>
+    </div>
+    
+    <?php if($data["articles"]->getPreviousPage() != $data["articles"]->getNextPage()): ?>
+    <div class="section">
+        <div class="column single">
+            <div class="content-box">
+                <div class="section-content pagination">
+                    <ul>
+                        <?php if($data["articles"]->getPage() != 1): ?>
+                        <li>
+                            <a class="newer" href="/clanky/<?= $data["articles"]->getPreviousPage() ?>">
+                                <span>&lt;&lt;</span> Novější
+                            </a>
+                        </li>
+                        <?php endif; ?>
+                        
+                        <?php if($data["articles"]->getPage() != $data["articles"]->getLastPage()): ?>
+                        <li>
+                            <a class="older" href="/clanky/<?= $data["articles"]->getNextPage() ?>">
+                                Starší <span>&gt;&gt;</span>
+                            </a>
+                        </li>
+                        <?php endif; ?>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+</div>

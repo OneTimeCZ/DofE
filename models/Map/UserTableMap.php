@@ -59,7 +59,7 @@ class UserTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 14;
+    const NUM_COLUMNS = 16;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class UserTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 14;
+    const NUM_HYDRATE_COLUMNS = 16;
 
     /**
      * the column name for the id field
@@ -80,6 +80,16 @@ class UserTableMap extends TableMap
      * the column name for the username field
      */
     const COL_USERNAME = 'users.username';
+
+    /**
+     * the column name for the name field
+     */
+    const COL_NAME = 'users.name';
+
+    /**
+     * the column name for the surname field
+     */
+    const COL_SURNAME = 'users.surname';
 
     /**
      * the column name for the url field
@@ -153,11 +163,11 @@ class UserTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Username', 'Url', 'Email', 'EmailConfirmedAt', 'EmailConfirmToken', 'Password', 'PasswordResetToken', 'Permissions', 'SigninCount', 'IdImage', 'LastSigninAt', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_CAMELNAME     => array('id', 'username', 'url', 'email', 'emailConfirmedAt', 'emailConfirmToken', 'password', 'passwordResetToken', 'permissions', 'signinCount', 'idImage', 'lastSigninAt', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(UserTableMap::COL_ID, UserTableMap::COL_USERNAME, UserTableMap::COL_URL, UserTableMap::COL_EMAIL, UserTableMap::COL_EMAIL_CONFIRMED_AT, UserTableMap::COL_EMAIL_CONFIRM_TOKEN, UserTableMap::COL_PASSWORD, UserTableMap::COL_PASSWORD_RESET_TOKEN, UserTableMap::COL_PERMISSIONS, UserTableMap::COL_SIGNIN_COUNT, UserTableMap::COL_ID_IMAGE, UserTableMap::COL_LAST_SIGNIN_AT, UserTableMap::COL_CREATED_AT, UserTableMap::COL_UPDATED_AT, ),
-        self::TYPE_FIELDNAME     => array('id', 'username', 'url', 'email', 'email_confirmed_at', 'email_confirm_token', 'password', 'password_reset_token', 'permissions', 'signin_count', 'id_image', 'last_signin_at', 'created_at', 'updated_at', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
+        self::TYPE_PHPNAME       => array('Id', 'Username', 'Name', 'Surname', 'Url', 'Email', 'EmailConfirmedAt', 'EmailConfirmToken', 'Password', 'PasswordResetToken', 'Permissions', 'SigninCount', 'IdImage', 'LastSigninAt', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_CAMELNAME     => array('id', 'username', 'name', 'surname', 'url', 'email', 'emailConfirmedAt', 'emailConfirmToken', 'password', 'passwordResetToken', 'permissions', 'signinCount', 'idImage', 'lastSigninAt', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(UserTableMap::COL_ID, UserTableMap::COL_USERNAME, UserTableMap::COL_NAME, UserTableMap::COL_SURNAME, UserTableMap::COL_URL, UserTableMap::COL_EMAIL, UserTableMap::COL_EMAIL_CONFIRMED_AT, UserTableMap::COL_EMAIL_CONFIRM_TOKEN, UserTableMap::COL_PASSWORD, UserTableMap::COL_PASSWORD_RESET_TOKEN, UserTableMap::COL_PERMISSIONS, UserTableMap::COL_SIGNIN_COUNT, UserTableMap::COL_ID_IMAGE, UserTableMap::COL_LAST_SIGNIN_AT, UserTableMap::COL_CREATED_AT, UserTableMap::COL_UPDATED_AT, ),
+        self::TYPE_FIELDNAME     => array('id', 'username', 'name', 'surname', 'url', 'email', 'email_confirmed_at', 'email_confirm_token', 'password', 'password_reset_token', 'permissions', 'signin_count', 'id_image', 'last_signin_at', 'created_at', 'updated_at', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, )
     );
 
     /**
@@ -167,11 +177,11 @@ class UserTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Username' => 1, 'Url' => 2, 'Email' => 3, 'EmailConfirmedAt' => 4, 'EmailConfirmToken' => 5, 'Password' => 6, 'PasswordResetToken' => 7, 'Permissions' => 8, 'SigninCount' => 9, 'IdImage' => 10, 'LastSigninAt' => 11, 'CreatedAt' => 12, 'UpdatedAt' => 13, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'username' => 1, 'url' => 2, 'email' => 3, 'emailConfirmedAt' => 4, 'emailConfirmToken' => 5, 'password' => 6, 'passwordResetToken' => 7, 'permissions' => 8, 'signinCount' => 9, 'idImage' => 10, 'lastSigninAt' => 11, 'createdAt' => 12, 'updatedAt' => 13, ),
-        self::TYPE_COLNAME       => array(UserTableMap::COL_ID => 0, UserTableMap::COL_USERNAME => 1, UserTableMap::COL_URL => 2, UserTableMap::COL_EMAIL => 3, UserTableMap::COL_EMAIL_CONFIRMED_AT => 4, UserTableMap::COL_EMAIL_CONFIRM_TOKEN => 5, UserTableMap::COL_PASSWORD => 6, UserTableMap::COL_PASSWORD_RESET_TOKEN => 7, UserTableMap::COL_PERMISSIONS => 8, UserTableMap::COL_SIGNIN_COUNT => 9, UserTableMap::COL_ID_IMAGE => 10, UserTableMap::COL_LAST_SIGNIN_AT => 11, UserTableMap::COL_CREATED_AT => 12, UserTableMap::COL_UPDATED_AT => 13, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'username' => 1, 'url' => 2, 'email' => 3, 'email_confirmed_at' => 4, 'email_confirm_token' => 5, 'password' => 6, 'password_reset_token' => 7, 'permissions' => 8, 'signin_count' => 9, 'id_image' => 10, 'last_signin_at' => 11, 'created_at' => 12, 'updated_at' => 13, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Username' => 1, 'Name' => 2, 'Surname' => 3, 'Url' => 4, 'Email' => 5, 'EmailConfirmedAt' => 6, 'EmailConfirmToken' => 7, 'Password' => 8, 'PasswordResetToken' => 9, 'Permissions' => 10, 'SigninCount' => 11, 'IdImage' => 12, 'LastSigninAt' => 13, 'CreatedAt' => 14, 'UpdatedAt' => 15, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'username' => 1, 'name' => 2, 'surname' => 3, 'url' => 4, 'email' => 5, 'emailConfirmedAt' => 6, 'emailConfirmToken' => 7, 'password' => 8, 'passwordResetToken' => 9, 'permissions' => 10, 'signinCount' => 11, 'idImage' => 12, 'lastSigninAt' => 13, 'createdAt' => 14, 'updatedAt' => 15, ),
+        self::TYPE_COLNAME       => array(UserTableMap::COL_ID => 0, UserTableMap::COL_USERNAME => 1, UserTableMap::COL_NAME => 2, UserTableMap::COL_SURNAME => 3, UserTableMap::COL_URL => 4, UserTableMap::COL_EMAIL => 5, UserTableMap::COL_EMAIL_CONFIRMED_AT => 6, UserTableMap::COL_EMAIL_CONFIRM_TOKEN => 7, UserTableMap::COL_PASSWORD => 8, UserTableMap::COL_PASSWORD_RESET_TOKEN => 9, UserTableMap::COL_PERMISSIONS => 10, UserTableMap::COL_SIGNIN_COUNT => 11, UserTableMap::COL_ID_IMAGE => 12, UserTableMap::COL_LAST_SIGNIN_AT => 13, UserTableMap::COL_CREATED_AT => 14, UserTableMap::COL_UPDATED_AT => 15, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'username' => 1, 'name' => 2, 'surname' => 3, 'url' => 4, 'email' => 5, 'email_confirmed_at' => 6, 'email_confirm_token' => 7, 'password' => 8, 'password_reset_token' => 9, 'permissions' => 10, 'signin_count' => 11, 'id_image' => 12, 'last_signin_at' => 13, 'created_at' => 14, 'updated_at' => 15, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, )
     );
 
     /**
@@ -193,6 +203,8 @@ class UserTableMap extends TableMap
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('username', 'Username', 'VARCHAR', true, 50, null);
+        $this->addColumn('name', 'Name', 'VARCHAR', true, 50, null);
+        $this->addColumn('surname', 'Surname', 'VARCHAR', true, 50, null);
         $this->addColumn('url', 'Url', 'VARCHAR', true, 50, null);
         $this->addColumn('email', 'Email', 'VARCHAR', true, 100, null);
         $this->addColumn('email_confirmed_at', 'EmailConfirmedAt', 'TIMESTAMP', false, null, null);
@@ -247,6 +259,13 @@ class UserTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, 'Activities', false);
+        $this->addRelation('Quote', '\\Models\\Quote', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':id_user',
+    1 => ':id',
+  ),
+), null, null, 'Quotes', false);
     } // buildRelations()
 
     /**
@@ -405,6 +424,8 @@ class UserTableMap extends TableMap
         if (null === $alias) {
             $criteria->addSelectColumn(UserTableMap::COL_ID);
             $criteria->addSelectColumn(UserTableMap::COL_USERNAME);
+            $criteria->addSelectColumn(UserTableMap::COL_NAME);
+            $criteria->addSelectColumn(UserTableMap::COL_SURNAME);
             $criteria->addSelectColumn(UserTableMap::COL_URL);
             $criteria->addSelectColumn(UserTableMap::COL_EMAIL);
             $criteria->addSelectColumn(UserTableMap::COL_EMAIL_CONFIRMED_AT);
@@ -420,6 +441,8 @@ class UserTableMap extends TableMap
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.username');
+            $criteria->addSelectColumn($alias . '.name');
+            $criteria->addSelectColumn($alias . '.surname');
             $criteria->addSelectColumn($alias . '.url');
             $criteria->addSelectColumn($alias . '.email');
             $criteria->addSelectColumn($alias . '.email_confirmed_at');

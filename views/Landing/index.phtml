@@ -40,26 +40,27 @@
                 </div>
             </div>
         </div>
+        <?php if(!$data["users"]->isEmpty()): ?>
         <div class="col-md-6 column double">
             <div class="content-box">
                 <div class="section-header striped">
                     <div class="color-stripe expedition"></div>
                     ÚČASTNÍCI
                 </div>
-                <div class="section-content participants">
+                <?php $i = 0; foreach($data["users"] as $user): ?>
+                <div class="section-content participants <?= $hidden = $i == 0 ? '' : 'hidden' ?>">
                     <div class="person">
                         <div class="col-xs-6 col-md-12">
-                            <img class="img img-responsive img-circle" src="../../includes/images/200x200/profilepic2.jpg">
+                            <img class="img img-responsive img-circle" src="../../includes/images/200x200/<?= $user->getImage()->getPath() ?>">
                         </div>
                         
                         <div class="col-xs-6 col-md-12">
                             <blockquote>
                                 <p>
-                                    Aultmore, brandy sour kahlua glenburgie long island iced tea, el presidente edradour. 
-                                    Stolichnaya long island iced tea ramos gin.
+                                    <?php foreach($user->getQuotes() as $quote)echo $quote->getContent() ?>
                                 </p>
                                 <footer>
-                                    Václav Mašek
+                                    <?= $user->getName().' '.$user->getSurname() ?>
                                 </footer>
                             </blockquote>
                         </div>
@@ -70,7 +71,9 @@
                         </div>
                     </div>
                 </div>
+                <?php $i++; endforeach; ?>
             </div>
-        </div>    
+        </div>
+        <?php endif; ?>
     </div>
 </div>

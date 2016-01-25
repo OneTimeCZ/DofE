@@ -8,6 +8,8 @@
     <table name="users" phpName="User">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="username" type="varchar" size="50" required="true"/>
+        <column name="name" type="varchar" size="50" required="true"/>
+        <column name="surname" type="varchar" size="50" required="true"/>
         <column name="url" type="varchar" size="50" required="true"/>
         <column name="email" type="varchar" size="100" required="true"/>
         <column name="email_confirmed_at" type="timestamp"/>
@@ -154,5 +156,16 @@
         <column name="name" type="varchar" size="50" required="true"/>
         <column name="url" type="varchar" size="50" required="true"/>
         <column name="color" type="varchar" size="10"/>
+    </table>
+    
+    <!-- Quotes -->
+    <table name="quotes" phpName="Quote">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="id_user" type="integer" required="true"/>
+        <column name="content" type="varchar" size="350" required="true"/>
+        
+        <foreign-key foreignTable="users">
+            <reference local="id_user" foreign="id"/>
+        </foreign-key>
     </table>
 </database>
