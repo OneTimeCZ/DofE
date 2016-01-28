@@ -486,6 +486,10 @@ body {
                                                 padding-left: 0;
                                                 padding-right: 0;
                                             }
+                                            
+                                            form.personal {
+                                                margin-top: 10px;
+                                            }
                                         }
                                     }
                                 }
@@ -568,7 +572,6 @@ body {
                                     
                                     h2 {
                                         margin: 0;
-                                        margin-bottom: 5px;
                                         padding: 5px;
                                         font-weight: bold;
                                         text-align: center;

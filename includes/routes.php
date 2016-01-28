@@ -60,7 +60,9 @@
     $router->addPost('User.login', '/prihlasit');
     $router->addPost('User.create', '/registrovat');
     $router->addGet('User.changePersonalForm', '/nastaveni/zmenit-udaje');
-    $router->addPost('User.changePersonal', '/nastaveni/ulozit-udaje');
+    $router->addPost('User.changeEmail', '/nastaveni/ulozit-email');
+    $router->addPost('User.changePassword', '/nastaveni/ulozit-heslo');
+    $router->addPost('User.changeUsername', '/nastaveni/ulozit-jmeno');
     $router->addGet('User.changeAvatarForm', '/nastaveni/zmenit-avatar');
     $router->addPost('User.changeAvatar', '/nastaveni/ulozit-avatar');
     $router->addGet('User.changeDofeForm', '/nastaveni/zmenit-dofe');

@@ -279,6 +279,8 @@ body {
                       margin-top: 20px;
                       padding-left: 0;
                       padding-right: 0; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.single div.content-box div.section-content form.personal {
+                      margin-top: 10px; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.double {
                 background: #e9eaed; }
                 @media (max-width: 991px) {
@@ -324,7 +326,6 @@ body {
                 height: auto; }
                 body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header.smaller h2 {
                   margin: 0;
-                  margin-bottom: 5px;
                   padding: 5px;
                   font-weight: bold;
                   text-align: center;

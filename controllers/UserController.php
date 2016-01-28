@@ -39,6 +39,10 @@ class UserController extends Controller{
             $user->setLastSigninAt(date("U"));
             $user->save();
             $this->addPopup('success', 'Byli jste úspěšně přihlášeni!');
+            
+            if($user->getEmailConfirmedAt() == NULL) {
+                $this->addPopup('warning', 'Vaše emailová adresa nebyla doposud ověřena.');
+            }
         }
         
         redirectTo('/');
@@ -76,11 +80,6 @@ class UserController extends Controller{
             ->orderByIdLevel("desc")
             ->find();
         
-        if(count($activities) % 3 != 0 || count($activities) > 9){
-            $this->addPopup('danger', 'Při zobrazování veřejného profilu uživatele ' . $user->getUsername() . ' nastala neočekávaná chyba.');
-            redirectTo('/');
-        }
-        
         $this->view('Profile/index', 'base_template', [
             'active' => 'profile',
             'title' => 'Profil | '.$user->getUsername(),
@@ -106,17 +105,19 @@ class UserController extends Controller{
         ]);
     }
     
-    public function create(){  
+    public function create(){        
+		if($_POST['regPassword'] != $_POST['regPassword2']){
+			$this->addPopup('danger', 'Hesla se neshodují.');
+			redirectTo("/registrace");
+        }
+        
         $existing = UserQuery::create()
             ->filterByUsername($_POST["regUsername"])
             ->_or()
             ->filterByEmail($_POST["regEmail"])
             ->findOne();
         
-		if($_POST['regPassword'] != $_POST['regPassword2']){
-			$this->addPopup('danger', 'Hesla se neshodují.');
-			redirectTo("/registrace");
-        } elseif($existing != NULL) {
+        if($existing != NULL) {
             if($existing->getUsername() == $_POST["regUsername"]){
                 $this->addPopup('danger', 'Uživatel se stejným uživatelským jménem je již zaregistrován.');
             } elseif($existing->getEmail() == $_POST["regEmail"]){
@@ -169,83 +170,93 @@ class UserController extends Controller{
     }
     
     public function changeDofeForm(){
-    
+        
     }
     
-    public function changePersonal(){
+    public function changeUsername(){
         if(!$this->isLogged()){
             $this->addPopup('danger', 'Pro změnu osobních údajů musíte být přihlášeni.');
             redirectTo('/#');
         }
         
-        if($_POST["save"] == 'Změnit jméno') {
-            if($_SESSION["user"]->getUsername() == $_POST["username"]) {
-                $this->addPopup('danger', 'Toto jméno je již přiřazeno k vašemu účtu.');
-                redirectTo('/nastaveni/zmenit-udaje');
-            }
-            
-            $existing = UserQuery::create()
-                ->filterByUsername($_POST["username"])
-                ->find();
-            
-            if(!$existing->isEmpty()) {
-                $this->addPopup('danger', 'Toto jméno je již přiřazeno k jinému účtu.');
-                redirectTo('/nastaveni/zmenit-udaje');
-            }
-            
-            $user = UserQuery::create()
-                ->findPk($_SESSION["user"]->getId());
-                
-            $user->setUsername($_POST["username"]);
-            $user->save();
-                
-            $this->addPopup('success', 'Uživatelské jméno bylo úspěšně změněno.');
-            redirectTo('/nastaveni/zmenit-udaje');
-            
-        } elseif($_POST["save"] == 'Změnit heslo') {
-            if($_SESSION["user"]->getPassword() != sha1($_POST["old_password"])) {
-                $this->addPopup('danger', 'Špatně zadané původní heslo.');
-                redirectTo('/nastaveni/zmenit-udaje');
-            }     
-            
-            if($_POST["new_password1"] != $_POST["new_password2"]) {
-                $this->addPopup('danger', 'Nová hesla nejsou stejná.');
-                redirectTo('/nastaveni/zmenit-udaje');
-            }
-            
-            if(sha1($_POST["new_password1"]) == $_SESSION["user"]->getPassword()) {
-                $this->addPopup('danger', 'Toto heslo je již přiřazeno k vašemu účtu.');
-                redirectTo('/nastaveni/zmenit-udaje');
-            }
-            
-            $user = UserQuery::create()
-                ->findPk($_SESSION["user"]->getId());
-            
-            $user->setPassword(sha1($_POST["new_password1"]));
-            $user->save();
-            
-            $this->addPopup('success', 'Heslo bylo úspěšně změněno.');
-            redirectTo('/nastaveni/zmenit-udaje');
-            
-        } elseif($_POST["save"] == 'Změnit email') {
-            if($_POST["e-mail"] == $_SESSION["user"]->getEmail()) {
-                $this->addPopup('danger', 'Tento email je již přiřazen k vašemu účtu.');
-                redirectTo('/nastaveni/zmenit-udaje');
-            }
-            
-            $existing = UserQuery::create()
-                ->filterByEmail($_POST["e-mail"])
-                ->find();
-            
-            if(!$existing->isEmpty()) {
-                $this->addPopup('danger', 'Tento email je již přiřazen k jinému účtu.');
-                redirectTo('/nastaveni/zmenit-udaje');
-            }
-            
-            //mail to existing
-            $this->addPopup('info', 'Na váš email byla odeslána žádost o změnu.');
+        if($_SESSION["user"]->getUsername() == $_POST["username"]) {
+            $this->addPopup('danger', 'Toto jméno je již přiřazeno k vašemu účtu.');
             redirectTo('/nastaveni/zmenit-udaje');
         }
+            
+        $existing = UserQuery::create()
+            ->filterByUsername($_POST["username"])
+            ->find();
+            
+        if(!$existing->isEmpty()) {
+            $this->addPopup('danger', 'Toto jméno je již přiřazeno k jinému účtu.');
+            redirectTo('/nastaveni/zmenit-udaje');
+        }
+            
+        $user = UserQuery::create()
+            ->findPk($_SESSION["user"]->getId());
+                
+        $user->setUsername($_POST["username"]);
+        $user->save();
+                
+        $this->addPopup('success', 'Uživatelské jméno bylo úspěšně změněno.');
+        redirectTo('/nastaveni/zmenit-udaje');
+    }
+    
+    public function changePassword(){
+        if(!$this->isLogged()){
+            $this->addPopup('danger', 'Pro změnu osobních údajů musíte být přihlášeni.');
+            redirectTo('/#');
+        }
+            
+        if($_POST["new_password1"] != $_POST["new_password2"]) {
+            $this->addPopup('danger', 'Nová hesla nejsou stejná.');
+            redirectTo('/nastaveni/zmenit-udaje');
+        }
+        
+        if($_SESSION["user"]->getPassword() != sha1($_POST["old_password"])) {
+            $this->addPopup('danger', 'Špatně zadané původní heslo.');
+            redirectTo('/nastaveni/zmenit-udaje');
+        } 
+            
+        if(sha1($_POST["new_password1"]) == $_SESSION["user"]->getPassword()) {
+            $this->addPopup('danger', 'Toto heslo je již přiřazeno k vašemu účtu.');
+            redirectTo('/nastaveni/zmenit-udaje');
+        }
+            
+        $user = UserQuery::create()
+            ->findPk($_SESSION["user"]->getId());
+            
+        $user->setPassword(sha1($_POST["new_password1"]));
+        $user->save();
+            
+        $this->addPopup('success', 'Heslo bylo úspěšně změněno.');
+        redirectTo('/nastaveni/zmenit-udaje');
+    }
+    
+    public function changeEmail(){
+        if(!$this->isLogged()){
+            $this->addPopup('danger', 'Pro změnu osobních údajů musíte být přihlášeni.');
+            redirectTo('/#');
+        }
+        
+        if($_POST["e-mail"] == $_SESSION["user"]->getEmail()) {
+            $this->addPopup('danger', 'Tento email je již přiřazen k vašemu účtu.');
+            redirectTo('/nastaveni/zmenit-udaje');
+        }
+            
+        $existing = UserQuery::create()
+            ->filterByEmail($_POST["e-mail"])
+            ->find();
+            
+        if(!$existing->isEmpty()) {
+            $this->addPopup('danger', 'Tento email je již přiřazen k jinému účtu.');
+            redirectTo('/nastaveni/zmenit-udaje');
+        }
+            
+        //mail to existing
+        $this->addPopup('info', 'Na váš email byla odeslána žádost o změnu.');
+        redirectTo('/nastaveni/zmenit-udaje');
     }
     
     public function changeAvatar(){
