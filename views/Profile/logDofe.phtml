@@ -9,7 +9,7 @@
         <div class="column single">
             <div class="content-box">
                 <div class="section-header smaller log-dofe">
-                    <h2><a class="pull-left" href="/nahlasit-aktivitu">&lt;&lt;</a> 4. týden 2016 (18. - 24.1) <a class="pull-right" href="/nahlasit-aktivitu">&gt;&gt;</a></h2>
+                    <h2><a class="pull-left" href="/nahlasit-aktivitu">&lt;&lt;</a>4. týden 2016<a class="pull-right" href="/nahlasit-aktivitu">&gt;&gt;</a></h2>
                 </div>
                 <div class="section-content log-dofe">
                     <form class="log-dofe" role="form" method="post" action="/ulozit-aktivitu">
@@ -24,6 +24,8 @@
                         </div>
                         
                         <input class="btn btn-default" type="submit" value="Odeslat" name="log-dofe">
+                        <?= $data["date"]["year"] ?>
+                        <?= $data["date"]["week"] ?>
                     </form>
                 </div>
             </div>

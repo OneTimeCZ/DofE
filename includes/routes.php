@@ -59,6 +59,7 @@
     $router->addGet('User.logout', '/odhlasit');
     $router->addPost('User.login', '/prihlasit');
     $router->addPost('User.create', '/registrovat');
+    $router->addGet('User.resendEmail', '/nastaveni/potvrzovaci-email');
     $router->addGet('User.changePersonalForm', '/nastaveni/zmenit-udaje');
     $router->addPost('User.changeEmail', '/nastaveni/ulozit-email');
     $router->addPost('User.changePassword', '/nastaveni/ulozit-heslo');
@@ -67,10 +68,20 @@
     $router->addPost('User.changeAvatar', '/nastaveni/ulozit-avatar');
     $router->addGet('User.changeDofeForm', '/nastaveni/zmenit-dofe');
     $router->addPost('User.changeDofe', '/nastaveni/ulozit-dofe');
-    $router->addGet('User.logDofeActivityForm', '/nahlasit-aktivitu');
-    $router->addPost('User.logDofeActivity', '/ulozit-aktivitu{/year,month,day}')
+    $router->addGet('User.forgottenPasswordPage', '/zapomenute-heslo');
+    $router->addPost('User.forgottenPassword', '/zapomenute-heslo-email');
+    $router->addGet('User.resetPassword', '/obnovit-heslo/{username}/{token}')
         ->setTokens([
-            'year' => '/d{4}',
-            'month' => '/d{2}',
-            'day' => '/d{2}'
+            'username' => '\w+',
+            'token' => '\w{50}',
+        ]);
+    $router->addGet('User.logDofeActivityForm', '/nahlasit-aktivitu{/year,week}')
+        ->setTokens([
+            'year' => '\d{4}',
+            'week' => '\d{1,2}'
+        ]);
+    $router->addPost('User.logDofeActivity', '/ulozit-aktivitu{/year,week}')
+        ->setTokens([
+            'year' => '\d{4}',
+            'week' => '\d{1,2}'
         ]);

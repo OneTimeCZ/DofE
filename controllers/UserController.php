@@ -41,7 +41,7 @@ class UserController extends Controller{
             $this->addPopup('success', 'Byli jste úspěšně přihlášeni!');
             
             if($user->getEmailConfirmedAt() == NULL) {
-                $this->addPopup('warning', 'Vaše emailová adresa nebyla doposud ověřena.');
+                $this->addPopup('warning', 'Vaše emailová adresa nebyla doposud ověřena. Nepřišel Vám potvrzovací email? <a href=/nastaveni/potvrzovaci-email class=alert-link>Nechte si jej zaslat znovu.</a>');
             }
         }
         
@@ -90,13 +90,43 @@ class UserController extends Controller{
         ]);
     }
     
+    public function resendEmail(){
+        if(!$this->isLogged()){
+            $this->addPopup('danger', 'Pro znovuodeslání potvrzovacího emailu se musíte přihlásit.');
+            redirectTo("/");
+        }
+        
+        if($_SESSION["user"]->getEmailConfirmedAt() != NULL){
+            $this->addPopup('danger', 'Váš email byl již potvrzen.');
+            redirectTo("/");
+        }
+        
+        do {
+            $token = token(50);
+            $existing = UserQuery::create()
+                ->filterByEmailConfirmToken($token)
+                ->count();
+        } while ($existing > 0);
+        
+        $user = UserQuery::create()
+            ->findPk($_SESSION["user"]->getId());
+        
+        $user->setEmailConfirmToken($token);
+        $user->save();
+        
+        //resend confirmation email with email_confirm_token
+        
+        $this->addPopup('success', 'Potvrzovací email byl odeslán.');
+        redirectTo("/");
+    }
+    
     public function profileSettings(){
         if(!$this->isLogged()){
             $this->addPopup('danger', 'Pro zobrazení vašeho profilu se musíte nejprve přihlásit.');
             redirectTo('/');
         }
         
-        //SQL
+        //SQL ??
         
         $this->view('Profile/settings', 'base_template', [
             'active' => 'profile',
@@ -130,7 +160,15 @@ class UserController extends Controller{
             $user->setUsername($_POST['regUsername']);
             $user->setPassword(sha1($_POST['regPassword']));
             $user->setEmail($_POST['regEmail']);
-            $user->setEmailConfirmToken(token(50));
+            
+            do {
+                $token = token(50);
+                $existing = UserQuery::create()
+                    ->filterByEmailConfirmToken($token)
+                    ->count();
+            } while ($existing > 0);
+            
+            $user->setEmailConfirmToken($token);
             $user->setPasswordResetToken(token(50));
             $user->setPermissions(0);
             $user->setSigninCount(0);
@@ -159,13 +197,30 @@ class UserController extends Controller{
     
     }
     
-    public function logDofeActivityForm($date = ''){
-        //SQL w/ $date["year"]/["month"]/["day"]
+    public function logDofeActivityForm($year = '', $week = ''){
+        if($year == ''){
+            $id_year = date('Y');
+            $id_week = date('W');
+        } else {
+            if($week == ''){
+                $id_year = date('Y');
+                $id_week = date('W');
+            } else {
+                $id_year = $year;
+                $id_week = $week;
+            }
+        }
+        
+        //SQL w/ week and year
         
         $this->view('Profile/logDofe', 'base_template', [
             'active' => 'logActivity',
             'title' => 'Nahlášení aktivit',
-            'recent' => ArticleQuery::recent()
+            'recent' => ArticleQuery::recent(),
+            'date' => [
+                'year' => $id_year,
+                'week' => $id_week
+            ]
         ]);
     }
     
@@ -269,5 +324,67 @@ class UserController extends Controller{
     
     public function changeDofe(){
     
+    }
+    
+    public function forgottenPassword(){
+        if(preg_match('/@/', $_POST["forgPw"])){        
+            $user = UserQuery::create()
+                ->filterByEmail($_POST["forgPw"])
+                ->findOne();
+            
+            if(!isset($user)){
+                $this->addPopup('danger', 'Uživatel s touto emailovou adresou neexistuje.');
+                redirectTo("/zapomenute-heslo");
+            }
+        } else {
+            $user = UserQuery::create()
+                ->filterByUsername($_POST["forgPw"])
+                ->findOne();
+            
+            if(!isset($user)){
+                $this->addPopup('danger', 'Uživatel s tímto uživatelským jménem neexistuje.');
+                redirectTo("/zapomenute-heslo");
+            }
+        }
+        
+        $user->setPasswordResetToken(token(50));
+        $user->save();
+        
+        //send email to the user with link to reset password
+        // adresa.cz/obnovit-heslo/$user->getUsername()/$user->getPasswordResetToken()
+        
+        $this->addPopup('success', 'Na vaši emailovou adresu byly odeslány instrukce pro obnovu hesla.');
+        redirectTo('/');
+    }
+    
+    public function resetPassword($username, $token){
+        $user = UserQuery::create()
+            ->filterByUsername($username)
+            ->filterByPasswordResetToken($token)
+            ->findOne();
+            
+        if(!isset($user)){
+            $this->addPopup('danger', 'Při obnově hesla byl zadán špatný kód nebo uživatelské jméno.');
+            redirectTo("/");
+        }
+        
+        $new_password = token(12);
+        $user->setPassword(sha1($new_password));
+        $user->save();
+            
+        //send email to the user with new password ($new_password)
+        
+        $this->addPopup('success', 'Na vaši emailovou adresu bylo odesláno nové heslo.');
+        redirectTo('/');
+    }
+    
+    public function forgottenPasswordPage(){
+        //SQL
+        
+        $this->view('Profile/forgottenPassword', 'base_template', [
+            'active' => 'forgottenPassword',
+            'title' => 'Zapomenuté heslo',
+            'recent' => ArticleQuery::recent()
+        ]);
     }
 }
