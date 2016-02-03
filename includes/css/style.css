@@ -79,6 +79,16 @@ body {
         body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box {
           padding: 10px;
           overflow: auto; }
+          body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box form.center div.form-group {
+            width: 40%;
+            margin-left: 30%; }
+            body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box form.center div.form-group input {
+              margin: auto; }
+            body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box form.center div.form-group input[type="file"] {
+              width: 0.1px;
+              height: 0.1px;
+              position: absolute;
+              z-index: -1; }
           body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news {
             overflow: auto; }
             body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-item {
@@ -108,6 +118,12 @@ body {
                     background: #e40046; }
                   body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-item div.content div.icon.expedition {
                     background: #71a100; }
+                  body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-item div.content div.icon.report {
+                    background: #e23400; }
+                  body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-item div.content div.icon.solved {
+                    background: #08b5bc; }
+                  body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-item div.content div.icon.unsolved {
+                    background: black; }
                 body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-item div.content div.text {
                   float: left;
                   height: 50px;
@@ -960,5 +976,8 @@ div.main-alert {
 .hidden {
   display: none;
   visibility: hidden; }
+
+.no-resize {
+  resize: none; }
 
 /*# sourceMappingURL=style.css.map */

@@ -75,6 +75,13 @@ abstract class Image implements ActiveRecordInterface
     protected $id;
 
     /**
+     * The value for the title field.
+     *
+     * @var        string
+     */
+    protected $title;
+
+    /**
      * The value for the description field.
      *
      * @var        string
@@ -384,6 +391,16 @@ abstract class Image implements ActiveRecordInterface
     }
 
     /**
+     * Get the [title] column value.
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
      * Get the [description] column value.
      *
      * @return string
@@ -482,6 +499,26 @@ abstract class Image implements ActiveRecordInterface
 
         return $this;
     } // setId()
+
+    /**
+     * Set the value of [title] column.
+     *
+     * @param string $v new value
+     * @return $this|\Models\Image The current object (for fluent API support)
+     */
+    public function setTitle($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->title !== $v) {
+            $this->title = $v;
+            $this->modifiedColumns[ImageTableMap::COL_TITLE] = true;
+        }
+
+        return $this;
+    } // setTitle()
 
     /**
      * Set the value of [description] column.
@@ -642,25 +679,28 @@ abstract class Image implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : ImageTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : ImageTableMap::translateFieldName('Description', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : ImageTableMap::translateFieldName('Title', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->title = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ImageTableMap::translateFieldName('Description', TableMap::TYPE_PHPNAME, $indexType)];
             $this->description = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ImageTableMap::translateFieldName('Path', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : ImageTableMap::translateFieldName('Path', TableMap::TYPE_PHPNAME, $indexType)];
             $this->path = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : ImageTableMap::translateFieldName('ThumbnailPath', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : ImageTableMap::translateFieldName('ThumbnailPath', TableMap::TYPE_PHPNAME, $indexType)];
             $this->thumbnail_path = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : ImageTableMap::translateFieldName('Type', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : ImageTableMap::translateFieldName('Type', TableMap::TYPE_PHPNAME, $indexType)];
             $this->type = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : ImageTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : ImageTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : ImageTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : ImageTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -673,7 +713,7 @@ abstract class Image implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 7; // 7 = ImageTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = ImageTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Models\\Image'), 0, $e);
@@ -925,6 +965,9 @@ abstract class Image implements ActiveRecordInterface
         if ($this->isColumnModified(ImageTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
+        if ($this->isColumnModified(ImageTableMap::COL_TITLE)) {
+            $modifiedColumns[':p' . $index++]  = 'title';
+        }
         if ($this->isColumnModified(ImageTableMap::COL_DESCRIPTION)) {
             $modifiedColumns[':p' . $index++]  = 'description';
         }
@@ -956,6 +999,9 @@ abstract class Image implements ActiveRecordInterface
                 switch ($columnName) {
                     case 'id':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
+                        break;
+                    case 'title':
+                        $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
                         break;
                     case 'description':
                         $stmt->bindValue($identifier, $this->description, PDO::PARAM_STR);
@@ -1041,21 +1087,24 @@ abstract class Image implements ActiveRecordInterface
                 return $this->getId();
                 break;
             case 1:
-                return $this->getDescription();
+                return $this->getTitle();
                 break;
             case 2:
-                return $this->getPath();
+                return $this->getDescription();
                 break;
             case 3:
-                return $this->getThumbnailPath();
+                return $this->getPath();
                 break;
             case 4:
-                return $this->getType();
+                return $this->getThumbnailPath();
                 break;
             case 5:
-                return $this->getCreatedAt();
+                return $this->getType();
                 break;
             case 6:
+                return $this->getCreatedAt();
+                break;
+            case 7:
                 return $this->getUpdatedAt();
                 break;
             default:
@@ -1089,19 +1138,20 @@ abstract class Image implements ActiveRecordInterface
         $keys = ImageTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getDescription(),
-            $keys[2] => $this->getPath(),
-            $keys[3] => $this->getThumbnailPath(),
-            $keys[4] => $this->getType(),
-            $keys[5] => $this->getCreatedAt(),
-            $keys[6] => $this->getUpdatedAt(),
+            $keys[1] => $this->getTitle(),
+            $keys[2] => $this->getDescription(),
+            $keys[3] => $this->getPath(),
+            $keys[4] => $this->getThumbnailPath(),
+            $keys[5] => $this->getType(),
+            $keys[6] => $this->getCreatedAt(),
+            $keys[7] => $this->getUpdatedAt(),
         );
-        if ($result[$keys[5]] instanceof \DateTime) {
-            $result[$keys[5]] = $result[$keys[5]]->format('c');
-        }
-
         if ($result[$keys[6]] instanceof \DateTime) {
             $result[$keys[6]] = $result[$keys[6]]->format('c');
+        }
+
+        if ($result[$keys[7]] instanceof \DateTime) {
+            $result[$keys[7]] = $result[$keys[7]]->format('c');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1178,21 +1228,24 @@ abstract class Image implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setDescription($value);
+                $this->setTitle($value);
                 break;
             case 2:
-                $this->setPath($value);
+                $this->setDescription($value);
                 break;
             case 3:
-                $this->setThumbnailPath($value);
+                $this->setPath($value);
                 break;
             case 4:
-                $this->setType($value);
+                $this->setThumbnailPath($value);
                 break;
             case 5:
-                $this->setCreatedAt($value);
+                $this->setType($value);
                 break;
             case 6:
+                $this->setCreatedAt($value);
+                break;
+            case 7:
                 $this->setUpdatedAt($value);
                 break;
         } // switch()
@@ -1225,22 +1278,25 @@ abstract class Image implements ActiveRecordInterface
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setDescription($arr[$keys[1]]);
+            $this->setTitle($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setPath($arr[$keys[2]]);
+            $this->setDescription($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setThumbnailPath($arr[$keys[3]]);
+            $this->setPath($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setType($arr[$keys[4]]);
+            $this->setThumbnailPath($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setCreatedAt($arr[$keys[5]]);
+            $this->setType($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setUpdatedAt($arr[$keys[6]]);
+            $this->setCreatedAt($arr[$keys[6]]);
+        }
+        if (array_key_exists($keys[7], $arr)) {
+            $this->setUpdatedAt($arr[$keys[7]]);
         }
     }
 
@@ -1285,6 +1341,9 @@ abstract class Image implements ActiveRecordInterface
 
         if ($this->isColumnModified(ImageTableMap::COL_ID)) {
             $criteria->add(ImageTableMap::COL_ID, $this->id);
+        }
+        if ($this->isColumnModified(ImageTableMap::COL_TITLE)) {
+            $criteria->add(ImageTableMap::COL_TITLE, $this->title);
         }
         if ($this->isColumnModified(ImageTableMap::COL_DESCRIPTION)) {
             $criteria->add(ImageTableMap::COL_DESCRIPTION, $this->description);
@@ -1390,6 +1449,7 @@ abstract class Image implements ActiveRecordInterface
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
+        $copyObj->setTitle($this->getTitle());
         $copyObj->setDescription($this->getDescription());
         $copyObj->setPath($this->getPath());
         $copyObj->setThumbnailPath($this->getThumbnailPath());
@@ -1965,6 +2025,7 @@ abstract class Image implements ActiveRecordInterface
     public function clear()
     {
         $this->id = null;
+        $this->title = null;
         $this->description = null;
         $this->path = null;
         $this->thumbnail_path = null;

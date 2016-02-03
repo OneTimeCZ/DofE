@@ -1,0 +1,28 @@
+<div class="page-heading">
+    <h1>Nahrát fotografii</h1>
+</div>
+
+<div class="section">
+    <div class="column single">
+        <div class="content-box">
+            <form role="form" class="center" enctype="multipart/form-data" action="/administrace/fotografie/ulozit" method="post">
+                <div class="form-group">
+                    <label for="title">Název</label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="Zadejte název fotografie" />
+                </div>
+                <div class="form-group">
+                    <label for="dsc">Popisek</label>
+                    <input type="text" class="form-control" id="dsc" name="description" placeholder="Zadejte popisek fotografie" />
+                </div>
+                <div class="form-group">
+                    <label class="btn btn-default" for="file">Zvolit soubor</label>
+                    <input class="btn btn-lg btn-default" type="file" id="file" name="image" required />
+                </div>
+                
+                <div class="form-group">
+                    <input class="btn btn-lg btn-default" type="submit" name="upload" value="Nahrát" id="upl">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

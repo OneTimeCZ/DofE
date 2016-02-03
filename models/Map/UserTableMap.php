@@ -266,6 +266,27 @@ class UserTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, 'Quotes', false);
+        $this->addRelation('UserReport', '\\Models\\UserReport', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':id_user',
+    1 => ':id',
+  ),
+), null, null, 'UserReports', false);
+        $this->addRelation('BugReport', '\\Models\\BugReport', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':id_user',
+    1 => ':id',
+  ),
+), null, null, 'BugReports', false);
+        $this->addRelation('Idea', '\\Models\\Idea', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':id_user',
+    1 => ':id',
+  ),
+), null, null, 'Ideas', false);
     } // buildRelations()
 
     /**

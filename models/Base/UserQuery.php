@@ -122,7 +122,37 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoinWithQuote() Adds a RIGHT JOIN clause and with to the query using the Quote relation
  * @method     ChildUserQuery innerJoinWithQuote() Adds a INNER JOIN clause and with to the query using the Quote relation
  *
- * @method     \Models\ImageQuery|\Models\ArticleQuery|\Models\CommentQuery|\Models\RatingQuery|\Models\ActivityQuery|\Models\QuoteQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     ChildUserQuery leftJoinUserReport($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserReport relation
+ * @method     ChildUserQuery rightJoinUserReport($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserReport relation
+ * @method     ChildUserQuery innerJoinUserReport($relationAlias = null) Adds a INNER JOIN clause to the query using the UserReport relation
+ *
+ * @method     ChildUserQuery joinWithUserReport($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the UserReport relation
+ *
+ * @method     ChildUserQuery leftJoinWithUserReport() Adds a LEFT JOIN clause and with to the query using the UserReport relation
+ * @method     ChildUserQuery rightJoinWithUserReport() Adds a RIGHT JOIN clause and with to the query using the UserReport relation
+ * @method     ChildUserQuery innerJoinWithUserReport() Adds a INNER JOIN clause and with to the query using the UserReport relation
+ *
+ * @method     ChildUserQuery leftJoinBugReport($relationAlias = null) Adds a LEFT JOIN clause to the query using the BugReport relation
+ * @method     ChildUserQuery rightJoinBugReport($relationAlias = null) Adds a RIGHT JOIN clause to the query using the BugReport relation
+ * @method     ChildUserQuery innerJoinBugReport($relationAlias = null) Adds a INNER JOIN clause to the query using the BugReport relation
+ *
+ * @method     ChildUserQuery joinWithBugReport($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the BugReport relation
+ *
+ * @method     ChildUserQuery leftJoinWithBugReport() Adds a LEFT JOIN clause and with to the query using the BugReport relation
+ * @method     ChildUserQuery rightJoinWithBugReport() Adds a RIGHT JOIN clause and with to the query using the BugReport relation
+ * @method     ChildUserQuery innerJoinWithBugReport() Adds a INNER JOIN clause and with to the query using the BugReport relation
+ *
+ * @method     ChildUserQuery leftJoinIdea($relationAlias = null) Adds a LEFT JOIN clause to the query using the Idea relation
+ * @method     ChildUserQuery rightJoinIdea($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Idea relation
+ * @method     ChildUserQuery innerJoinIdea($relationAlias = null) Adds a INNER JOIN clause to the query using the Idea relation
+ *
+ * @method     ChildUserQuery joinWithIdea($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Idea relation
+ *
+ * @method     ChildUserQuery leftJoinWithIdea() Adds a LEFT JOIN clause and with to the query using the Idea relation
+ * @method     ChildUserQuery rightJoinWithIdea() Adds a RIGHT JOIN clause and with to the query using the Idea relation
+ * @method     ChildUserQuery innerJoinWithIdea() Adds a INNER JOIN clause and with to the query using the Idea relation
+ *
+ * @method     \Models\ImageQuery|\Models\ArticleQuery|\Models\CommentQuery|\Models\RatingQuery|\Models\ActivityQuery|\Models\QuoteQuery|\Models\UserReportQuery|\Models\BugReportQuery|\Models\IdeaQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUser findOne(ConnectionInterface $con = null) Return the first ChildUser matching the query
  * @method     ChildUser findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUser matching the query, or a new ChildUser object populated from the query conditions when no match is found
@@ -1373,6 +1403,225 @@ abstract class UserQuery extends ModelCriteria
         return $this
             ->joinQuote($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Quote', '\Models\QuoteQuery');
+    }
+
+    /**
+     * Filter the query by a related \Models\UserReport object
+     *
+     * @param \Models\UserReport|ObjectCollection $userReport the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByUserReport($userReport, $comparison = null)
+    {
+        if ($userReport instanceof \Models\UserReport) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $userReport->getIdUser(), $comparison);
+        } elseif ($userReport instanceof ObjectCollection) {
+            return $this
+                ->useUserReportQuery()
+                ->filterByPrimaryKeys($userReport->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByUserReport() only accepts arguments of type \Models\UserReport or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the UserReport relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinUserReport($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('UserReport');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'UserReport');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the UserReport relation UserReport object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Models\UserReportQuery A secondary query class using the current class as primary query
+     */
+    public function useUserReportQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinUserReport($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'UserReport', '\Models\UserReportQuery');
+    }
+
+    /**
+     * Filter the query by a related \Models\BugReport object
+     *
+     * @param \Models\BugReport|ObjectCollection $bugReport the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByBugReport($bugReport, $comparison = null)
+    {
+        if ($bugReport instanceof \Models\BugReport) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $bugReport->getIdUser(), $comparison);
+        } elseif ($bugReport instanceof ObjectCollection) {
+            return $this
+                ->useBugReportQuery()
+                ->filterByPrimaryKeys($bugReport->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByBugReport() only accepts arguments of type \Models\BugReport or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the BugReport relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinBugReport($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('BugReport');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'BugReport');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the BugReport relation BugReport object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Models\BugReportQuery A secondary query class using the current class as primary query
+     */
+    public function useBugReportQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinBugReport($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'BugReport', '\Models\BugReportQuery');
+    }
+
+    /**
+     * Filter the query by a related \Models\Idea object
+     *
+     * @param \Models\Idea|ObjectCollection $idea the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByIdea($idea, $comparison = null)
+    {
+        if ($idea instanceof \Models\Idea) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $idea->getIdUser(), $comparison);
+        } elseif ($idea instanceof ObjectCollection) {
+            return $this
+                ->useIdeaQuery()
+                ->filterByPrimaryKeys($idea->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByIdea() only accepts arguments of type \Models\Idea or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Idea relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinIdea($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Idea');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Idea');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Idea relation Idea object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Models\IdeaQuery A secondary query class using the current class as primary query
+     */
+    public function useIdeaQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinIdea($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Idea', '\Models\IdeaQuery');
     }
 
     /**

@@ -51,7 +51,9 @@
                 <div class="section-content participants <?= $hidden = $i == 0 ? '' : 'hidden' ?>">
                     <div class="person">
                         <div class="col-xs-6 col-md-12">
-                            <img class="img img-responsive img-circle" src="../../includes/images/200x200/<?= $user->getImage()->getPath() ?>">
+                            <a href="/profil/<?= $user->getUrl() ?>">
+                                <img class="img img-responsive img-circle" src="../../includes/images/200x200/<?= $user->getImage()->getPath() ?>">
+                            </a>
                         </div>
                         
                         <div class="col-xs-6 col-md-12">

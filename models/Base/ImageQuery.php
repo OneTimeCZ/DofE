@@ -21,6 +21,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  * @method     ChildImageQuery orderById($order = Criteria::ASC) Order by the id column
+ * @method     ChildImageQuery orderByTitle($order = Criteria::ASC) Order by the title column
  * @method     ChildImageQuery orderByDescription($order = Criteria::ASC) Order by the description column
  * @method     ChildImageQuery orderByPath($order = Criteria::ASC) Order by the path column
  * @method     ChildImageQuery orderByThumbnailPath($order = Criteria::ASC) Order by the thumbnail_path column
@@ -29,6 +30,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildImageQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  *
  * @method     ChildImageQuery groupById() Group by the id column
+ * @method     ChildImageQuery groupByTitle() Group by the title column
  * @method     ChildImageQuery groupByDescription() Group by the description column
  * @method     ChildImageQuery groupByPath() Group by the path column
  * @method     ChildImageQuery groupByThumbnailPath() Group by the thumbnail_path column
@@ -70,6 +72,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildImage findOneOrCreate(ConnectionInterface $con = null) Return the first ChildImage matching the query, or a new ChildImage object populated from the query conditions when no match is found
  *
  * @method     ChildImage findOneById(int $id) Return the first ChildImage filtered by the id column
+ * @method     ChildImage findOneByTitle(string $title) Return the first ChildImage filtered by the title column
  * @method     ChildImage findOneByDescription(string $description) Return the first ChildImage filtered by the description column
  * @method     ChildImage findOneByPath(string $path) Return the first ChildImage filtered by the path column
  * @method     ChildImage findOneByThumbnailPath(string $thumbnail_path) Return the first ChildImage filtered by the thumbnail_path column
@@ -81,6 +84,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildImage requireOne(ConnectionInterface $con = null) Return the first ChildImage matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildImage requireOneById(int $id) Return the first ChildImage filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildImage requireOneByTitle(string $title) Return the first ChildImage filtered by the title column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildImage requireOneByDescription(string $description) Return the first ChildImage filtered by the description column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildImage requireOneByPath(string $path) Return the first ChildImage filtered by the path column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildImage requireOneByThumbnailPath(string $thumbnail_path) Return the first ChildImage filtered by the thumbnail_path column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -90,6 +94,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildImage[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildImage objects based on current ModelCriteria
  * @method     ChildImage[]|ObjectCollection findById(int $id) Return ChildImage objects filtered by the id column
+ * @method     ChildImage[]|ObjectCollection findByTitle(string $title) Return ChildImage objects filtered by the title column
  * @method     ChildImage[]|ObjectCollection findByDescription(string $description) Return ChildImage objects filtered by the description column
  * @method     ChildImage[]|ObjectCollection findByPath(string $path) Return ChildImage objects filtered by the path column
  * @method     ChildImage[]|ObjectCollection findByThumbnailPath(string $thumbnail_path) Return ChildImage objects filtered by the thumbnail_path column
@@ -188,7 +193,7 @@ abstract class ImageQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, description, path, thumbnail_path, type, created_at, updated_at FROM images WHERE id = :p0';
+        $sql = 'SELECT id, title, description, path, thumbnail_path, type, created_at, updated_at FROM images WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -317,6 +322,35 @@ abstract class ImageQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(ImageTableMap::COL_ID, $id, $comparison);
+    }
+
+    /**
+     * Filter the query on the title column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByTitle('fooValue');   // WHERE title = 'fooValue'
+     * $query->filterByTitle('%fooValue%'); // WHERE title LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $title The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildImageQuery The current query, for fluid interface
+     */
+    public function filterByTitle($title = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($title)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $title)) {
+                $title = str_replace('*', '%', $title);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(ImageTableMap::COL_TITLE, $title, $comparison);
     }
 
     /**

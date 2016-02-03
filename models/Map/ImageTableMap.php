@@ -59,7 +59,7 @@ class ImageTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 7;
+    const NUM_COLUMNS = 8;
 
     /**
      * The number of lazy-loaded columns
@@ -69,12 +69,17 @@ class ImageTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 7;
+    const NUM_HYDRATE_COLUMNS = 8;
 
     /**
      * the column name for the id field
      */
     const COL_ID = 'images.id';
+
+    /**
+     * the column name for the title field
+     */
+    const COL_TITLE = 'images.title';
 
     /**
      * the column name for the description field
@@ -118,11 +123,11 @@ class ImageTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Description', 'Path', 'ThumbnailPath', 'Type', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_CAMELNAME     => array('id', 'description', 'path', 'thumbnailPath', 'type', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(ImageTableMap::COL_ID, ImageTableMap::COL_DESCRIPTION, ImageTableMap::COL_PATH, ImageTableMap::COL_THUMBNAIL_PATH, ImageTableMap::COL_TYPE, ImageTableMap::COL_CREATED_AT, ImageTableMap::COL_UPDATED_AT, ),
-        self::TYPE_FIELDNAME     => array('id', 'description', 'path', 'thumbnail_path', 'type', 'created_at', 'updated_at', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
+        self::TYPE_PHPNAME       => array('Id', 'Title', 'Description', 'Path', 'ThumbnailPath', 'Type', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_CAMELNAME     => array('id', 'title', 'description', 'path', 'thumbnailPath', 'type', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(ImageTableMap::COL_ID, ImageTableMap::COL_TITLE, ImageTableMap::COL_DESCRIPTION, ImageTableMap::COL_PATH, ImageTableMap::COL_THUMBNAIL_PATH, ImageTableMap::COL_TYPE, ImageTableMap::COL_CREATED_AT, ImageTableMap::COL_UPDATED_AT, ),
+        self::TYPE_FIELDNAME     => array('id', 'title', 'description', 'path', 'thumbnail_path', 'type', 'created_at', 'updated_at', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -132,11 +137,11 @@ class ImageTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Description' => 1, 'Path' => 2, 'ThumbnailPath' => 3, 'Type' => 4, 'CreatedAt' => 5, 'UpdatedAt' => 6, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'description' => 1, 'path' => 2, 'thumbnailPath' => 3, 'type' => 4, 'createdAt' => 5, 'updatedAt' => 6, ),
-        self::TYPE_COLNAME       => array(ImageTableMap::COL_ID => 0, ImageTableMap::COL_DESCRIPTION => 1, ImageTableMap::COL_PATH => 2, ImageTableMap::COL_THUMBNAIL_PATH => 3, ImageTableMap::COL_TYPE => 4, ImageTableMap::COL_CREATED_AT => 5, ImageTableMap::COL_UPDATED_AT => 6, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'description' => 1, 'path' => 2, 'thumbnail_path' => 3, 'type' => 4, 'created_at' => 5, 'updated_at' => 6, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Title' => 1, 'Description' => 2, 'Path' => 3, 'ThumbnailPath' => 4, 'Type' => 5, 'CreatedAt' => 6, 'UpdatedAt' => 7, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'title' => 1, 'description' => 2, 'path' => 3, 'thumbnailPath' => 4, 'type' => 5, 'createdAt' => 6, 'updatedAt' => 7, ),
+        self::TYPE_COLNAME       => array(ImageTableMap::COL_ID => 0, ImageTableMap::COL_TITLE => 1, ImageTableMap::COL_DESCRIPTION => 2, ImageTableMap::COL_PATH => 3, ImageTableMap::COL_THUMBNAIL_PATH => 4, ImageTableMap::COL_TYPE => 5, ImageTableMap::COL_CREATED_AT => 6, ImageTableMap::COL_UPDATED_AT => 7, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'title' => 1, 'description' => 2, 'path' => 3, 'thumbnail_path' => 4, 'type' => 5, 'created_at' => 6, 'updated_at' => 7, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -157,6 +162,7 @@ class ImageTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('title', 'Title', 'VARCHAR', true, 50, null);
         $this->addColumn('description', 'Description', 'VARCHAR', false, 150, null);
         $this->addColumn('path', 'Path', 'VARCHAR', false, 150, null);
         $this->addColumn('thumbnail_path', 'ThumbnailPath', 'VARCHAR', false, 150, null);
@@ -341,6 +347,7 @@ class ImageTableMap extends TableMap
     {
         if (null === $alias) {
             $criteria->addSelectColumn(ImageTableMap::COL_ID);
+            $criteria->addSelectColumn(ImageTableMap::COL_TITLE);
             $criteria->addSelectColumn(ImageTableMap::COL_DESCRIPTION);
             $criteria->addSelectColumn(ImageTableMap::COL_PATH);
             $criteria->addSelectColumn(ImageTableMap::COL_THUMBNAIL_PATH);
@@ -349,6 +356,7 @@ class ImageTableMap extends TableMap
             $criteria->addSelectColumn(ImageTableMap::COL_UPDATED_AT);
         } else {
             $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.title');
             $criteria->addSelectColumn($alias . '.description');
             $criteria->addSelectColumn($alias . '.path');
             $criteria->addSelectColumn($alias . '.thumbnail_path');

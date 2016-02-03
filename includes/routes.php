@@ -60,6 +60,11 @@
     $router->addPost('User.login', '/prihlasit');
     $router->addPost('User.create', '/registrovat');
     $router->addGet('User.resendEmail', '/nastaveni/potvrzovaci-email');
+    $router->addGet('User.confirmEmail', '/potvrdit-email/{username}/{token}')
+        ->setTokens([
+            'username' => '\w+',
+            'token' => '\w{50}',
+        ]);
     $router->addGet('User.changePersonalForm', '/nastaveni/zmenit-udaje');
     $router->addPost('User.changeEmail', '/nastaveni/ulozit-email');
     $router->addPost('User.changePassword', '/nastaveni/ulozit-heslo');
@@ -75,13 +80,21 @@
             'username' => '\w+',
             'token' => '\w{50}',
         ]);
-    $router->addGet('User.logDofeActivityForm', '/nahlasit-aktivitu{/year,week}')
+    $router->addGet('User.logDofeActivityForm', '/nahlasit-aktivitu{/year,month,day}')
         ->setTokens([
             'year' => '\d{4}',
-            'week' => '\d{1,2}'
+            'month' => '\d{2}',
+            'day' => '\d{2}'
         ]);
-    $router->addPost('User.logDofeActivity', '/ulozit-aktivitu{/year,week}')
+    $router->addPost('User.logDofeActivity', '/ulozit-aktivitu{/year,month,day}')
         ->setTokens([
             'year' => '\d{4}',
-            'week' => '\d{1,2}'
+            'month' => '\d{2}',
+            'day' => '\d{2}'
         ]);
+    $router->addGet('User.reportBugPage', '/nastaveni/nahlasit-chybu');
+    $router->addPost('User.reportBug', '/nastaveni/nahlasit-chyba');
+    $router->addGet('User.reportUserPage', '/nastaveni/nahlasit-uzivatele');
+    $router->addPost('User.reportUser', '/nastaveni/nahlasit-uzivatel');
+    $router->addGet('User.ideaSuggestionPage', '/nastaveni/navrhnout-zlepseni');
+    $router->addPost('User.ideaSuggestion', '/nastaveni/navrh-zlepseni');

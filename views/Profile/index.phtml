@@ -7,7 +7,7 @@
                         <img class="img-thumbnail img img-responsive" src="includes/images/200x200/<?= $data["user"]->getImage()->getPath() ?>" alt="Profilový obrázek" title="Profilový obrázek uživatele <?= $data["user"]->getUsername() ?>" >
                     </div>
                     <div class="basic">
-                    <h1><?= $data["user"]->getUsername() ?></h1>
+                    <h1><?= $data["user"]->getName() ?> <?= $data["user"]->getSurname() ?></h1>
                         <ul class="">
                             <li class="item">
                                 Členem DofE VOŠ a SPŠE Plzeň od: 11.1.2015

@@ -56,6 +56,54 @@
                         </div>
                     </div>
                 </div>
+                <div class="news-item col-sm-6 col-lg-3">
+                    <div class="content">
+                        <div class="icon solved">
+                            <button class="icon" type="button">
+                                <i class="fa fa-bug"></i>
+                            </button>
+                        </div>
+                        <div class="text">
+                            Vyřešené chyby <span class="badge"><?= $data["new"]["solved_bugs"] ?></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="news-item col-sm-6 col-lg-3">
+                    <div class="content">
+                        <div class="icon unsolved">
+                            <button class="icon" type="button">
+                                <i class="fa fa-exclamation"></i>
+                            </button>
+                        </div>
+                        <div class="text">
+                            Nevyřešené chyby <span class="badge"><?= $data["new"]["unsolved_bugs"] ?></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="news-item col-sm-6 col-lg-3">
+                    <div class="content">
+                        <div class="icon report">
+                            <button class="icon" type="button">
+                                <i class="fa fa-flag"></i>
+                            </button>
+                        </div>
+                        <div class="text">
+                            Nahlášení uživatelé <span class="badge"><?= $data["new"]["user_reports"] ?></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="news-item col-sm-6 col-lg-3">
+                    <div class="content">
+                        <div class="icon physical">
+                            <button class="icon" type="button">
+                                <i class="fa fa-lightbulb-o"></i>
+                            </button>
+                        </div>
+                        <div class="text">
+                            Návrhy <span class="badge"><?= $data["new"]["ideas"] ?></span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

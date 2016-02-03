@@ -57,6 +57,7 @@
     <!-- Images -->
     <table name="images" phpName="Image">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="title" type="varchar" size="50" required="true"/>
         <column name="description" type="varchar" size="150"/>
         <column name="path" type="varchar" size="150"/>
         <column name="thumbnail_path" type="varchar" size="150"/>
@@ -97,6 +98,8 @@
         <foreign-key foreignTable="comments">
             <reference local="id_comment" foreign="id"/>
         </foreign-key>
+        
+        <behavior name="timestampable" />
     </table>
     
     <!-- DofE Levels(Bronze,Silver,Gold) -->
@@ -132,6 +135,8 @@
         <foreign-key foreignTable="activity_types">
             <reference local="id_activity_type" foreign="id"/>
         </foreign-key>
+        
+        <behavior name="timestampable" />
     </table>
     
     <!-- DofE Activity Types(volunteering,physical,skill) -->
@@ -150,6 +155,8 @@
         <foreign-key foreignTable="activities">
             <reference local="id_activity" foreign="id"/>
         </foreign-key>
+        
+        <behavior name="timestampable" />
     </table>
     
     <!-- Categories -->
@@ -169,5 +176,54 @@
         <foreign-key foreignTable="users">
             <reference local="id_user" foreign="id"/>
         </foreign-key>
+        
+        <behavior name="timestampable" />
+    </table>
+    
+    <!-- User Reports -->
+    <table name="user_reports" phpName="UserReport">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="id_user" type="integer" required="true"/>
+        <column name="id_user_reported" type="integer" required="true"/>
+        <column name="reason" type="varchar" size="500" required="true"/>
+        
+        <foreign-key foreignTable="users">
+            <reference local="id_user" foreign="id"/>
+        </foreign-key>
+        
+        <behavior name="timestampable" />
+    </table>
+    
+    <!-- Bug Reports -->
+    <table name="bug_reports" phpName="BugReport">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="id_user" type="integer" required="true"/>
+        <column name="location" type="varchar" size="200" required="true"/>
+        <column name="description" type="varchar" size="1000" required="true"/>
+        <column name="severity" type="integer" required="true"/>
+        <column name="device" type="varchar" size="200"/>
+        <column name="browser" type="varchar" size="100"/>
+        <column name="fixed_at" type="timestamp"/>
+        
+        <foreign-key foreignTable="users">
+            <reference local="id_user" foreign="id"/>
+        </foreign-key>
+        
+        <behavior name="timestampable" />
+    </table>
+    
+    <!-- Idea Suggestions -->
+    <table name="ideas" phpName="Idea">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="id_user" type="integer" required="true"/>
+        <column name="description" type="varchar" size="1000" required="true"/>
+        <column name="reason" type="varchar" size="500" required="true"/>
+        <column name="approved_at" type="timestamp"/>
+        
+        <foreign-key foreignTable="users">
+            <reference local="id_user" foreign="id"/>
+        </foreign-key>
+        
+        <behavior name="timestampable" />
     </table>
 </database>

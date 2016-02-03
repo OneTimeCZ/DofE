@@ -17,6 +17,12 @@ use Models\ActivityType;
 use Models\ActivityTypeQuery;
 use Models\Level;
 use Models\LevelQuery;
+use Models\BugReport;
+use Models\BugReportQuery;
+use Models\UserReport;
+use Models\UserReportQuery;
+use Models\Idea;
+use Models\IdeaQuery;
 use \DateTime;
 
 require_once '/helpers/helper.php';
@@ -90,6 +96,40 @@ class UserController extends Controller{
         ]);
     }
     
+    public function confirmEmail($username = '', $token = ''){        
+        if($username == ''){
+            $this->addPopup('danger', 'Při potvrzování emailu je nutné zadat uživatelské jméno.');
+            redirectTo('/');
+        }
+        
+        if($token == ''){
+            $this->addPopup('danger', 'Při potvrzování emailu je nutné zadat potvrzovací kód. který byl poslán na vaši emailovou adresu.');
+            redirectTo('/');
+        }
+        
+        $user = UserQuery::create()
+            ->filterByUsername($username)
+            ->filterByEmailConfirmToken($token)
+            ->findOne();
+            
+        if(!isset($user)){
+            $this->addPopup('danger', 'Při potvrzování emailu byl zadán špatný kód nebo uživatelské jméno.');
+            redirectTo("/");
+        }
+        
+        if($user->getEmailConfirmedAt() != NULL){
+            $this->addPopup('danger', 'Váš email byl již potvrzen.');
+            redirectTo("/");
+        }
+        
+        $user->setEmailConfirmedAt(time());
+        $user->setEmailConfirmToken(NULL);
+        $user->save();
+        
+        $this->addPopup('success', 'Vaše emailová adresa byla potvrzena.');
+        redirectTo('/');
+    }
+    
     public function resendEmail(){
         if(!$this->isLogged()){
             $this->addPopup('danger', 'Pro znovuodeslání potvrzovacího emailu se musíte přihlásit.');
@@ -101,17 +141,10 @@ class UserController extends Controller{
             redirectTo("/");
         }
         
-        do {
-            $token = token(50);
-            $existing = UserQuery::create()
-                ->filterByEmailConfirmToken($token)
-                ->count();
-        } while ($existing > 0);
-        
         $user = UserQuery::create()
             ->findPk($_SESSION["user"]->getId());
         
-        $user->setEmailConfirmToken($token);
+        $user->setEmailConfirmToken(token(50));
         $user->save();
         
         //resend confirmation email with email_confirm_token
@@ -141,6 +174,26 @@ class UserController extends Controller{
 			redirectTo("/registrace");
         }
         
+        if(preg_match('/^[a-zA-Z0-9]/', $_POST['regPassword'])){
+            $this->addPopup('danger', 'Vaše heslo obsahuje nepovolené znaky nebo mezeru.');
+            redirectTo("/registrace");
+        }
+        
+        if(strlen(utf8_decode($_POST["regPassword"])) < 8){
+            $this->addPopup('danger', 'Vaše heslo je příliš krátké.');
+            redirectTo("/registrace");
+        }
+        
+        if(strlen(utf8_decode($_POST["regPassword"])) > 32){
+            $this->addPopup('danger', 'Vaše heslo je příliš dlouhé.');
+            redirectTo("/registrace");
+        }
+        
+        if(preg_match('/^[a-zA-Z0-9]/', $_POST["regUsername"])){
+            $this->addPopup('danger', 'Vaše uživatelské jméno obsahuje nepovolené znaky nebo mezeru.');
+            redirectTo("/registrace");
+        }
+        
         $existing = UserQuery::create()
             ->filterByUsername($_POST["regUsername"])
             ->_or()
@@ -161,15 +214,8 @@ class UserController extends Controller{
             $user->setPassword(sha1($_POST['regPassword']));
             $user->setEmail($_POST['regEmail']);
             
-            do {
-                $token = token(50);
-                $existing = UserQuery::create()
-                    ->filterByEmailConfirmToken($token)
-                    ->count();
-            } while ($existing > 0);
-            
-            $user->setEmailConfirmToken($token);
-            $user->setPasswordResetToken(token(50));
+            $user->setEmailConfirmToken(NULL);
+            $user->setPasswordResetToken(NULL);
             $user->setPermissions(0);
             $user->setSigninCount(0);
 
@@ -197,21 +243,22 @@ class UserController extends Controller{
     
     }
     
-    public function logDofeActivityForm($year = '', $week = ''){
+    public function logDofeActivityForm($year = '', $month = '', $day = ''){
         if($year == ''){
-            $id_year = date('Y');
-            $id_week = date('W');
+            $id_year = date("Y");
+            $id_month = date("m");
+            $id_day = date("d");
         } else {
-            if($week == ''){
-                $id_year = date('Y');
-                $id_week = date('W');
+            if($month == ''){
+                $id_month = 01;
+                $id_day = 01;
             } else {
-                $id_year = $year;
-                $id_week = $week;
+                $id_month = $month;
+                $id_day = $day == '' ? 01 : $day;
             }
+            
+            $id_year = $year;
         }
-        
-        //SQL w/ week and year
         
         $this->view('Profile/logDofe', 'base_template', [
             'active' => 'logActivity',
@@ -219,7 +266,8 @@ class UserController extends Controller{
             'recent' => ArticleQuery::recent(),
             'date' => [
                 'year' => $id_year,
-                'week' => $id_week
+                'month' => $id_month,
+                'day' => $id_day
             ]
         ]);
     }
@@ -358,6 +406,16 @@ class UserController extends Controller{
     }
     
     public function resetPassword($username, $token){
+        if($username == ''){
+            $this->addPopup('danger', 'Při obnově hesla je nutné zadat uživatelské jméno.');
+            redirectTo('/');
+        }
+        
+        if($token == ''){
+            $this->addPopup('danger', 'Při obnově hesla je nutné zadat potvrzovací kód. který byl poslán na vaši emailovou adresu.');
+            redirectTo('/');
+        }
+        
         $user = UserQuery::create()
             ->filterByUsername($username)
             ->filterByPasswordResetToken($token)
@@ -370,6 +428,7 @@ class UserController extends Controller{
         
         $new_password = token(12);
         $user->setPassword(sha1($new_password));
+        $user->setPasswordResetToken(NULL);
         $user->save();
             
         //send email to the user with new password ($new_password)
@@ -386,5 +445,172 @@ class UserController extends Controller{
             'title' => 'Zapomenuté heslo',
             'recent' => ArticleQuery::recent()
         ]);
+    }
+    
+    public function reportBugPage(){
+        if(!$this->isLogged()){
+            $this->addPopup('danger', 'Pro nahlášení chyby musíte být přihlášeni.');
+            redirectTo("/");
+        }
+        
+        $this->view('Profile/reportBug', 'base_template', [
+            'active' => 'reportBug',
+            'title' => 'Nahlásit chybu',
+            'recent' => ArticleQuery::recent()
+        ]);
+    }
+    
+    public function reportBug(){
+        if(!$this->isLogged()){
+            $this->addPopup('danger', 'Pro nahlášení chyby musíte být přihlášeni.');
+            redirectTo("/");
+        }
+        
+        if(strlen(utf8_decode($_POST["description"])) >= 1000){
+            $popups[] = array(
+                'type' => 'danger',
+                'content' => 'Popis chyby je příliš dlouhý. Popis by měl obsahovat maximálně 1000 znaků.'
+            );
+        }
+        
+        if(strlen(utf8_decode($_POST["location"])) >= 200){
+            $popups[] = array(
+                'type' => 'danger',
+                'content' => 'Lokalizace chyby je příliš dlouhá. Lokalizace by měla obsahovat maximálně 200 znaků.'
+            );
+        }
+        
+        if(isset($_POST["device"])){
+            if(strlen(utf8_decode($_POST["device"])) >= 200){
+                $popups[] = array(
+                    'type' => 'danger',
+                    'content' => 'Popis zařízení je příliš dlouhý. Popis zařízení by měl obsahovat maximálně 200 znaků.'
+                );
+            }
+        }
+        
+        if(isset($_POST["browser"])){
+            if(strlen(utf8_decode($_POST["browser"])) >= 100){
+                $popups[] = array(
+                    'type' => 'danger',
+                    'content' => 'Popis prohlížeče je příliš dlouhý. Popis prohlížeče by měl obsahovat maximálně 100 znaků.'
+                );
+            }
+        }
+        
+        if(isset($popups)){
+            foreach($popups as $pop){
+                $this->addPopup($pop["type"], $pop["content"]);
+            }
+            
+            redirectTo("/nastaveni/nahlasit-chybu");
+        }
+        
+        $bug = new BugReport;
+        $bug->setIdUser($_SESSION["user"]->getId());
+        $bug->setLocation($_POST["location"]);
+        $bug->setDescription($_POST["description"]);
+        $bug->setSeverity($_POST["severity"]);
+        if(isset($_POST["device"])) $bug->setDevice($_POST["device"]);
+        if(isset($_POST["browser"])) $bug->setBrowser($_POST["browser"]);
+        $bug->save();
+        
+        $this->addPopup('success', 'Chyba byla úspěšně nahlášena. Děkujeme!');
+        redirectTo("/nastaveni");
+    }
+    
+    public function reportUserPage(){
+        if(!$this->isLogged()){
+            $this->addPopup('danger', 'Pro nahlášení uživatele musíte být přihlášeni.');
+            redirectTo("/");
+        }
+        
+        $users = UserQuery::create()
+            ->find();
+        
+        if($users->isEmpty()){
+            $this->addPopup('danger', 'V systému nejsou žádní uživatelé?!');
+            redirectTo("/nastaveni");
+        }
+        
+        $this->view('Profile/reportUser', 'base_template', [
+            'active' => 'reportUser',
+            'title' => 'Nahlásit uživatele',
+            'recent' => ArticleQuery::recent(),
+            'users' => $users
+        ]);
+    }
+    
+    public function reportUser(){
+        if(!$this->isLogged()){
+            $this->addPopup('danger', 'Pro nahlášení uživatele musíte být přihlášeni.');
+            redirectTo("/");
+        }
+        
+        if($_POST["user"] == 0){
+            $this->addPopup('danger', 'Pro nahlášení uživatele musíte nějakého zvolit.');
+            redirectTo("/nastaveni/nahlasit-uzivatele");
+        }
+        
+        if($_POST["user"] == $_SESSION["user"]->getId()){
+            $this->addPopup('danger', 'Nemůžete nahlásit sami sebe...');
+            redirectTo("/nastaveni/nahlasit-uzivatele");
+        }
+        
+        if(strlen(utf8_decode($_POST["reason"])) >= 500){
+            $this->addPopup('danger', 'Důvod nahlášení je příliš dlouhý. Důvod nahlášení by měl obsahovat maximálně 500 znaků.');
+            redirectTo("/nastaveni/nahlasit-uzivatele");
+        }
+        
+        $report = new UserReport;
+        $report->setIdUser($_SESSION["user"]->getId());
+        $report->setIdUserReported($_POST["user"]);
+        $report->setReason($_POST["reason"]);
+        $report->save();
+        
+        $user = UserQuery::create()
+            ->findPk($_POST["user"]);
+        
+        $this->addPopup('success', 'Uživatel ' . $user->getName() . ' ' . $user->getSurname() . ' (<a class=alert-link href=/profil/' . $user->getUrl() . '>' . $user->getUsername() . '</a>) byl úspěšně nahlášen. Děkujeme!');
+        redirectTo("/nastaveni");
+    }
+    
+    public function ideaSuggestionPage(){
+        if(!$this->isLogged()){
+            $this->addPopup('danger', 'Pro podání návrhu na zlepšení musíte být přihlášeni.');
+            redirectTo("/");
+        }
+        
+        $this->view('Profile/ideaSuggestion', 'base_template', [
+            'active' => 'ideaSuggestion',
+            'title' => 'Podat návrh',
+            'recent' => ArticleQuery::recent()
+        ]);
+    }
+    
+    public function ideaSuggestion(){
+        if(!$this->isLogged()){
+            $this->addPopup('danger', 'Pro podání návrhu na zlepšení musíte být přihlášeni.');
+            redirectTo("/");
+        }
+        
+        if(strlen(utf8_decode($_POST["reason"])) >= 500){
+            $this->addPopup('danger', 'Důvod je příliš dlouhý. Důvod by měl obsahovat maximálně 500 znaků.');
+            redirectTo("/nastaveni/navrhnout-zlepseni");
+        }
+        
+        if(strlen(utf8_decode($_POST["description"])) >= 1000){
+            $this->addPopup('danger', 'Popis návrhu je příliš dlouhý. Popis návrhu by měl obsahovat maximálně 1000 znaků.');
+            redirectTo("/nastaveni/navrhnout-zlepseni");
+        }
+        
+        $idea = new Idea;
+        $idea->setIdUser($_SESSION["user"]->getId());
+        $idea->setDescription($_POST["description"]);
+        $idea->setReason($_POST["reason"]);
+        $idea->save();
+        
+        $this->addPopup('success', 'Váš návrh byl úspěšně zaznamenán. Děkujeme!');
+        redirectTo("/nastaveni");
     }
 }

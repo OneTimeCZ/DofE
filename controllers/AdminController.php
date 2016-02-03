@@ -13,6 +13,13 @@ use Models\Comment;
 use Models\CommentQuery;
 use Models\User;
 use Models\UserQuery;
+use Models\UserReport;
+use Models\UserReportQuery;
+use Models\BugReport;
+use Models\BugReportQuery;
+use Models\Idea;
+use Models\IdeaQuery;
+use Propel\Runtime\ActiveQuery\Criteria;
 
 require_once '/helpers/helper.php';
 
@@ -46,13 +53,37 @@ class AdminController extends Controller{
             ->filterByCreatedAt(array('min' => 'yesterday'))
             ->count();
         
+        $user_reports = UserReportQuery::create()
+            ->filterByCreatedAt(array('min' => 'yesterday'))
+            ->count();
+        
+        $unsolved_bugs = BugReportQuery::create()
+            ->filterByCreatedAt(array('min' => 'yesterday'))
+            ->filterByFixedAt(NULL)
+            ->count();
+        
+        $solved_bugs = BugReportQuery::create()
+            ->filterByCreatedAt(array('min' => 'yesterday'))
+            ->filterByFixedAt(NULL, Criteria::NOT_EQUAL)
+            ->count();
+        
+        $ideas = IdeaQuery::create()
+            ->filterByApprovedAt(NULL)
+            ->count();
+        
         $this->view('Admin/index', 'admin_template', [
             'active' => 'main',
             'title' => 'Administrace',
-            'new' => ['users' => $users,
-                      'comments' => $comments,
-                      'articles' => $articles,
-                      'images' => $images]
+            'new' => [
+                'users' => $users,
+                'comments' => $comments,
+                'articles' => $articles,
+                'images' => $images,
+                'user_reports' => $user_reports,
+                'unsolved_bugs' => $unsolved_bugs,
+                'solved_bugs' => $solved_bugs,
+                'ideas' => $ideas
+            ]
         ]);
     }
     
@@ -110,6 +141,13 @@ class AdminController extends Controller{
         $article = ArticleQuery::create()
             ->findPk($id);
         
+        if(!$this->isAdmin()){
+            if($article->getIdUser() != $_SESSION["user"]->getId()){
+                $this->addPopup('danger', 'Pro úpravu cizích článků nemáte dostatečná práva.');
+                redirectTo("/administrace/clanky");
+            }
+        }
+        
         $categories = CategoryQuery::create()
             ->find();
         
@@ -161,8 +199,91 @@ class AdminController extends Controller{
         
     }
     
-    public function imageAdd(){
+    public function imageSave(){
+        $fullsize_directory = "includes/images/fullsize/";
+        $thumbnail_directory = "includes/images/thumbnails/";
         
+        $file_name = token(20);
+        $file_size = $_FILES['image']['size'];
+        $file_temporary_name = $_FILES['image']['tmp_name'];
+        $file_type = $_FILES['image']['type'];
+        $file_extension = explode('.', $_FILES['image']['name']);
+        $file_extension = strtolower($file_extension[count($file_extension) - 1]);
+        $extensions = array("jpeg","jpg","png");
+      
+        if(getimagesize($file_temporary_name) === false) {
+            $popups[] = array(
+                'type' => 'danger',
+                'content' => 'Tento soubor je prázdný. Prosíme nahrajte fotografii.'
+            );
+        }
+        
+        if(!in_array($file_extension, $extensions)){
+            $popups[] = array(
+                'type' => 'danger',
+                'content' => 'Nepovolená přípona souboru. Prosíme nahrajte fotografii ve formátu JPEG nebo PNG.'
+            );
+        }
+        
+        if($file_size > 10485760){
+            $popups[] = array(
+                'type' => 'danger',
+                'content' => 'Fotografie je přiliš rozměrná. Prosíme nahrajte fotografii o velikosti maximálně 10 MB.'
+            );
+        }
+        
+        if(strlen(utf8_decode($_POST["description"])) >= 500){
+            $popups[] = array(
+                'type' => 'danger',
+                'content' => 'Popisek fotografie je příliš dlouhý. Popisek by měl obsahovat maximálně 500 znaků.'
+            );
+        }
+        
+        if(strlen(utf8_decode($_POST["title"])) >= 50){
+            $popups[] = array(
+                'type' => 'danger',
+                'content' => 'Název fotografie je příliš dlouhý. Název by měl obsahovat maximálně 50 znaků.'
+            );
+        }
+        
+        if(isset($popups)){
+            foreach($popups as $pop){
+                $this->addPopup($pop["type"], $pop["content"]);
+            }
+            
+            redirectTo("/administrace/fotografie/nahrat");
+        }
+        
+        while(file_exists($fullsize_directory . $file_name) || file_exists($thumbnail_directory . $file_name)){
+            $file_name = token(20);
+        }
+        
+        $file_name .= "." . $file_extension;
+        
+        if(!move_uploaded_file($file_temporary_name, $fullsize_directory . $file_name)){
+            $this->addPopup('danger', 'Při přesunu fotografie do složky fullsize nastal neočekávaný problém.');
+            redirectTo("/administrace/fotografie/nahrat");
+        }
+        
+        //copy image as a thumbnail, resize it afterwards
+        
+        $image = new Image;
+        $image->setTitle($_POST["title"]);
+        $image->setDescription($_POST["description"]);
+        $image->setType("fullsize");
+        $image->setPath($file_name);
+        $image->setThumbnailPath($file_name);
+        $image->save();
+        
+        $this->addPopup('success', 'Vaše fotografie byla úspěšně nahrána.');
+        redirectTo("/administrace/fotografie/nahrat");
+    }
+    
+    public function imageAdd(){
+        $this->view('Admin/uploadPhoto', 'admin_template', [
+            'active' => 'uploadPhoto',
+            'title' => 'Nahrát fotografii'
+        ]);
     }
     
     public function imageDelete($name){

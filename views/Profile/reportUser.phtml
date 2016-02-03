@@ -1,0 +1,35 @@
+<div class="content">    
+    <div class="section">
+        <div class="page-heading register">
+            <h1>Nahlásit uživatele</h1>
+        </div>
+    </div>
+    
+    <div class="section">
+        <div class="column single">
+            <div class="content-box">
+                <div class="section-content">    
+                    <form class="register col-xs-offset-1 col-xs-10" role="form" action="/nastaveni/nahlasit-uzivatel" method="post">
+                        <div class="form-group">
+                            <label for="reason">Popis chyby</label>
+                            <textarea class="form-control no-resize" rows="6" placeholder="Popište důvod nahlášení co nejpřesněji." name="reason" id="reason" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="user">Uživatel</label>
+                            <select name="user" id="user" title="Zvolte jméno uživatele" class="form-control">
+                                <option value="0" data-hidden="true"></option>
+                            <?php foreach($data["users"] as $user): ?>    
+                                <option value="<?= $user->getId() ?>"><?= $user->getName() ?> <?= $user->getSurname() ?> (<?= $user->getUsername() ?>)</option>
+                            <?php endforeach; ?>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <input class="btn btn-default" type="submit" name="report" value="Nahlásit" >
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
