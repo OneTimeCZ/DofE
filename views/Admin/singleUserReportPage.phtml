@@ -1,0 +1,30 @@
+<div class="page-heading">
+    <h1>Nahlášení uživatele</h1>
+</div>
+
+<?php if($data["user_report"] != NULL): ?>
+<div class="section">
+    <div class="column single">
+        <div class="content-box">
+            <div class="content col-xs-offset-1 col-xs-10">
+                <div class="form-group">
+                    <label for="user_author">Nahlásil (kdo)</label>
+                    <input class="form-control" id="user_author" value="<?= $data["user_report"]->getUserAuthor()->getUsername() ?>" readonly/>
+                </div>
+                <div class="form-group">
+                    <label for="user_reported">Nahlásil (koho)</label>
+                    <input class="form-control" id="user_reported" value="<?= $data["user_report"]->getUserReported()->getUsername() ?>" readonly/>
+                </div>
+                <div class="form-group">
+                    <label for="reason">Důvod</label>
+                    <textarea class="form-control no-resize" rows="4" id="reason" readonly><?= $data["user_report"]->getReason() ?></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="date">Datum</label>
+                    <input class="form-control" id="date" value="<?= $data["user_report"]->getCreatedAt()->format('d.m.Y H:i:s') ?>" readonly/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>

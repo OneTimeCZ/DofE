@@ -1,0 +1,59 @@
+<div class="page-heading">
+    <h1>Hlášení o chybě</h1>
+</div>
+
+<?php if($data["bug"] != NULL): ?>
+<div class="section">
+    <div class="column single">
+        <div class="content-box">
+            <div class="content col-xs-offset-1 col-xs-10">
+                <div class="form-group">
+                    <label for="author">Autor</label>
+                    <input class="form-control" type="text" id="author" value="<?= $data["bug"]->getUser()->getUsername() ?>" readonly/>
+                </div>
+                <div class="form-group">
+                    <label for="date">Datum</label>
+                    <input class="form-control" type="text" id="date" value="<?= $data["bug"]->getCreatedAt()->format('d.m.Y H:i:s') ?>" readonly/>
+                </div>
+                <div class="form-group">
+                    <label for="state">Stav</label>
+                    <?php if($data["bug"]->getFixedAt() == NULL): ?>
+                    <input class="form-control" type="text" id="state" value="Nevyřešeno" readonly/>
+                    <?php else: ?>
+                    <input class="form-control" type="text" id="state" value="Vyřešeno <?= $data["bug"]->getFixedAt()->format('d.m.Y H:i:s') ?>" readonly/>
+                    <?php endif; ?>
+                </div>
+                <div class="form-group">
+                    <label for="location">Lokalizace</label>
+                    <input class="form-control" type="text" id="location" value="<?= $data["bug"]->getLocation() ?>" readonly/>
+                </div>
+                <div class="form-group">
+                    <label for="description">Popis chyby</label>
+                    <textarea class="form-control no-resize" id="description" rows="8" readonly><?= $data["bug"]->getDescription() ?></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="device">Označení zařízení</label>
+                    <input class="form-control" type="text" id="device" value="<?= $data["bug"]->getDevice() ?>" readonly/>
+                </div>
+                <div class="form-group">
+                    <label for="browser">Webový prohlížeč</label>
+                    <input class="form-control" type="text" id="browser" value="<?= $data["bug"]->getBrowser() ?>" readonly/>
+                </div>
+                <div class="form-group">
+                    <label for="severity">Závažnost chyby</label>
+                    <select name="severity" id="severity" class="form-control" disabled>
+                        <option value="1" <?= ($data["bug"]->getSeverity() == 1) ? 'selected="selected"' : '' ?>>Nízká</option>
+                        <option value="2" <?= ($data["bug"]->getSeverity() == 2) ? 'selected="selected"' : '' ?>>Střední</option>
+                        <option value="3" <?= ($data["bug"]->getSeverity() == 3) ? 'selected="selected"' : '' ?>>Vysoká</option>
+                    </select>
+                </div>
+                <?php if($data["bug"]->getFixedAt() == NULL): ?>
+                <div class="form-group">
+                    <a class="btn btn-default" href="/administrace/chyba/<?= $data["bug"]->getId() ?>/vyreseno">Označit za vyřešené</a>
+                </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>

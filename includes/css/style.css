@@ -91,25 +91,54 @@ body {
               z-index: -1; }
           body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news {
             overflow: auto; }
+            body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news a.detail-link {
+              overflow: auto;
+              color: #232323; }
+            body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-collapse {
+              clear: both;
+              margin-left: 15px;
+              margin-right: 15px;
+              margin-bottom: 15px;
+              background: white; }
+              body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-collapse.last {
+                margin-bottom: 0; }
+              body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-collapse div.content {
+                padding: 15px; }
+                body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-collapse div.content table {
+                  margin-bottom: 0; }
+              body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-collapse div.color-stripe {
+                height: 5px; }
+                body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-collapse div.color-stripe.physical {
+                  background: #e1c72c; }
+                body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-collapse div.color-stripe.skills {
+                  background: #009edc; }
+                body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-collapse div.color-stripe.volunteering {
+                  background: #e40046; }
+                body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-collapse div.color-stripe.expedition {
+                  background: #71a100; }
+                body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-collapse div.color-stripe.report {
+                  background: #e23400; }
+                body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-collapse div.color-stripe.solved {
+                  background: #08b5bc; }
+                body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-collapse div.color-stripe.unsolved {
+                  background: black; }
+                body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-collapse div.color-stripe.gold {
+                  background: #b4975a; }
             body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-item {
               overflow: auto;
-              margin-bottom: 30px; }
+              margin-bottom: 15px;
+              margin-top: 15px; }
               body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-item div.content {
                 background: white;
                 overflow: auto; }
                 body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-item div.content div.icon {
                   line-height: 50px;
+                  width: 50px;
+                  height: 50px;
                   font-size: 1.4em;
                   color: white;
                   float: left;
                   text-align: center; }
-                  body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-item div.content div.icon button.icon {
-                    background: none;
-                    border: 0;
-                    margin: 0;
-                    padding: 0;
-                    width: 50px;
-                    height: 50px; }
                   body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-item div.content div.icon.physical {
                     background: #e1c72c; }
                   body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-item div.content div.icon.skills {
@@ -124,6 +153,8 @@ body {
                     background: #08b5bc; }
                   body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-item div.content div.icon.unsolved {
                     background: black; }
+                  body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-item div.content div.icon.gold {
+                    background: #b4975a; }
                 body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box div.admin-news div.news-item div.content div.text {
                   float: left;
                   height: 50px;
@@ -972,6 +1003,10 @@ div.main-alert {
     div.main-alert {
       margin-left: 5px;
       margin-right: 5px; } }
+
+p.unspecified {
+  margin-bottom: 0;
+  color: gray; }
 
 .hidden {
   display: none;

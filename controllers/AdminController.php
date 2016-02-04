@@ -82,7 +82,7 @@ class AdminController extends Controller{
                 'user_reports' => $user_reports,
                 'unsolved_bugs' => $unsolved_bugs,
                 'solved_bugs' => $solved_bugs,
-                'ideas' => $ideas
+                'ideas' => $ideas,
             ]
         ]);
     }
@@ -172,10 +172,13 @@ class AdminController extends Controller{
             $article->setIdImage(1);
             $article->setIdCategory($_POST["category"]);
             $article->setTitle($_POST["title"]);
-            $article->setUrl("2-test-url");
             $article->setKeywords(str_replace(", ", ",", $_POST["keywords"]));
             $article->setContent($_POST["content"]);
             
+            $article->save();
+            
+            $article = ArticleQuery::create()->orderByCreatedAt('desc')->findOne();
+            $article->setUrl($article->getId());
             $article->save();
             
             $this->addPopup('success', 'Článek byl úspěšně přidán!');
@@ -323,5 +326,257 @@ class AdminController extends Controller{
         
         $this->addPopup('success', 'Komentář byl úspěšně odstraněn!');
         redirectTo("/administrace/clanek/".$article_id."/komentare");
+    }
+    
+    public function ideaApprove($id){
+        if(!($this->isAdmin() || $this->isEditor())){
+            $this->addPopup('danger', 'Pro schvalování návrhů nemáte dostatečná práva.');
+            redirectTo("/");
+        }
+        
+        $idea = IdeaQuery::create()
+            ->findPk($id);
+        
+        if(!isset($idea)){
+            $this->addPopup('danger', 'Návrh s tímto identifikačním číslem se v databázi nenachází.');
+            redirectTo("/administrace");
+        }
+        
+        if($idea->getIdUser() == $_SESSION["user"]->getId()){
+            $this->addPopup('danger', 'Tento návrh jste podali vy, nemůžete ho proto zároveň schválit.');
+            redirectTo("/administrace");
+        }
+        
+        $idea->setApprovedAt(time());
+        $idea->setApprovedBy($_SESSION["user"]->getId());
+        $idea->save();
+        
+        $this->addPopup('success', 'Návrh číslo ' . $id . ' byl úspěšně schválen.');
+        redirectTo("/administrace");
+    }
+    
+    public function newUsersPage(){
+        $users = UserQuery::create()
+            ->filterByCreatedAt(array('min' => 'yesterday'))
+            ->orderByUsername()
+            ->find();
+        
+        if($users->isEmpty()){
+            $this->addPopup('danger', 'Za posledních 24 hodin se nezaregistrovali žádní noví uživatelé.');
+        }
+        
+        $this->view('Admin/newUsers', 'admin_template', [
+            'active' => 'newUsers',
+            'title' => 'Noví uživatelé',
+            'users' => $users
+        ]);
+    }
+    
+    public function newCommentsPage(){
+        $comments = CommentQuery::create()
+            ->filterByCreatedAt(array('min' => 'yesterday'))
+            ->joinWith('Article')
+            ->joinWith('User')
+            ->orderByCreatedAt('desc')
+            ->find();
+        
+        if($comments->isEmpty()){
+            $this->addPopup('danger', 'Za posledních 24 hodin nebyly přidány žádné komentáře.');
+        }
+        
+        $this->view('Admin/newComments', 'admin_template', [
+            'active' => 'newComments',
+            'title' => 'Nové komentáře',
+            'comments' => $comments
+        ]);
+    }
+    
+    public function newArticlesPage(){
+        $articles = ArticleQuery::create()
+            ->filterByCreatedAt(array('min' => 'yesterday'))
+            ->joinWith('User')
+            ->orderByCreatedAt('desc')
+            ->find();
+        
+        if($articles->isEmpty()){
+            $this->addPopup('danger', 'Za posledních 24 hodin nebyly přidány žádné články.');
+        }
+        
+        $this->view('Admin/newArticles', 'admin_template', [
+            'active' => 'newArticles',
+            'title' => 'Nové články',
+            'articles' => $articles
+        ]);
+    }
+    
+    public function newPhotosPage(){
+        $images = ImageQuery::create()
+            ->filterByCreatedAt(array('min' => 'yesterday'))
+            ->filterByType('fullsize')
+            ->orderByCreatedAt('desc')
+            ->find();
+        
+        if($images->isEmpty()){
+            $this->addPopup('danger', 'Za posledních 24 hodin nebyly přidány žádné fotografie.');
+        }
+        
+        $this->view('Admin/newImages', 'admin_template', [
+            'active' => 'newImages',
+            'title' => 'Nové fotografie',
+            'images' => $images
+        ]);
+    }
+    
+    public function solvedBugsPage(){
+        $solved_bugs = BugReportQuery::create()
+            ->filterByFixedAt(NULL, Criteria::NOT_EQUAL)
+            ->orderByCreatedAt('desc')
+            ->find();
+        
+        if($solved_bugs->isEmpty()){
+            $this->addPopup('danger', 'Na Vaší stránce zatím nebyl vyřešen žádný hlášený problém.');
+        }
+        
+        $this->view('Admin/solvedBugs', 'admin_template', [
+            'active' => 'solvedBugs',
+            'title' => 'Vyřešené chyby',
+            'solved_bugs' => $solved_bugs
+        ]);
+    }
+    
+    public function unsolvedBugsPage(){
+        $unsolved_bugs = BugReportQuery::create()
+            ->filterByFixedAt(NULL)
+            ->orderByCreatedAt('desc')
+            ->find();
+        
+        if($unsolved_bugs->isEmpty()){
+            $this->addPopup('success', 'Gratulujeme! Na Vaší stránce se momentálně nenachází žádné nevyřešené problémy. Nebo alespoň žádné nebyly nahlášeny ;)');
+        }
+        
+        $this->view('Admin/unsolvedBugs', 'admin_template', [
+            'active' => 'unsolvedBugs',
+            'title' => 'Nevyřešené chyby',
+            'unsolved_bugs' => $unsolved_bugs
+        ]);
+    }
+    
+    public function singleBugPage($id){
+        $bug = BugReportQuery::create()
+            ->joinWith('User')
+            ->findPk($id);
+        
+        if($bug == NULL){
+            $this->addPopup('danger', 'Hlášení o chybě s tímto identifikačním číslem se v databázi nenachází.');
+            redirectTo('/administrace');
+        }
+        
+        $this->view('Admin/singleBugPage', 'admin_template', [
+            'active' => 'singleBug',
+            'title' => 'Hlášení o chybě',
+            'bug' => $bug
+        ]);
+    }
+    
+    public function markBugSolved($id){
+        $bug = BugReportQuery::create()
+            ->findPk($id);
+        
+        if($bug == NULL){
+            $this->addPopup('danger', 'Hlášení o chybě s tímto identifikačním číslem se v databázi nenachází.');
+            redirectTo('/administrace');
+        }
+        
+        if(!$this->isAdmin()){
+            $this->addPopup('danger', 'Pro změnu stavu chyby na stránce nemáte dostatečná práva.');
+            redirectTo('/administrace');
+        }
+        
+        $bug->setFixedAt(time());
+        $bug->save();
+        
+        $this->addPopup('success', 'Stav chyby #' . $id . ' byl nastaven na "opraveno".');
+        redirectTo("/administrace");
+    }
+    
+    public function userReportsPage(){
+        $user_reports = UserReportQuery::create()
+            ->joinUserAuthor('UserAuthor')
+            ->with('UserAuthor', 'UserAuthor')
+            ->joinUserReported('UserReported')
+            ->with('UserReported', 'UserReported')
+            ->filterByCreatedAt(array('min' => 'yesterday'))
+            ->orderByCreatedAt('desc')
+            ->find();
+        
+        if($user_reports->isEmpty()){
+            $this->addPopup('danger', 'V databázi se nenachází žádní nahlášení uživatelé.');
+            redirectTo("/administrace");
+        }
+        
+        $this->view('Admin/userReportsPage', 'admin_template', [
+            'active' => 'userReports',
+            'title' => 'Nahlášení uživatelé',
+            'user_reports' => $user_reports
+        ]);
+    }
+    
+    public function singleUserReportPage($id){
+        $user_report = UserReportQuery::create()
+            ->joinUserAuthor('UserAuthor')
+            ->with('UserAuthor', 'UserAuthor')
+            ->joinUserReported('UserReported')
+            ->with('UserReported', 'UserReported')
+            ->findPk($id);
+        
+        if($user_report == NULL){
+            $this->addPopup('danger', 'Nahlášení uživatele s tímto identifikačním číslem se v databázi nenachází.');
+            redirecTo("/administrace");
+        }
+        
+        $this->view('Admin/singleUserReportPage', 'admin_template', [
+            'active' => 'singleUserReport',
+            'title' => 'Nahlášení uživatele',
+            'user_report' => $user_report
+        ]);
+    }
+    
+    public function ideaSuggestionsPage(){
+        $ideas = IdeaQuery::create()
+            ->filterByApprovedAt(NULL)
+            ->joinUserAuthor('UserAuthor')
+            ->with('UserAuthor', 'UserAuthor')
+            ->find();
+        
+        if($ideas->isEmpty()){
+            $this->addPopup('danger', 'Momentálně se v databázi nenachází žádné nepřijaté návrhy na zlepšení.');
+            redirecTo("/administrace");
+        }
+        
+        $this->view('Admin/ideasPage', 'admin_template', [
+            'active' => 'ideasPage',
+            'title' => 'Návrhy na zlepšení',
+            'ideas' => $ideas
+        ]);
+    }
+    
+    public function singleIdeaSuggestionPage($id){
+        $idea = IdeaQuery::create()
+            ->joinUserAuthor('UserAuthor')
+            ->with('UserAuthor', 'UserAuthor')
+            ->joinUserApproved('UserApproved')
+            ->with('UserApproved', 'UserApproved')
+            ->findPk($id);
+        
+        if($idea == NULL){
+            $this->addPopup('danger', 'Návrh na zlepšení s tímto identifikačním číslem se v databázi nenachází.');
+            redirecTo("/administrace");
+        }
+        
+        $this->view('Admin/singleIdeaPage', 'admin_template', [
+            'active' => 'singleIdeaPage',
+            'title' => 'Návrh na zlepšení',
+            'idea' => $idea
+        ]);
     }
 }

@@ -174,9 +174,71 @@ body {
                                     div.admin-news {
                                         overflow: auto;
                                         
+                                        a.detail-link {
+                                            overflow: auto;
+                                            color: $darkgray;
+                                        }
+                                        
+                                        div.news-collapse {
+                                            clear: both;
+                                            margin-left: 15px;
+                                            margin-right: 15px;
+                                            margin-bottom: 15px;
+                                            background: white;
+                                            
+                                            &.last {
+                                                margin-bottom: 0;
+                                            }
+                                            
+                                            div.content {
+                                                padding: 15px;
+                                                
+                                                table {
+                                                    margin-bottom: 0;
+                                                }
+                                            }
+                                            
+                                            div.color-stripe {
+                                                height: 5px;
+                                                
+                                                &.physical {
+                                                    background: $physical;
+                                                }
+
+                                                &.skills {
+                                                    background: $skills;
+                                                }
+
+                                                &.volunteering {
+                                                    background: $volunteering;
+                                                }
+
+                                                &.expedition {
+                                                    background: $expedition;
+                                                }
+                                                    
+                                                &.report {
+                                                    background: $report;
+                                                }
+                                                    
+                                                &.solved {
+                                                    background: $lightblue;
+                                                }
+                                                    
+                                                &.unsolved {
+                                                    background: black;
+                                                }
+                                                    
+                                                &.gold {
+                                                    background: $dofegold;
+                                                }
+                                            }
+                                        }
+                                        
                                         div.news-item {
                                             overflow: auto;
-                                            margin-bottom: 30px;
+                                            margin-bottom: 15px;
+                                            margin-top: 15px;
                                             
                                             div.content {
                                                 background: white;
@@ -184,21 +246,14 @@ body {
                                                 
                                                 div.icon {
                                                     line-height: 50px;
+                                                    width: 50px;
+                                                    height: 50px;
                                                     font-size: 1.4em;
                                                     color: white;
                                                     float: left;
                                                     text-align: center;
-                                                    
-                                                    button.icon {
-                                                        background: none;
-                                                        border: 0;
-                                                        margin: 0;
-                                                        padding: 0;
-                                                        width: 50px;
-                                                        height: 50px;
-                                                    }
 
-                                                    &.physical{
+                                                    &.physical {
                                                         background: $physical;
                                                     }
 
@@ -224,6 +279,10 @@ body {
                                                     
                                                     &.unsolved {
                                                         background: black;
+                                                    }
+                                                    
+                                                    &.gold {
+                                                        background: $dofegold;
                                                     }
                                                 }
 
@@ -1620,6 +1679,11 @@ div.main-alert {
         margin-left: 5px;
         margin-right: 5px;
     }
+}
+
+p.unspecified {
+    margin-bottom: 0;
+    color: gray;
 }
 
 .hidden {

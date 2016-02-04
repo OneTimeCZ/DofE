@@ -1,0 +1,46 @@
+<div class="page-heading">
+    <h1>Návrh na zlepšení</h1>
+</div>
+
+<?php if($data["idea"] != NULL): ?>
+<div class="section">
+    <div class="column single">
+        <div class="content-box">
+            <div class="content col-xs-offset-1 col-xs-10">
+                <div class="form-group">
+                    <label for="author">Autor</label>
+                    <input type="text" class="form-control" id="author" value="<?= $data["idea"]->getUserAuthor()->getUsername() ?>" readonly/>
+                </div>
+                <?php if($data["idea"]->getApprovedAt() == NULL): ?>
+                <div class="form-group">
+                    <label for="state">Stav</label>
+                    <input type="text" class="form-control" id="state" value="Čeká na schválení" readonly/>
+                </div>
+                <?php else: ?>
+                <div class="form-group">
+                    <label for="state2">Schválil/a</label>
+                    <input type="text" class="form-control" id="state2" value="<?= $data["idea"]->getUserApproved()->getUsername() ?>" readonly/>
+                </div>
+                <div class="form-group">
+                    <label for="state3">Schváleno</label>
+                    <input type="text" class="form-control" id="state3" value="<?= $data["idea"]->getApprovedAt()->format("d.m.Y H:i:s") ?>" readonly/>
+                </div>
+                <?php endif; ?>
+                <div class="form-group">
+                    <label for="description">Popis</label>
+                    <textarea class="no-resize form-control" id="description" rows="8" readonly><?= $data["idea"]->getDescription() ?></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="reason">Důvod</label>
+                    <textarea class="no-resize form-control" id="reason" rows="4" readonly><?= $data["idea"]->getReason() ?></textarea>
+                </div>
+                <?php if($data["idea"]->getApprovedAt() == NULL): ?>
+                <div class="form-group">
+                    <a href="/administrace/navrh/<?= $data["idea"]->getId() ?>/prijmout" class="btn btn-default">Přijmout návrh</a>
+                </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>

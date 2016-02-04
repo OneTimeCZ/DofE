@@ -1,0 +1,44 @@
+<div class="page-heading">
+    <h1>Nevyřešené chyby</h1>
+</div>
+
+<?php if(!$data["solved_bugs"]->isEmpty()): ?>
+<div class="section">
+    <div class="column single">
+        <div class="content-box">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th class="col-xs-3 text-center">Autor</th>
+                        <th class="col-xs-3 text-center">Závažnost</th>
+                        <th class="col-xs-2 text-center">Datum nahlášení</th>
+                        <th class="col-xs-2 text-center">Datum opravení</th>
+                        <th class="col-xs-2 text-center">Odkaz</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($data["solved_bugs"] as $bug): ?>
+                    <tr>
+                        <td class="col-xs-3 text-center">
+                            <?php if($bug->getUser()->getPermissions() >= 1): ?>
+                            <a href="/profil/<?= $bug->getUser()->getUrl() ?>"><?= $bug->getUser()->getUsername() ?></a>
+                            <?php else: ?>
+                            <?= $bug->getUser()->getUsername() ?>
+                            <?php endif; ?>
+                        </td>
+                        <td class="col-xs-3 text-center">
+                            <?php if($bug->getSeverity() == 1): ?>Nízká<?php elseif($bug->getSeverity() == 2): ?>Střední<?php else: ?>Vysoká<?php endif; ?>
+                        </td>
+                        <td class="col-xs-2 text-center"><?= $bug->getCreatedAt()->format('d.m.Y H:i:s') ?></td>
+                        <td class="col-xs-2 text-center"><?= $bug->getFixedAt()->format('d.m.Y H:i:s') ?></td>
+                        <td class="col-xs-2 text-center">
+                            <a href="/administrace/chyba/<?= $bug->getId() ?>">Chyba #<?= $bug->getId() ?></a>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<?php endif; ?>

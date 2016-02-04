@@ -187,8 +187,12 @@
         <column name="id_user_reported" type="integer" required="true"/>
         <column name="reason" type="varchar" size="500" required="true"/>
         
-        <foreign-key foreignTable="users">
+        <foreign-key foreignTable="users" phpName="UserAuthor">
             <reference local="id_user" foreign="id"/>
+        </foreign-key>
+        
+        <foreign-key foreignTable="users" phpName="UserReported">
+            <reference local="id_user_reported" foreign="id"/>
         </foreign-key>
         
         <behavior name="timestampable" />
@@ -219,9 +223,14 @@
         <column name="description" type="varchar" size="1000" required="true"/>
         <column name="reason" type="varchar" size="500" required="true"/>
         <column name="approved_at" type="timestamp"/>
+        <column name="approved_by" type="integer"/>
         
-        <foreign-key foreignTable="users">
+        <foreign-key foreignTable="users" phpName="UserAuthor">
             <reference local="id_user" foreign="id"/>
+        </foreign-key>
+        
+        <foreign-key foreignTable="users" phpName="UserApproved">
+            <reference local="approved_by" foreign="id"/>
         </foreign-key>
         
         <behavior name="timestampable" />

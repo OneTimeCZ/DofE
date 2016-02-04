@@ -141,11 +141,8 @@ class UserController extends Controller{
             redirectTo("/");
         }
         
-        $user = UserQuery::create()
-            ->findPk($_SESSION["user"]->getId());
-        
-        $user->setEmailConfirmToken(token(50));
-        $user->save();
+        $_SESSION["user"]->setEmailConfirmToken(token(50));
+        $_SESSION["user"]->save();
         
         //resend confirmation email with email_confirm_token
         
@@ -174,7 +171,7 @@ class UserController extends Controller{
 			redirectTo("/registrace");
         }
         
-        if(preg_match('/^[a-zA-Z0-9]/', $_POST['regPassword'])){
+        if(preg_match('/[^a-zA-Z0-9]/', $_POST['regPassword'])){
             $this->addPopup('danger', 'Vaše heslo obsahuje nepovolené znaky nebo mezeru.');
             redirectTo("/registrace");
         }
@@ -189,7 +186,7 @@ class UserController extends Controller{
             redirectTo("/registrace");
         }
         
-        if(preg_match('/^[a-zA-Z0-9]/', $_POST["regUsername"])){
+        if(preg_match('/[^a-zA-Z0-9]/', $_POST["regUsername"])){
             $this->addPopup('danger', 'Vaše uživatelské jméno obsahuje nepovolené znaky nebo mezeru.');
             redirectTo("/registrace");
         }
@@ -209,12 +206,15 @@ class UserController extends Controller{
             
             redirectTo("/registrace");
         } else {
+            $token = token(50);
+            //EMAIL THE USER WITH CODE FOR EMAIL CONFIRMATION $token
+            
             $user = new User();
             $user->setUsername($_POST['regUsername']);
             $user->setPassword(sha1($_POST['regPassword']));
             $user->setEmail($_POST['regEmail']);
-            
-            $user->setEmailConfirmToken(NULL);
+            $user->setUrl($_POST['regUsername']);
+            $user->setEmailConfirmToken($token);
             $user->setPasswordResetToken(NULL);
             $user->setPermissions(0);
             $user->setSigninCount(0);

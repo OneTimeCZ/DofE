@@ -52,6 +52,39 @@
     $router->addPost('Admin.imageSave', '/administrace/fotografie/ulozit');
     //delete a photo
     $router->addGet('Admin.imageDelete', '/administrace/fotografie/{name}/odstranit');
+    //accept a suggestion
+    $router->addGet('Admin.ideaApprove', '/administrace/navrh/{id}/prijmout')
+        ->setTokens([
+            'id' => '[1-9]\d*',
+        ]);
+    //news pages
+    $router->addGet('Admin.newUsersPage', '/administrace/co-je-noveho/uzivatele');
+    $router->addGet('Admin.newCommentsPage', '/administrace/co-je-noveho/komentare');
+    $router->addGet('Admin.newArticlesPage', '/administrace/co-je-noveho/clanky');
+    $router->addGet('Admin.newPhotosPage', '/administrace/co-je-noveho/fotografie');
+    //bug pages
+    $router->addGet('Admin.solvedBugsPage', '/administrace/chyby/vyresene');
+    $router->addGet('Admin.unsolvedBugsPage', '/administrace/chyby/nevyresene');
+    $router->addGet('Admin.markBugSolved', '/administrace/chyba/{id}/vyreseno')
+        ->setTokens([
+            'id' => '[1-9]\d*'
+        ]);
+    $router->addGet('Admin.singleBugPage', '/administrace/chyba/{id}')
+        ->setTokens([
+            'id' => '[1-9]\d*'
+        ]);
+    //user reports page
+    $router->addGet('Admin.userReportsPage', '/administrace/nahlaseni-uzivatele');
+    $router->addGet('Admin.singleUserReportPage', '/administrace/nahlaseni-uzivatele/{id}')
+        ->setTokens([
+            'id' => '[1-9]\d*'
+        ]);
+    //idea suggestions
+    $router->addGet('Admin.ideaSuggestionsPage', '/administrace/navrhy/neschvalene');
+    $router->addGet('Admin.singleIdeaSuggestionPage', '/administrace/navrh/{id}')
+        ->setTokens([
+            'id' => '[1-9]\d*'
+        ]);
 
 //---USER---
     $router->addGet('User.profilePublic', '/profil/{name}');

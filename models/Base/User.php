@@ -231,8 +231,14 @@ abstract class User implements ActiveRecordInterface
     /**
      * @var        ObjectCollection|ChildUserReport[] Collection to store aggregation of ChildUserReport objects.
      */
-    protected $collUserReports;
-    protected $collUserReportsPartial;
+    protected $collUserReportsRelatedByIdUser;
+    protected $collUserReportsRelatedByIdUserPartial;
+
+    /**
+     * @var        ObjectCollection|ChildUserReport[] Collection to store aggregation of ChildUserReport objects.
+     */
+    protected $collUserReportsRelatedByIdUserReported;
+    protected $collUserReportsRelatedByIdUserReportedPartial;
 
     /**
      * @var        ObjectCollection|ChildBugReport[] Collection to store aggregation of ChildBugReport objects.
@@ -243,8 +249,14 @@ abstract class User implements ActiveRecordInterface
     /**
      * @var        ObjectCollection|ChildIdea[] Collection to store aggregation of ChildIdea objects.
      */
-    protected $collIdeas;
-    protected $collIdeasPartial;
+    protected $collIdeasRelatedByIdUser;
+    protected $collIdeasRelatedByIdUserPartial;
+
+    /**
+     * @var        ObjectCollection|ChildIdea[] Collection to store aggregation of ChildIdea objects.
+     */
+    protected $collIdeasRelatedByApprovedBy;
+    protected $collIdeasRelatedByApprovedByPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -288,7 +300,13 @@ abstract class User implements ActiveRecordInterface
      * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildUserReport[]
      */
-    protected $userReportsScheduledForDeletion = null;
+    protected $userReportsRelatedByIdUserScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildUserReport[]
+     */
+    protected $userReportsRelatedByIdUserReportedScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -300,7 +318,13 @@ abstract class User implements ActiveRecordInterface
      * An array of objects scheduled for deletion.
      * @var ObjectCollection|ChildIdea[]
      */
-    protected $ideasScheduledForDeletion = null;
+    protected $ideasRelatedByIdUserScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildIdea[]
+     */
+    protected $ideasRelatedByApprovedByScheduledForDeletion = null;
 
     /**
      * Initializes internal state of Models\Base\User object.
@@ -1229,11 +1253,15 @@ abstract class User implements ActiveRecordInterface
 
             $this->collQuotes = null;
 
-            $this->collUserReports = null;
+            $this->collUserReportsRelatedByIdUser = null;
+
+            $this->collUserReportsRelatedByIdUserReported = null;
 
             $this->collBugReports = null;
 
-            $this->collIdeas = null;
+            $this->collIdeasRelatedByIdUser = null;
+
+            $this->collIdeasRelatedByApprovedBy = null;
 
         } // if (deep)
     }
@@ -1454,17 +1482,34 @@ abstract class User implements ActiveRecordInterface
                 }
             }
 
-            if ($this->userReportsScheduledForDeletion !== null) {
-                if (!$this->userReportsScheduledForDeletion->isEmpty()) {
+            if ($this->userReportsRelatedByIdUserScheduledForDeletion !== null) {
+                if (!$this->userReportsRelatedByIdUserScheduledForDeletion->isEmpty()) {
                     \Models\UserReportQuery::create()
-                        ->filterByPrimaryKeys($this->userReportsScheduledForDeletion->getPrimaryKeys(false))
+                        ->filterByPrimaryKeys($this->userReportsRelatedByIdUserScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->userReportsScheduledForDeletion = null;
+                    $this->userReportsRelatedByIdUserScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collUserReports !== null) {
-                foreach ($this->collUserReports as $referrerFK) {
+            if ($this->collUserReportsRelatedByIdUser !== null) {
+                foreach ($this->collUserReportsRelatedByIdUser as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->userReportsRelatedByIdUserReportedScheduledForDeletion !== null) {
+                if (!$this->userReportsRelatedByIdUserReportedScheduledForDeletion->isEmpty()) {
+                    \Models\UserReportQuery::create()
+                        ->filterByPrimaryKeys($this->userReportsRelatedByIdUserReportedScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->userReportsRelatedByIdUserReportedScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collUserReportsRelatedByIdUserReported !== null) {
+                foreach ($this->collUserReportsRelatedByIdUserReported as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1488,17 +1533,35 @@ abstract class User implements ActiveRecordInterface
                 }
             }
 
-            if ($this->ideasScheduledForDeletion !== null) {
-                if (!$this->ideasScheduledForDeletion->isEmpty()) {
+            if ($this->ideasRelatedByIdUserScheduledForDeletion !== null) {
+                if (!$this->ideasRelatedByIdUserScheduledForDeletion->isEmpty()) {
                     \Models\IdeaQuery::create()
-                        ->filterByPrimaryKeys($this->ideasScheduledForDeletion->getPrimaryKeys(false))
+                        ->filterByPrimaryKeys($this->ideasRelatedByIdUserScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->ideasScheduledForDeletion = null;
+                    $this->ideasRelatedByIdUserScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collIdeas !== null) {
-                foreach ($this->collIdeas as $referrerFK) {
+            if ($this->collIdeasRelatedByIdUser !== null) {
+                foreach ($this->collIdeasRelatedByIdUser as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->ideasRelatedByApprovedByScheduledForDeletion !== null) {
+                if (!$this->ideasRelatedByApprovedByScheduledForDeletion->isEmpty()) {
+                    foreach ($this->ideasRelatedByApprovedByScheduledForDeletion as $ideaRelatedByApprovedBy) {
+                        // need to save related object because we set the relation to null
+                        $ideaRelatedByApprovedBy->save($con);
+                    }
+                    $this->ideasRelatedByApprovedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collIdeasRelatedByApprovedBy !== null) {
+                foreach ($this->collIdeasRelatedByApprovedBy as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1907,7 +1970,7 @@ abstract class User implements ActiveRecordInterface
 
                 $result[$key] = $this->collQuotes->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
-            if (null !== $this->collUserReports) {
+            if (null !== $this->collUserReportsRelatedByIdUser) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -1920,7 +1983,22 @@ abstract class User implements ActiveRecordInterface
                         $key = 'UserReports';
                 }
 
-                $result[$key] = $this->collUserReports->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->collUserReportsRelatedByIdUser->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collUserReportsRelatedByIdUserReported) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'userReports';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'user_reportss';
+                        break;
+                    default:
+                        $key = 'UserReports';
+                }
+
+                $result[$key] = $this->collUserReportsRelatedByIdUserReported->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collBugReports) {
 
@@ -1937,7 +2015,7 @@ abstract class User implements ActiveRecordInterface
 
                 $result[$key] = $this->collBugReports->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
-            if (null !== $this->collIdeas) {
+            if (null !== $this->collIdeasRelatedByIdUser) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
@@ -1950,7 +2028,22 @@ abstract class User implements ActiveRecordInterface
                         $key = 'Ideas';
                 }
 
-                $result[$key] = $this->collIdeas->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->collIdeasRelatedByIdUser->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collIdeasRelatedByApprovedBy) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'ideas';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'ideass';
+                        break;
+                    default:
+                        $key = 'Ideas';
+                }
+
+                $result[$key] = $this->collIdeasRelatedByApprovedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -2334,9 +2427,15 @@ abstract class User implements ActiveRecordInterface
                 }
             }
 
-            foreach ($this->getUserReports() as $relObj) {
+            foreach ($this->getUserReportsRelatedByIdUser() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addUserReport($relObj->copy($deepCopy));
+                    $copyObj->addUserReportRelatedByIdUser($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getUserReportsRelatedByIdUserReported() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addUserReportRelatedByIdUserReported($relObj->copy($deepCopy));
                 }
             }
 
@@ -2346,9 +2445,15 @@ abstract class User implements ActiveRecordInterface
                 }
             }
 
-            foreach ($this->getIdeas() as $relObj) {
+            foreach ($this->getIdeasRelatedByIdUser() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addIdea($relObj->copy($deepCopy));
+                    $copyObj->addIdeaRelatedByIdUser($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getIdeasRelatedByApprovedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addIdeaRelatedByApprovedBy($relObj->copy($deepCopy));
                 }
             }
 
@@ -2459,14 +2564,20 @@ abstract class User implements ActiveRecordInterface
         if ('Quote' == $relationName) {
             return $this->initQuotes();
         }
-        if ('UserReport' == $relationName) {
-            return $this->initUserReports();
+        if ('UserReportRelatedByIdUser' == $relationName) {
+            return $this->initUserReportsRelatedByIdUser();
+        }
+        if ('UserReportRelatedByIdUserReported' == $relationName) {
+            return $this->initUserReportsRelatedByIdUserReported();
         }
         if ('BugReport' == $relationName) {
             return $this->initBugReports();
         }
-        if ('Idea' == $relationName) {
-            return $this->initIdeas();
+        if ('IdeaRelatedByIdUser' == $relationName) {
+            return $this->initIdeasRelatedByIdUser();
+        }
+        if ('IdeaRelatedByApprovedBy' == $relationName) {
+            return $this->initIdeasRelatedByApprovedBy();
         }
     }
 
@@ -3731,31 +3842,31 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
-     * Clears out the collUserReports collection
+     * Clears out the collUserReportsRelatedByIdUser collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return void
-     * @see        addUserReports()
+     * @see        addUserReportsRelatedByIdUser()
      */
-    public function clearUserReports()
+    public function clearUserReportsRelatedByIdUser()
     {
-        $this->collUserReports = null; // important to set this to NULL since that means it is uninitialized
+        $this->collUserReportsRelatedByIdUser = null; // important to set this to NULL since that means it is uninitialized
     }
 
     /**
-     * Reset is the collUserReports collection loaded partially.
+     * Reset is the collUserReportsRelatedByIdUser collection loaded partially.
      */
-    public function resetPartialUserReports($v = true)
+    public function resetPartialUserReportsRelatedByIdUser($v = true)
     {
-        $this->collUserReportsPartial = $v;
+        $this->collUserReportsRelatedByIdUserPartial = $v;
     }
 
     /**
-     * Initializes the collUserReports collection.
+     * Initializes the collUserReportsRelatedByIdUser collection.
      *
-     * By default this just sets the collUserReports collection to an empty array (like clearcollUserReports());
+     * By default this just sets the collUserReportsRelatedByIdUser collection to an empty array (like clearcollUserReportsRelatedByIdUser());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -3764,13 +3875,13 @@ abstract class User implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initUserReports($overrideExisting = true)
+    public function initUserReportsRelatedByIdUser($overrideExisting = true)
     {
-        if (null !== $this->collUserReports && !$overrideExisting) {
+        if (null !== $this->collUserReportsRelatedByIdUser && !$overrideExisting) {
             return;
         }
-        $this->collUserReports = new ObjectCollection();
-        $this->collUserReports->setModel('\Models\UserReport');
+        $this->collUserReportsRelatedByIdUser = new ObjectCollection();
+        $this->collUserReportsRelatedByIdUser->setModel('\Models\UserReport');
     }
 
     /**
@@ -3787,48 +3898,48 @@ abstract class User implements ActiveRecordInterface
      * @return ObjectCollection|ChildUserReport[] List of ChildUserReport objects
      * @throws PropelException
      */
-    public function getUserReports(Criteria $criteria = null, ConnectionInterface $con = null)
+    public function getUserReportsRelatedByIdUser(Criteria $criteria = null, ConnectionInterface $con = null)
     {
-        $partial = $this->collUserReportsPartial && !$this->isNew();
-        if (null === $this->collUserReports || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collUserReports) {
+        $partial = $this->collUserReportsRelatedByIdUserPartial && !$this->isNew();
+        if (null === $this->collUserReportsRelatedByIdUser || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collUserReportsRelatedByIdUser) {
                 // return empty collection
-                $this->initUserReports();
+                $this->initUserReportsRelatedByIdUser();
             } else {
-                $collUserReports = ChildUserReportQuery::create(null, $criteria)
-                    ->filterByUser($this)
+                $collUserReportsRelatedByIdUser = ChildUserReportQuery::create(null, $criteria)
+                    ->filterByUserAuthor($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collUserReportsPartial && count($collUserReports)) {
-                        $this->initUserReports(false);
+                    if (false !== $this->collUserReportsRelatedByIdUserPartial && count($collUserReportsRelatedByIdUser)) {
+                        $this->initUserReportsRelatedByIdUser(false);
 
-                        foreach ($collUserReports as $obj) {
-                            if (false == $this->collUserReports->contains($obj)) {
-                                $this->collUserReports->append($obj);
+                        foreach ($collUserReportsRelatedByIdUser as $obj) {
+                            if (false == $this->collUserReportsRelatedByIdUser->contains($obj)) {
+                                $this->collUserReportsRelatedByIdUser->append($obj);
                             }
                         }
 
-                        $this->collUserReportsPartial = true;
+                        $this->collUserReportsRelatedByIdUserPartial = true;
                     }
 
-                    return $collUserReports;
+                    return $collUserReportsRelatedByIdUser;
                 }
 
-                if ($partial && $this->collUserReports) {
-                    foreach ($this->collUserReports as $obj) {
+                if ($partial && $this->collUserReportsRelatedByIdUser) {
+                    foreach ($this->collUserReportsRelatedByIdUser as $obj) {
                         if ($obj->isNew()) {
-                            $collUserReports[] = $obj;
+                            $collUserReportsRelatedByIdUser[] = $obj;
                         }
                     }
                 }
 
-                $this->collUserReports = $collUserReports;
-                $this->collUserReportsPartial = false;
+                $this->collUserReportsRelatedByIdUser = $collUserReportsRelatedByIdUser;
+                $this->collUserReportsRelatedByIdUserPartial = false;
             }
         }
 
-        return $this->collUserReports;
+        return $this->collUserReportsRelatedByIdUser;
     }
 
     /**
@@ -3837,29 +3948,29 @@ abstract class User implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $userReports A Propel collection.
+     * @param      Collection $userReportsRelatedByIdUser A Propel collection.
      * @param      ConnectionInterface $con Optional connection object
      * @return $this|ChildUser The current object (for fluent API support)
      */
-    public function setUserReports(Collection $userReports, ConnectionInterface $con = null)
+    public function setUserReportsRelatedByIdUser(Collection $userReportsRelatedByIdUser, ConnectionInterface $con = null)
     {
-        /** @var ChildUserReport[] $userReportsToDelete */
-        $userReportsToDelete = $this->getUserReports(new Criteria(), $con)->diff($userReports);
+        /** @var ChildUserReport[] $userReportsRelatedByIdUserToDelete */
+        $userReportsRelatedByIdUserToDelete = $this->getUserReportsRelatedByIdUser(new Criteria(), $con)->diff($userReportsRelatedByIdUser);
 
 
-        $this->userReportsScheduledForDeletion = $userReportsToDelete;
+        $this->userReportsRelatedByIdUserScheduledForDeletion = $userReportsRelatedByIdUserToDelete;
 
-        foreach ($userReportsToDelete as $userReportRemoved) {
-            $userReportRemoved->setUser(null);
+        foreach ($userReportsRelatedByIdUserToDelete as $userReportRelatedByIdUserRemoved) {
+            $userReportRelatedByIdUserRemoved->setUserAuthor(null);
         }
 
-        $this->collUserReports = null;
-        foreach ($userReports as $userReport) {
-            $this->addUserReport($userReport);
+        $this->collUserReportsRelatedByIdUser = null;
+        foreach ($userReportsRelatedByIdUser as $userReportRelatedByIdUser) {
+            $this->addUserReportRelatedByIdUser($userReportRelatedByIdUser);
         }
 
-        $this->collUserReports = $userReports;
-        $this->collUserReportsPartial = false;
+        $this->collUserReportsRelatedByIdUser = $userReportsRelatedByIdUser;
+        $this->collUserReportsRelatedByIdUserPartial = false;
 
         return $this;
     }
@@ -3873,16 +3984,16 @@ abstract class User implements ActiveRecordInterface
      * @return int             Count of related UserReport objects.
      * @throws PropelException
      */
-    public function countUserReports(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    public function countUserReportsRelatedByIdUser(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
     {
-        $partial = $this->collUserReportsPartial && !$this->isNew();
-        if (null === $this->collUserReports || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collUserReports) {
+        $partial = $this->collUserReportsRelatedByIdUserPartial && !$this->isNew();
+        if (null === $this->collUserReportsRelatedByIdUser || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collUserReportsRelatedByIdUser) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getUserReports());
+                return count($this->getUserReportsRelatedByIdUser());
             }
 
             $query = ChildUserReportQuery::create(null, $criteria);
@@ -3891,11 +4002,11 @@ abstract class User implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByUser($this)
+                ->filterByUserAuthor($this)
                 ->count($con);
         }
 
-        return count($this->collUserReports);
+        return count($this->collUserReportsRelatedByIdUser);
     }
 
     /**
@@ -3905,18 +4016,18 @@ abstract class User implements ActiveRecordInterface
      * @param  ChildUserReport $l ChildUserReport
      * @return $this|\Models\User The current object (for fluent API support)
      */
-    public function addUserReport(ChildUserReport $l)
+    public function addUserReportRelatedByIdUser(ChildUserReport $l)
     {
-        if ($this->collUserReports === null) {
-            $this->initUserReports();
-            $this->collUserReportsPartial = true;
+        if ($this->collUserReportsRelatedByIdUser === null) {
+            $this->initUserReportsRelatedByIdUser();
+            $this->collUserReportsRelatedByIdUserPartial = true;
         }
 
-        if (!$this->collUserReports->contains($l)) {
-            $this->doAddUserReport($l);
+        if (!$this->collUserReportsRelatedByIdUser->contains($l)) {
+            $this->doAddUserReportRelatedByIdUser($l);
 
-            if ($this->userReportsScheduledForDeletion and $this->userReportsScheduledForDeletion->contains($l)) {
-                $this->userReportsScheduledForDeletion->remove($this->userReportsScheduledForDeletion->search($l));
+            if ($this->userReportsRelatedByIdUserScheduledForDeletion and $this->userReportsRelatedByIdUserScheduledForDeletion->contains($l)) {
+                $this->userReportsRelatedByIdUserScheduledForDeletion->remove($this->userReportsRelatedByIdUserScheduledForDeletion->search($l));
             }
         }
 
@@ -3924,29 +4035,251 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
-     * @param ChildUserReport $userReport The ChildUserReport object to add.
+     * @param ChildUserReport $userReportRelatedByIdUser The ChildUserReport object to add.
      */
-    protected function doAddUserReport(ChildUserReport $userReport)
+    protected function doAddUserReportRelatedByIdUser(ChildUserReport $userReportRelatedByIdUser)
     {
-        $this->collUserReports[]= $userReport;
-        $userReport->setUser($this);
+        $this->collUserReportsRelatedByIdUser[]= $userReportRelatedByIdUser;
+        $userReportRelatedByIdUser->setUserAuthor($this);
     }
 
     /**
-     * @param  ChildUserReport $userReport The ChildUserReport object to remove.
+     * @param  ChildUserReport $userReportRelatedByIdUser The ChildUserReport object to remove.
      * @return $this|ChildUser The current object (for fluent API support)
      */
-    public function removeUserReport(ChildUserReport $userReport)
+    public function removeUserReportRelatedByIdUser(ChildUserReport $userReportRelatedByIdUser)
     {
-        if ($this->getUserReports()->contains($userReport)) {
-            $pos = $this->collUserReports->search($userReport);
-            $this->collUserReports->remove($pos);
-            if (null === $this->userReportsScheduledForDeletion) {
-                $this->userReportsScheduledForDeletion = clone $this->collUserReports;
-                $this->userReportsScheduledForDeletion->clear();
+        if ($this->getUserReportsRelatedByIdUser()->contains($userReportRelatedByIdUser)) {
+            $pos = $this->collUserReportsRelatedByIdUser->search($userReportRelatedByIdUser);
+            $this->collUserReportsRelatedByIdUser->remove($pos);
+            if (null === $this->userReportsRelatedByIdUserScheduledForDeletion) {
+                $this->userReportsRelatedByIdUserScheduledForDeletion = clone $this->collUserReportsRelatedByIdUser;
+                $this->userReportsRelatedByIdUserScheduledForDeletion->clear();
             }
-            $this->userReportsScheduledForDeletion[]= clone $userReport;
-            $userReport->setUser(null);
+            $this->userReportsRelatedByIdUserScheduledForDeletion[]= clone $userReportRelatedByIdUser;
+            $userReportRelatedByIdUser->setUserAuthor(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collUserReportsRelatedByIdUserReported collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addUserReportsRelatedByIdUserReported()
+     */
+    public function clearUserReportsRelatedByIdUserReported()
+    {
+        $this->collUserReportsRelatedByIdUserReported = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collUserReportsRelatedByIdUserReported collection loaded partially.
+     */
+    public function resetPartialUserReportsRelatedByIdUserReported($v = true)
+    {
+        $this->collUserReportsRelatedByIdUserReportedPartial = $v;
+    }
+
+    /**
+     * Initializes the collUserReportsRelatedByIdUserReported collection.
+     *
+     * By default this just sets the collUserReportsRelatedByIdUserReported collection to an empty array (like clearcollUserReportsRelatedByIdUserReported());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initUserReportsRelatedByIdUserReported($overrideExisting = true)
+    {
+        if (null !== $this->collUserReportsRelatedByIdUserReported && !$overrideExisting) {
+            return;
+        }
+        $this->collUserReportsRelatedByIdUserReported = new ObjectCollection();
+        $this->collUserReportsRelatedByIdUserReported->setModel('\Models\UserReport');
+    }
+
+    /**
+     * Gets an array of ChildUserReport objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildUserReport[] List of ChildUserReport objects
+     * @throws PropelException
+     */
+    public function getUserReportsRelatedByIdUserReported(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collUserReportsRelatedByIdUserReportedPartial && !$this->isNew();
+        if (null === $this->collUserReportsRelatedByIdUserReported || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collUserReportsRelatedByIdUserReported) {
+                // return empty collection
+                $this->initUserReportsRelatedByIdUserReported();
+            } else {
+                $collUserReportsRelatedByIdUserReported = ChildUserReportQuery::create(null, $criteria)
+                    ->filterByUserReported($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collUserReportsRelatedByIdUserReportedPartial && count($collUserReportsRelatedByIdUserReported)) {
+                        $this->initUserReportsRelatedByIdUserReported(false);
+
+                        foreach ($collUserReportsRelatedByIdUserReported as $obj) {
+                            if (false == $this->collUserReportsRelatedByIdUserReported->contains($obj)) {
+                                $this->collUserReportsRelatedByIdUserReported->append($obj);
+                            }
+                        }
+
+                        $this->collUserReportsRelatedByIdUserReportedPartial = true;
+                    }
+
+                    return $collUserReportsRelatedByIdUserReported;
+                }
+
+                if ($partial && $this->collUserReportsRelatedByIdUserReported) {
+                    foreach ($this->collUserReportsRelatedByIdUserReported as $obj) {
+                        if ($obj->isNew()) {
+                            $collUserReportsRelatedByIdUserReported[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collUserReportsRelatedByIdUserReported = $collUserReportsRelatedByIdUserReported;
+                $this->collUserReportsRelatedByIdUserReportedPartial = false;
+            }
+        }
+
+        return $this->collUserReportsRelatedByIdUserReported;
+    }
+
+    /**
+     * Sets a collection of ChildUserReport objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $userReportsRelatedByIdUserReported A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setUserReportsRelatedByIdUserReported(Collection $userReportsRelatedByIdUserReported, ConnectionInterface $con = null)
+    {
+        /** @var ChildUserReport[] $userReportsRelatedByIdUserReportedToDelete */
+        $userReportsRelatedByIdUserReportedToDelete = $this->getUserReportsRelatedByIdUserReported(new Criteria(), $con)->diff($userReportsRelatedByIdUserReported);
+
+
+        $this->userReportsRelatedByIdUserReportedScheduledForDeletion = $userReportsRelatedByIdUserReportedToDelete;
+
+        foreach ($userReportsRelatedByIdUserReportedToDelete as $userReportRelatedByIdUserReportedRemoved) {
+            $userReportRelatedByIdUserReportedRemoved->setUserReported(null);
+        }
+
+        $this->collUserReportsRelatedByIdUserReported = null;
+        foreach ($userReportsRelatedByIdUserReported as $userReportRelatedByIdUserReported) {
+            $this->addUserReportRelatedByIdUserReported($userReportRelatedByIdUserReported);
+        }
+
+        $this->collUserReportsRelatedByIdUserReported = $userReportsRelatedByIdUserReported;
+        $this->collUserReportsRelatedByIdUserReportedPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related UserReport objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related UserReport objects.
+     * @throws PropelException
+     */
+    public function countUserReportsRelatedByIdUserReported(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collUserReportsRelatedByIdUserReportedPartial && !$this->isNew();
+        if (null === $this->collUserReportsRelatedByIdUserReported || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collUserReportsRelatedByIdUserReported) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getUserReportsRelatedByIdUserReported());
+            }
+
+            $query = ChildUserReportQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserReported($this)
+                ->count($con);
+        }
+
+        return count($this->collUserReportsRelatedByIdUserReported);
+    }
+
+    /**
+     * Method called to associate a ChildUserReport object to this object
+     * through the ChildUserReport foreign key attribute.
+     *
+     * @param  ChildUserReport $l ChildUserReport
+     * @return $this|\Models\User The current object (for fluent API support)
+     */
+    public function addUserReportRelatedByIdUserReported(ChildUserReport $l)
+    {
+        if ($this->collUserReportsRelatedByIdUserReported === null) {
+            $this->initUserReportsRelatedByIdUserReported();
+            $this->collUserReportsRelatedByIdUserReportedPartial = true;
+        }
+
+        if (!$this->collUserReportsRelatedByIdUserReported->contains($l)) {
+            $this->doAddUserReportRelatedByIdUserReported($l);
+
+            if ($this->userReportsRelatedByIdUserReportedScheduledForDeletion and $this->userReportsRelatedByIdUserReportedScheduledForDeletion->contains($l)) {
+                $this->userReportsRelatedByIdUserReportedScheduledForDeletion->remove($this->userReportsRelatedByIdUserReportedScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildUserReport $userReportRelatedByIdUserReported The ChildUserReport object to add.
+     */
+    protected function doAddUserReportRelatedByIdUserReported(ChildUserReport $userReportRelatedByIdUserReported)
+    {
+        $this->collUserReportsRelatedByIdUserReported[]= $userReportRelatedByIdUserReported;
+        $userReportRelatedByIdUserReported->setUserReported($this);
+    }
+
+    /**
+     * @param  ChildUserReport $userReportRelatedByIdUserReported The ChildUserReport object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removeUserReportRelatedByIdUserReported(ChildUserReport $userReportRelatedByIdUserReported)
+    {
+        if ($this->getUserReportsRelatedByIdUserReported()->contains($userReportRelatedByIdUserReported)) {
+            $pos = $this->collUserReportsRelatedByIdUserReported->search($userReportRelatedByIdUserReported);
+            $this->collUserReportsRelatedByIdUserReported->remove($pos);
+            if (null === $this->userReportsRelatedByIdUserReportedScheduledForDeletion) {
+                $this->userReportsRelatedByIdUserReportedScheduledForDeletion = clone $this->collUserReportsRelatedByIdUserReported;
+                $this->userReportsRelatedByIdUserReportedScheduledForDeletion->clear();
+            }
+            $this->userReportsRelatedByIdUserReportedScheduledForDeletion[]= clone $userReportRelatedByIdUserReported;
+            $userReportRelatedByIdUserReported->setUserReported(null);
         }
 
         return $this;
@@ -4175,31 +4508,31 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
-     * Clears out the collIdeas collection
+     * Clears out the collIdeasRelatedByIdUser collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return void
-     * @see        addIdeas()
+     * @see        addIdeasRelatedByIdUser()
      */
-    public function clearIdeas()
+    public function clearIdeasRelatedByIdUser()
     {
-        $this->collIdeas = null; // important to set this to NULL since that means it is uninitialized
+        $this->collIdeasRelatedByIdUser = null; // important to set this to NULL since that means it is uninitialized
     }
 
     /**
-     * Reset is the collIdeas collection loaded partially.
+     * Reset is the collIdeasRelatedByIdUser collection loaded partially.
      */
-    public function resetPartialIdeas($v = true)
+    public function resetPartialIdeasRelatedByIdUser($v = true)
     {
-        $this->collIdeasPartial = $v;
+        $this->collIdeasRelatedByIdUserPartial = $v;
     }
 
     /**
-     * Initializes the collIdeas collection.
+     * Initializes the collIdeasRelatedByIdUser collection.
      *
-     * By default this just sets the collIdeas collection to an empty array (like clearcollIdeas());
+     * By default this just sets the collIdeasRelatedByIdUser collection to an empty array (like clearcollIdeasRelatedByIdUser());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -4208,13 +4541,13 @@ abstract class User implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initIdeas($overrideExisting = true)
+    public function initIdeasRelatedByIdUser($overrideExisting = true)
     {
-        if (null !== $this->collIdeas && !$overrideExisting) {
+        if (null !== $this->collIdeasRelatedByIdUser && !$overrideExisting) {
             return;
         }
-        $this->collIdeas = new ObjectCollection();
-        $this->collIdeas->setModel('\Models\Idea');
+        $this->collIdeasRelatedByIdUser = new ObjectCollection();
+        $this->collIdeasRelatedByIdUser->setModel('\Models\Idea');
     }
 
     /**
@@ -4231,48 +4564,48 @@ abstract class User implements ActiveRecordInterface
      * @return ObjectCollection|ChildIdea[] List of ChildIdea objects
      * @throws PropelException
      */
-    public function getIdeas(Criteria $criteria = null, ConnectionInterface $con = null)
+    public function getIdeasRelatedByIdUser(Criteria $criteria = null, ConnectionInterface $con = null)
     {
-        $partial = $this->collIdeasPartial && !$this->isNew();
-        if (null === $this->collIdeas || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collIdeas) {
+        $partial = $this->collIdeasRelatedByIdUserPartial && !$this->isNew();
+        if (null === $this->collIdeasRelatedByIdUser || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collIdeasRelatedByIdUser) {
                 // return empty collection
-                $this->initIdeas();
+                $this->initIdeasRelatedByIdUser();
             } else {
-                $collIdeas = ChildIdeaQuery::create(null, $criteria)
-                    ->filterByUser($this)
+                $collIdeasRelatedByIdUser = ChildIdeaQuery::create(null, $criteria)
+                    ->filterByUserAuthor($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collIdeasPartial && count($collIdeas)) {
-                        $this->initIdeas(false);
+                    if (false !== $this->collIdeasRelatedByIdUserPartial && count($collIdeasRelatedByIdUser)) {
+                        $this->initIdeasRelatedByIdUser(false);
 
-                        foreach ($collIdeas as $obj) {
-                            if (false == $this->collIdeas->contains($obj)) {
-                                $this->collIdeas->append($obj);
+                        foreach ($collIdeasRelatedByIdUser as $obj) {
+                            if (false == $this->collIdeasRelatedByIdUser->contains($obj)) {
+                                $this->collIdeasRelatedByIdUser->append($obj);
                             }
                         }
 
-                        $this->collIdeasPartial = true;
+                        $this->collIdeasRelatedByIdUserPartial = true;
                     }
 
-                    return $collIdeas;
+                    return $collIdeasRelatedByIdUser;
                 }
 
-                if ($partial && $this->collIdeas) {
-                    foreach ($this->collIdeas as $obj) {
+                if ($partial && $this->collIdeasRelatedByIdUser) {
+                    foreach ($this->collIdeasRelatedByIdUser as $obj) {
                         if ($obj->isNew()) {
-                            $collIdeas[] = $obj;
+                            $collIdeasRelatedByIdUser[] = $obj;
                         }
                     }
                 }
 
-                $this->collIdeas = $collIdeas;
-                $this->collIdeasPartial = false;
+                $this->collIdeasRelatedByIdUser = $collIdeasRelatedByIdUser;
+                $this->collIdeasRelatedByIdUserPartial = false;
             }
         }
 
-        return $this->collIdeas;
+        return $this->collIdeasRelatedByIdUser;
     }
 
     /**
@@ -4281,29 +4614,29 @@ abstract class User implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $ideas A Propel collection.
+     * @param      Collection $ideasRelatedByIdUser A Propel collection.
      * @param      ConnectionInterface $con Optional connection object
      * @return $this|ChildUser The current object (for fluent API support)
      */
-    public function setIdeas(Collection $ideas, ConnectionInterface $con = null)
+    public function setIdeasRelatedByIdUser(Collection $ideasRelatedByIdUser, ConnectionInterface $con = null)
     {
-        /** @var ChildIdea[] $ideasToDelete */
-        $ideasToDelete = $this->getIdeas(new Criteria(), $con)->diff($ideas);
+        /** @var ChildIdea[] $ideasRelatedByIdUserToDelete */
+        $ideasRelatedByIdUserToDelete = $this->getIdeasRelatedByIdUser(new Criteria(), $con)->diff($ideasRelatedByIdUser);
 
 
-        $this->ideasScheduledForDeletion = $ideasToDelete;
+        $this->ideasRelatedByIdUserScheduledForDeletion = $ideasRelatedByIdUserToDelete;
 
-        foreach ($ideasToDelete as $ideaRemoved) {
-            $ideaRemoved->setUser(null);
+        foreach ($ideasRelatedByIdUserToDelete as $ideaRelatedByIdUserRemoved) {
+            $ideaRelatedByIdUserRemoved->setUserAuthor(null);
         }
 
-        $this->collIdeas = null;
-        foreach ($ideas as $idea) {
-            $this->addIdea($idea);
+        $this->collIdeasRelatedByIdUser = null;
+        foreach ($ideasRelatedByIdUser as $ideaRelatedByIdUser) {
+            $this->addIdeaRelatedByIdUser($ideaRelatedByIdUser);
         }
 
-        $this->collIdeas = $ideas;
-        $this->collIdeasPartial = false;
+        $this->collIdeasRelatedByIdUser = $ideasRelatedByIdUser;
+        $this->collIdeasRelatedByIdUserPartial = false;
 
         return $this;
     }
@@ -4317,16 +4650,16 @@ abstract class User implements ActiveRecordInterface
      * @return int             Count of related Idea objects.
      * @throws PropelException
      */
-    public function countIdeas(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    public function countIdeasRelatedByIdUser(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
     {
-        $partial = $this->collIdeasPartial && !$this->isNew();
-        if (null === $this->collIdeas || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collIdeas) {
+        $partial = $this->collIdeasRelatedByIdUserPartial && !$this->isNew();
+        if (null === $this->collIdeasRelatedByIdUser || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collIdeasRelatedByIdUser) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getIdeas());
+                return count($this->getIdeasRelatedByIdUser());
             }
 
             $query = ChildIdeaQuery::create(null, $criteria);
@@ -4335,11 +4668,11 @@ abstract class User implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByUser($this)
+                ->filterByUserAuthor($this)
                 ->count($con);
         }
 
-        return count($this->collIdeas);
+        return count($this->collIdeasRelatedByIdUser);
     }
 
     /**
@@ -4349,18 +4682,18 @@ abstract class User implements ActiveRecordInterface
      * @param  ChildIdea $l ChildIdea
      * @return $this|\Models\User The current object (for fluent API support)
      */
-    public function addIdea(ChildIdea $l)
+    public function addIdeaRelatedByIdUser(ChildIdea $l)
     {
-        if ($this->collIdeas === null) {
-            $this->initIdeas();
-            $this->collIdeasPartial = true;
+        if ($this->collIdeasRelatedByIdUser === null) {
+            $this->initIdeasRelatedByIdUser();
+            $this->collIdeasRelatedByIdUserPartial = true;
         }
 
-        if (!$this->collIdeas->contains($l)) {
-            $this->doAddIdea($l);
+        if (!$this->collIdeasRelatedByIdUser->contains($l)) {
+            $this->doAddIdeaRelatedByIdUser($l);
 
-            if ($this->ideasScheduledForDeletion and $this->ideasScheduledForDeletion->contains($l)) {
-                $this->ideasScheduledForDeletion->remove($this->ideasScheduledForDeletion->search($l));
+            if ($this->ideasRelatedByIdUserScheduledForDeletion and $this->ideasRelatedByIdUserScheduledForDeletion->contains($l)) {
+                $this->ideasRelatedByIdUserScheduledForDeletion->remove($this->ideasRelatedByIdUserScheduledForDeletion->search($l));
             }
         }
 
@@ -4368,29 +4701,251 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
-     * @param ChildIdea $idea The ChildIdea object to add.
+     * @param ChildIdea $ideaRelatedByIdUser The ChildIdea object to add.
      */
-    protected function doAddIdea(ChildIdea $idea)
+    protected function doAddIdeaRelatedByIdUser(ChildIdea $ideaRelatedByIdUser)
     {
-        $this->collIdeas[]= $idea;
-        $idea->setUser($this);
+        $this->collIdeasRelatedByIdUser[]= $ideaRelatedByIdUser;
+        $ideaRelatedByIdUser->setUserAuthor($this);
     }
 
     /**
-     * @param  ChildIdea $idea The ChildIdea object to remove.
+     * @param  ChildIdea $ideaRelatedByIdUser The ChildIdea object to remove.
      * @return $this|ChildUser The current object (for fluent API support)
      */
-    public function removeIdea(ChildIdea $idea)
+    public function removeIdeaRelatedByIdUser(ChildIdea $ideaRelatedByIdUser)
     {
-        if ($this->getIdeas()->contains($idea)) {
-            $pos = $this->collIdeas->search($idea);
-            $this->collIdeas->remove($pos);
-            if (null === $this->ideasScheduledForDeletion) {
-                $this->ideasScheduledForDeletion = clone $this->collIdeas;
-                $this->ideasScheduledForDeletion->clear();
+        if ($this->getIdeasRelatedByIdUser()->contains($ideaRelatedByIdUser)) {
+            $pos = $this->collIdeasRelatedByIdUser->search($ideaRelatedByIdUser);
+            $this->collIdeasRelatedByIdUser->remove($pos);
+            if (null === $this->ideasRelatedByIdUserScheduledForDeletion) {
+                $this->ideasRelatedByIdUserScheduledForDeletion = clone $this->collIdeasRelatedByIdUser;
+                $this->ideasRelatedByIdUserScheduledForDeletion->clear();
             }
-            $this->ideasScheduledForDeletion[]= clone $idea;
-            $idea->setUser(null);
+            $this->ideasRelatedByIdUserScheduledForDeletion[]= clone $ideaRelatedByIdUser;
+            $ideaRelatedByIdUser->setUserAuthor(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collIdeasRelatedByApprovedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addIdeasRelatedByApprovedBy()
+     */
+    public function clearIdeasRelatedByApprovedBy()
+    {
+        $this->collIdeasRelatedByApprovedBy = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collIdeasRelatedByApprovedBy collection loaded partially.
+     */
+    public function resetPartialIdeasRelatedByApprovedBy($v = true)
+    {
+        $this->collIdeasRelatedByApprovedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collIdeasRelatedByApprovedBy collection.
+     *
+     * By default this just sets the collIdeasRelatedByApprovedBy collection to an empty array (like clearcollIdeasRelatedByApprovedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initIdeasRelatedByApprovedBy($overrideExisting = true)
+    {
+        if (null !== $this->collIdeasRelatedByApprovedBy && !$overrideExisting) {
+            return;
+        }
+        $this->collIdeasRelatedByApprovedBy = new ObjectCollection();
+        $this->collIdeasRelatedByApprovedBy->setModel('\Models\Idea');
+    }
+
+    /**
+     * Gets an array of ChildIdea objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildIdea[] List of ChildIdea objects
+     * @throws PropelException
+     */
+    public function getIdeasRelatedByApprovedBy(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collIdeasRelatedByApprovedByPartial && !$this->isNew();
+        if (null === $this->collIdeasRelatedByApprovedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collIdeasRelatedByApprovedBy) {
+                // return empty collection
+                $this->initIdeasRelatedByApprovedBy();
+            } else {
+                $collIdeasRelatedByApprovedBy = ChildIdeaQuery::create(null, $criteria)
+                    ->filterByUserApproved($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collIdeasRelatedByApprovedByPartial && count($collIdeasRelatedByApprovedBy)) {
+                        $this->initIdeasRelatedByApprovedBy(false);
+
+                        foreach ($collIdeasRelatedByApprovedBy as $obj) {
+                            if (false == $this->collIdeasRelatedByApprovedBy->contains($obj)) {
+                                $this->collIdeasRelatedByApprovedBy->append($obj);
+                            }
+                        }
+
+                        $this->collIdeasRelatedByApprovedByPartial = true;
+                    }
+
+                    return $collIdeasRelatedByApprovedBy;
+                }
+
+                if ($partial && $this->collIdeasRelatedByApprovedBy) {
+                    foreach ($this->collIdeasRelatedByApprovedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collIdeasRelatedByApprovedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collIdeasRelatedByApprovedBy = $collIdeasRelatedByApprovedBy;
+                $this->collIdeasRelatedByApprovedByPartial = false;
+            }
+        }
+
+        return $this->collIdeasRelatedByApprovedBy;
+    }
+
+    /**
+     * Sets a collection of ChildIdea objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $ideasRelatedByApprovedBy A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setIdeasRelatedByApprovedBy(Collection $ideasRelatedByApprovedBy, ConnectionInterface $con = null)
+    {
+        /** @var ChildIdea[] $ideasRelatedByApprovedByToDelete */
+        $ideasRelatedByApprovedByToDelete = $this->getIdeasRelatedByApprovedBy(new Criteria(), $con)->diff($ideasRelatedByApprovedBy);
+
+
+        $this->ideasRelatedByApprovedByScheduledForDeletion = $ideasRelatedByApprovedByToDelete;
+
+        foreach ($ideasRelatedByApprovedByToDelete as $ideaRelatedByApprovedByRemoved) {
+            $ideaRelatedByApprovedByRemoved->setUserApproved(null);
+        }
+
+        $this->collIdeasRelatedByApprovedBy = null;
+        foreach ($ideasRelatedByApprovedBy as $ideaRelatedByApprovedBy) {
+            $this->addIdeaRelatedByApprovedBy($ideaRelatedByApprovedBy);
+        }
+
+        $this->collIdeasRelatedByApprovedBy = $ideasRelatedByApprovedBy;
+        $this->collIdeasRelatedByApprovedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Idea objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Idea objects.
+     * @throws PropelException
+     */
+    public function countIdeasRelatedByApprovedBy(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collIdeasRelatedByApprovedByPartial && !$this->isNew();
+        if (null === $this->collIdeasRelatedByApprovedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collIdeasRelatedByApprovedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getIdeasRelatedByApprovedBy());
+            }
+
+            $query = ChildIdeaQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserApproved($this)
+                ->count($con);
+        }
+
+        return count($this->collIdeasRelatedByApprovedBy);
+    }
+
+    /**
+     * Method called to associate a ChildIdea object to this object
+     * through the ChildIdea foreign key attribute.
+     *
+     * @param  ChildIdea $l ChildIdea
+     * @return $this|\Models\User The current object (for fluent API support)
+     */
+    public function addIdeaRelatedByApprovedBy(ChildIdea $l)
+    {
+        if ($this->collIdeasRelatedByApprovedBy === null) {
+            $this->initIdeasRelatedByApprovedBy();
+            $this->collIdeasRelatedByApprovedByPartial = true;
+        }
+
+        if (!$this->collIdeasRelatedByApprovedBy->contains($l)) {
+            $this->doAddIdeaRelatedByApprovedBy($l);
+
+            if ($this->ideasRelatedByApprovedByScheduledForDeletion and $this->ideasRelatedByApprovedByScheduledForDeletion->contains($l)) {
+                $this->ideasRelatedByApprovedByScheduledForDeletion->remove($this->ideasRelatedByApprovedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildIdea $ideaRelatedByApprovedBy The ChildIdea object to add.
+     */
+    protected function doAddIdeaRelatedByApprovedBy(ChildIdea $ideaRelatedByApprovedBy)
+    {
+        $this->collIdeasRelatedByApprovedBy[]= $ideaRelatedByApprovedBy;
+        $ideaRelatedByApprovedBy->setUserApproved($this);
+    }
+
+    /**
+     * @param  ChildIdea $ideaRelatedByApprovedBy The ChildIdea object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removeIdeaRelatedByApprovedBy(ChildIdea $ideaRelatedByApprovedBy)
+    {
+        if ($this->getIdeasRelatedByApprovedBy()->contains($ideaRelatedByApprovedBy)) {
+            $pos = $this->collIdeasRelatedByApprovedBy->search($ideaRelatedByApprovedBy);
+            $this->collIdeasRelatedByApprovedBy->remove($pos);
+            if (null === $this->ideasRelatedByApprovedByScheduledForDeletion) {
+                $this->ideasRelatedByApprovedByScheduledForDeletion = clone $this->collIdeasRelatedByApprovedBy;
+                $this->ideasRelatedByApprovedByScheduledForDeletion->clear();
+            }
+            $this->ideasRelatedByApprovedByScheduledForDeletion[]= $ideaRelatedByApprovedBy;
+            $ideaRelatedByApprovedBy->setUserApproved(null);
         }
 
         return $this;
@@ -4465,8 +5020,13 @@ abstract class User implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collUserReports) {
-                foreach ($this->collUserReports as $o) {
+            if ($this->collUserReportsRelatedByIdUser) {
+                foreach ($this->collUserReportsRelatedByIdUser as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collUserReportsRelatedByIdUserReported) {
+                foreach ($this->collUserReportsRelatedByIdUserReported as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
@@ -4475,8 +5035,13 @@ abstract class User implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collIdeas) {
-                foreach ($this->collIdeas as $o) {
+            if ($this->collIdeasRelatedByIdUser) {
+                foreach ($this->collIdeasRelatedByIdUser as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collIdeasRelatedByApprovedBy) {
+                foreach ($this->collIdeasRelatedByApprovedBy as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
@@ -4487,9 +5052,11 @@ abstract class User implements ActiveRecordInterface
         $this->collRatings = null;
         $this->collActivities = null;
         $this->collQuotes = null;
-        $this->collUserReports = null;
+        $this->collUserReportsRelatedByIdUser = null;
+        $this->collUserReportsRelatedByIdUserReported = null;
         $this->collBugReports = null;
-        $this->collIdeas = null;
+        $this->collIdeasRelatedByIdUser = null;
+        $this->collIdeasRelatedByApprovedBy = null;
         $this->aImage = null;
     }
 

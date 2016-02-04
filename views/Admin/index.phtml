@@ -9,100 +9,100 @@
         <div class="content-box">
             <div class="admin-news">
                 <div class="news-item col-sm-6 col-lg-3">
-                    <div class="content">
-                        <div class="icon physical">
-                            <button class="icon" type="button">
+                    <a class="detail-link" href="/administrace/co-je-noveho/uzivatele">
+                        <div class="content">
+                            <div class="icon physical">
                                 <span class="glyphicon glyphicon-user"></span>
-                            </button>
+                            </div>
+                            <div class="text">
+                                Noví uživatelé: <span class="badge"><?= $data["new"]["users"] ?></span>
+                            </div>
                         </div>
-                        <div class="text">
-                            Noví uživatelé: <span class="badge"><?= $data["new"]["users"] ?></span>
-                        </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="news-item col-sm-6 col-lg-3">
-                    <div class="content">
-                        <div class="icon skills">
-                            <button class="icon" type="button">
+                    <a class="detail-link" href="/administrace/co-je-noveho/komentare">
+                        <div class="content">
+                            <div class="icon skills">
                                 <span class="glyphicon glyphicon-comment"></span>
-                            </button>
+                            </div>
+                            <div class="text">
+                                Nové komentáře: <span class="badge"><?= $data["new"]["comments"] ?></span>
+                            </div>
                         </div>
-                        <div class="text">
-                            Nové komentáře: <span class="badge"><?= $data["new"]["comments"] ?></span>
-                        </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="news-item col-sm-6 col-lg-3">
-                    <div class="content">
-                        <div class="icon volunteering">
-                            <button class="icon" type="button">
+                    <a class="detail-link" href="/administrace/co-je-noveho/clanky">
+                        <div class="content">
+                            <div class="icon volunteering">
                                 <span class="glyphicon glyphicon-pencil"></span>
-                            </button>
+                            </div>
+                            <div class="text">
+                                Nové články: <span class="badge"><?= $data["new"]["articles"] ?></span>
+                            </div>
                         </div>
-                        <div class="text">
-                            Nové články: <span class="badge"><?= $data["new"]["articles"] ?></span>
-                        </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="news-item col-sm-6 col-lg-3">
-                    <div class="content">
-                        <div class="icon expedition">
-                            <button class="icon" type="button">
+                    <a class="detail-link" href="/administrace/co-je-noveho/fotografie">
+                        <div class="content">
+                            <div class="icon expedition">
                                 <span class="glyphicon glyphicon-picture"></span>
-                            </button>
+                            </div>
+                            <div class="text">
+                                Nové fotografie <span class="badge"><?= $data["new"]["images"] ?></span>
+                            </div>
                         </div>
-                        <div class="text">
-                            Nové fotografie <span class="badge"><?= $data["new"]["images"] ?></span>
-                        </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="news-item col-sm-6 col-lg-3">
-                    <div class="content">
-                        <div class="icon solved">
-                            <button class="icon" type="button">
+                    <a class="detail-link" href="/administrace/chyby/vyresene">
+                        <div class="content">
+                            <div class="icon solved">
                                 <i class="fa fa-bug"></i>
-                            </button>
+                            </div>
+                            <div class="text">
+                                Vyřešené chyby <span class="badge"><?= $data["new"]["solved_bugs"] ?></span>
+                            </div>
                         </div>
-                        <div class="text">
-                            Vyřešené chyby <span class="badge"><?= $data["new"]["solved_bugs"] ?></span>
-                        </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="news-item col-sm-6 col-lg-3">
-                    <div class="content">
-                        <div class="icon unsolved">
-                            <button class="icon" type="button">
+                    <a class="detail-link" href="/administrace/chyby/nevyresene">
+                        <div class="content">
+                            <div class="icon unsolved">
                                 <i class="fa fa-exclamation"></i>
-                            </button>
+                            </div>
+                            <div class="text">
+                                Nevyřešené chyby <span class="badge"><?= $data["new"]["unsolved_bugs"] ?></span>
+                            </div>
                         </div>
-                        <div class="text">
-                            Nevyřešené chyby <span class="badge"><?= $data["new"]["unsolved_bugs"] ?></span>
-                        </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="news-item col-sm-6 col-lg-3">
-                    <div class="content">
-                        <div class="icon report">
-                            <button class="icon" type="button">
+                    <a class="detail-link" href="/administrace/nahlaseni-uzivatele">
+                        <div class="content">
+                            <div class="icon report">
                                 <i class="fa fa-flag"></i>
-                            </button>
+                            </div>
+                            <div class="text">
+                                Nahlášení uživatelé <span class="badge"><?= $data["new"]["user_reports"] ?></span>
+                            </div>
                         </div>
-                        <div class="text">
-                            Nahlášení uživatelé <span class="badge"><?= $data["new"]["user_reports"] ?></span>
-                        </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="news-item col-sm-6 col-lg-3">
-                    <div class="content">
-                        <div class="icon physical">
-                            <button class="icon" type="button">
+                    <a class="detail-link" href="/administrace/navrhy/neschvalene">
+                        <div class="content">
+                            <div class="icon gold">
                                 <i class="fa fa-lightbulb-o"></i>
-                            </button>
+                            </div>
+                            <div class="text">
+                                Neschválené návrhy <span class="badge"><?= $data["new"]["ideas"] ?></span>
+                            </div>
                         </div>
-                        <div class="text">
-                            Návrhy <span class="badge"><?= $data["new"]["ideas"] ?></span>
-                        </div>
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>

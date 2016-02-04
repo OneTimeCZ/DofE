@@ -1,0 +1,44 @@
+<div class="page-heading">
+    <h1>Noví uživatelé</h1>
+</div>
+
+<?php if(!$data["users"]->isEmpty()): ?>
+<div class="section">
+    <div class="column single">
+        <div class="content-box">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th class="text-center col-xs-2">Uživatelské jméno</th>
+                        <th class="text-center col-xs-2">Křestní jméno</th>
+                        <th class="text-center col-xs-2">Příjmení</th>
+                        <th class="text-center col-xs-3">Datum registrace</th>
+                        <th class="text-center col-xs-3">Emailová adresa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($data["users"] as $user): ?>
+                    <tr>
+                        <td class="text-center col-xs-2">
+                            <?php if($user->getPermissions() >= 1): ?>
+                                <a href="/profil/<?= $user->getUrl() ?>"><?= $user->getUsername() ?></a>
+                            <?php else: ?>
+                                <?= $user->getUsername() ?>
+                            <?php endif; ?>
+                        </td>
+                        <td class="text-center col-xs-2">
+                            <?= ($user->getName() == NULL) ? "<p class=unspecified>(nespecifikováno)</p>" : $user->getName() ?>
+                        </td>
+                        <td class="text-center col-xs-2">
+                            <?= ($user->getSurname() == NULL) ? "<p class=unspecified>(nespecifikováno)</p>" : $user->getSurname() ?>
+                        </td>
+                        <td class="text-center col-xs-3"><?= $user->getCreatedAt()->format('d.m.Y H:i:s') ?></td>
+                        <td class="text-center col-xs-3"><?= $user->getEmail() ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<?php endif; ?>

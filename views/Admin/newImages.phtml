@@ -1,0 +1,34 @@
+<div class="page-heading">
+    <h1>Nové fotografie</h1>
+</div>
+
+<?php if(!$data["images"]->isEmpty()): ?>
+<div class="section">
+    <div class="column single">
+        <div class="content-box">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th class="text-center col-xs-3">Název</th>
+                        <th class="col-xs-5">Popis</th>
+                        <th class="col-xs-2">Odkaz</th>
+                        <th class="text-center col-xs-2">Datum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($data["images"] as $image): ?>
+                    <tr>
+                        <td class="text-center col-xs-3"><?= $image->getTitle() ?></td>
+                        <td class="col-xs-5"><?= $image->getDescription() ?></td>
+                        <td class="col-xs-2">
+                            <a href="/includes/images/fullsize/<?= $image->getPath() ?>">THUMBNAIL DO BUDOUCNA S ODKAZEM NA FOTKU</a>
+                        </td>
+                        <td class="text-center col-xs-2">Datum</td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<?php endif; ?>

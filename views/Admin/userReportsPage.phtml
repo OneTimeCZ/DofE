@@ -1,0 +1,46 @@
+<div class="page-heading">
+    <h1>Nahlášení uživatelé</h1>
+</div>
+
+<?php if(!$data["user_reports"]->isEmpty()): ?>
+<div class="section">
+    <div class="column single">
+        <div class="content-box">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th class="col-xs-2 text-center">Nahlásil (kdo)</th>
+                        <th class="col-xs-2 text-center">Nahlásil (koho)</th>
+                        <th class="col-xs-6">Důvod</th>
+                        <th class="col-xs-2 text-center">Datum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($data["user_reports"] as $report): ?>
+                    <tr>
+                        <td class="col-xs-2 text-center">
+                            <?php if($report->getUserAuthor()->getPermissions() >= 1): ?>
+                            <a href="/profil/<?= $report->getUserAuthor()->getUrl() ?>"><?= $report->getUserAuthor()->getUsername() ?></a>
+                            <?php else: ?>
+                            <?= $report->getUserAuthor()->getUsername() ?>
+                            <?php endif; ?>
+                        </td>
+                        <td class="col-xs-2 text-center">
+                            <?php if($report->getUserReported()->getPermissions() >= 1): ?>
+                            <a href="/profil/<?= $report->getUserReported()->getUrl() ?>"><?= $report->getUserReported()->getUsername() ?></a>
+                            <?php else: ?>
+                            <?= $report->getUserReported()->getUsername() ?>
+                            <?php endif; ?>
+                        </td>
+                        <td class="col-xs-6"><?= $report->getReason() ?></td>
+                        <td class="col-xs-2 text-center"><?= $report->getCreatedAt()->format('d.m.Y H:i:s') ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
+                        

@@ -1,0 +1,36 @@
+<div class="page-heading">
+    <h1>Nové články</h1>
+</div>
+
+<?php if(!$data["articles"]->isEmpty()): ?>
+<div class="section">
+    <div class="column single">
+        <div class="content-box">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th class="text-center col-xs-2">Autor</th>
+                        <th class="text-center col-xs-3">Název</th>
+                        <th class="col-xs-5">Obsah</th>
+                        <th class="text-center col-xs-2">Datum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($data["articles"] as $article): ?>
+                    <tr>
+                        <td class="text-center col-xs-2">
+                            <a href="/profil/<?= $article->getUser()->getUrl() ?>"><?= $article->getUser()->getUsername() ?></a>
+                        </td>
+                        <td class="text-center col-xs-3">
+                            <a href="/clanek/<?= $article->getUrl() ?>"><?= $article->getTitle() ?></a>
+                        </td>
+                        <td class="col-xs-5"><?= substr(strip_tags($article->getContent()), 0, 250)."..." ?></td>
+                        <td class="text-center col-xs-2"><?= $article->getCreatedAt()->format('d.m.Y H:i:s') ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<?php endif; ?>

@@ -1,0 +1,40 @@
+<div class="page-heading">
+    <h1>Nové komentáře</h1>
+</div>
+
+<?php if(!$data["comments"]->isEmpty()): ?>
+<div class="section">
+    <div class="column single">
+        <div class="content-box">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th class="col-xs-2 text-center">Autor</th>
+                        <th class="col-xs-3">Článek</th>
+                        <th class="col-xs-5">Obsah</th>
+                        <th class="col-xs-2 text-center">Datum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($data["comments"] as $comment): ?>
+                    <tr>
+                        <td class="col-xs-2 text-center">
+                            <?php if($comment->getUser()->getPermissions() >= 1): ?>
+                                <a href="<?= $comment->getUser()->getUrl() ?>"><?= $comment->getUser()->getUsername() ?></a>
+                            <?php else: ?>
+                                <?= $comment->getUser()->getUsername() ?>
+                            <?php endif; ?>
+                        </td>
+                        <td class="col-xs-3">
+                            <a href="/clanek/<?= $comment->getArticle()->getUrl() ?>"><?= $comment->getArticle()->getTitle() ?></a>
+                        </td>
+                        <td class="col-xs-5"><?= $comment->getContent() ?></td>
+                        <td class="col-xs-2 text-center"><?= $comment->getCreatedAt()->format('d.m.Y H:i:s') ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<?php endif; ?>

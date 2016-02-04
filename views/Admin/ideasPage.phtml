@@ -1,0 +1,40 @@
+<div class="page-heading">
+    <h1>Návrhy na zlepšení</h1>
+</div>
+
+<?php if(!$data["ideas"]->isEmpty()): ?>
+<div class="section">
+    <div class="column single">
+        <div class="content-box">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th class="col-xs-2 text-center">Autor</th>
+                        <th class="col-xs-1 text-center">Odkaz</th>
+                        <th class="col-xs-7">Popis</th>
+                        <th class="col-xs-2 text-center">Datum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($data["ideas"] as $idea): ?>
+                    <tr>
+                        <td class="col-xs-2 text-center">
+                            <?php if($idea->getUserAuthor()->getPermissions() >= 1): ?>
+                            <a href="/profil/<?= $idea->getUserAuthor()->getUrl() ?>"><?= $idea->getUserAuthor()->getUsername() ?></a>
+                            <?php else: ?>
+                            <?= $idea->getUserAuthor()->getUsername() ?>
+                            <?php endif; ?>
+                        </td>
+                        <td class="col-xs-1 text-center">
+                            <a href="/administrace/navrh/<?= $idea->getId() ?>">Návrh č. <?= $idea->getId() ?></a>
+                        </td>
+                        <td class="col-xs-7"><?= substr(strip_tags($idea->getDescription()), 0, 250)."..." ?></td>
+                        <td class="col-xs-2 text-center"><?= $idea->getCreatedAt()->format('d.m.Y H:i:s') ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
