@@ -110,6 +110,13 @@ abstract class User implements ActiveRecordInterface
     protected $surname;
 
     /**
+     * The value for the member_from field.
+     *
+     * @var        \DateTime
+     */
+    protected $member_from;
+
+    /**
      * The value for the url field.
      *
      * @var        string
@@ -592,6 +599,26 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
+     * Get the [optionally formatted] temporal [member_from] column value.
+     *
+     *
+     * @param      string $format The date/time format string (either date()-style or strftime()-style).
+     *                            If format is NULL, then the raw DateTime object will be returned.
+     *
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     *
+     * @throws PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getMemberFrom($format = NULL)
+    {
+        if ($format === null) {
+            return $this->member_from;
+        } else {
+            return $this->member_from instanceof \DateTime ? $this->member_from->format($format) : null;
+        }
+    }
+
+    /**
      * Get the [url] column value.
      *
      * @return string
@@ -830,6 +857,26 @@ abstract class User implements ActiveRecordInterface
 
         return $this;
     } // setSurname()
+
+    /**
+     * Sets the value of [member_from] column to a normalized version of the date/time value specified.
+     *
+     * @param  mixed $v string, integer (timestamp), or \DateTime value.
+     *               Empty strings are treated as NULL.
+     * @return $this|\Models\User The current object (for fluent API support)
+     */
+    public function setMemberFrom($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->member_from !== null || $dt !== null) {
+            if ($this->member_from === null || $dt === null || $dt->format("Y-m-d H:i:s") !== $this->member_from->format("Y-m-d H:i:s")) {
+                $this->member_from = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[UserTableMap::COL_MEMBER_FROM] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    } // setMemberFrom()
 
     /**
      * Set the value of [url] column.
@@ -1123,49 +1170,55 @@ abstract class User implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : UserTableMap::translateFieldName('Surname', TableMap::TYPE_PHPNAME, $indexType)];
             $this->surname = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : UserTableMap::translateFieldName('Url', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : UserTableMap::translateFieldName('MemberFrom', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->member_from = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : UserTableMap::translateFieldName('Url', TableMap::TYPE_PHPNAME, $indexType)];
             $this->url = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : UserTableMap::translateFieldName('Email', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : UserTableMap::translateFieldName('Email', TableMap::TYPE_PHPNAME, $indexType)];
             $this->email = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : UserTableMap::translateFieldName('EmailConfirmedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : UserTableMap::translateFieldName('EmailConfirmedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->email_confirmed_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : UserTableMap::translateFieldName('EmailConfirmToken', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : UserTableMap::translateFieldName('EmailConfirmToken', TableMap::TYPE_PHPNAME, $indexType)];
             $this->email_confirm_token = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : UserTableMap::translateFieldName('Password', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : UserTableMap::translateFieldName('Password', TableMap::TYPE_PHPNAME, $indexType)];
             $this->password = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : UserTableMap::translateFieldName('PasswordResetToken', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : UserTableMap::translateFieldName('PasswordResetToken', TableMap::TYPE_PHPNAME, $indexType)];
             $this->password_reset_token = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : UserTableMap::translateFieldName('Permissions', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : UserTableMap::translateFieldName('Permissions', TableMap::TYPE_PHPNAME, $indexType)];
             $this->permissions = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : UserTableMap::translateFieldName('SigninCount', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : UserTableMap::translateFieldName('SigninCount', TableMap::TYPE_PHPNAME, $indexType)];
             $this->signin_count = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : UserTableMap::translateFieldName('IdImage', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : UserTableMap::translateFieldName('IdImage', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id_image = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : UserTableMap::translateFieldName('LastSigninAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : UserTableMap::translateFieldName('LastSigninAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->last_signin_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : UserTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 15 + $startcol : UserTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 15 + $startcol : UserTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 16 + $startcol : UserTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -1178,7 +1231,7 @@ abstract class User implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 16; // 16 = UserTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 17; // 17 = UserTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Models\\User'), 0, $e);
@@ -1606,6 +1659,9 @@ abstract class User implements ActiveRecordInterface
         if ($this->isColumnModified(UserTableMap::COL_SURNAME)) {
             $modifiedColumns[':p' . $index++]  = 'surname';
         }
+        if ($this->isColumnModified(UserTableMap::COL_MEMBER_FROM)) {
+            $modifiedColumns[':p' . $index++]  = 'member_from';
+        }
         if ($this->isColumnModified(UserTableMap::COL_URL)) {
             $modifiedColumns[':p' . $index++]  = 'url';
         }
@@ -1664,6 +1720,9 @@ abstract class User implements ActiveRecordInterface
                         break;
                     case 'surname':
                         $stmt->bindValue($identifier, $this->surname, PDO::PARAM_STR);
+                        break;
+                    case 'member_from':
+                        $stmt->bindValue($identifier, $this->member_from ? $this->member_from->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
                     case 'url':
                         $stmt->bindValue($identifier, $this->url, PDO::PARAM_STR);
@@ -1776,39 +1835,42 @@ abstract class User implements ActiveRecordInterface
                 return $this->getSurname();
                 break;
             case 4:
-                return $this->getUrl();
+                return $this->getMemberFrom();
                 break;
             case 5:
-                return $this->getEmail();
+                return $this->getUrl();
                 break;
             case 6:
-                return $this->getEmailConfirmedAt();
+                return $this->getEmail();
                 break;
             case 7:
-                return $this->getEmailConfirmToken();
+                return $this->getEmailConfirmedAt();
                 break;
             case 8:
-                return $this->getPassword();
+                return $this->getEmailConfirmToken();
                 break;
             case 9:
-                return $this->getPasswordResetToken();
+                return $this->getPassword();
                 break;
             case 10:
-                return $this->getPermissions();
+                return $this->getPasswordResetToken();
                 break;
             case 11:
-                return $this->getSigninCount();
+                return $this->getPermissions();
                 break;
             case 12:
-                return $this->getIdImage();
+                return $this->getSigninCount();
                 break;
             case 13:
-                return $this->getLastSigninAt();
+                return $this->getIdImage();
                 break;
             case 14:
-                return $this->getCreatedAt();
+                return $this->getLastSigninAt();
                 break;
             case 15:
+                return $this->getCreatedAt();
+                break;
+            case 16:
                 return $this->getUpdatedAt();
                 break;
             default:
@@ -1845,25 +1907,26 @@ abstract class User implements ActiveRecordInterface
             $keys[1] => $this->getUsername(),
             $keys[2] => $this->getName(),
             $keys[3] => $this->getSurname(),
-            $keys[4] => $this->getUrl(),
-            $keys[5] => $this->getEmail(),
-            $keys[6] => $this->getEmailConfirmedAt(),
-            $keys[7] => $this->getEmailConfirmToken(),
-            $keys[8] => $this->getPassword(),
-            $keys[9] => $this->getPasswordResetToken(),
-            $keys[10] => $this->getPermissions(),
-            $keys[11] => $this->getSigninCount(),
-            $keys[12] => $this->getIdImage(),
-            $keys[13] => $this->getLastSigninAt(),
-            $keys[14] => $this->getCreatedAt(),
-            $keys[15] => $this->getUpdatedAt(),
+            $keys[4] => $this->getMemberFrom(),
+            $keys[5] => $this->getUrl(),
+            $keys[6] => $this->getEmail(),
+            $keys[7] => $this->getEmailConfirmedAt(),
+            $keys[8] => $this->getEmailConfirmToken(),
+            $keys[9] => $this->getPassword(),
+            $keys[10] => $this->getPasswordResetToken(),
+            $keys[11] => $this->getPermissions(),
+            $keys[12] => $this->getSigninCount(),
+            $keys[13] => $this->getIdImage(),
+            $keys[14] => $this->getLastSigninAt(),
+            $keys[15] => $this->getCreatedAt(),
+            $keys[16] => $this->getUpdatedAt(),
         );
-        if ($result[$keys[6]] instanceof \DateTime) {
-            $result[$keys[6]] = $result[$keys[6]]->format('c');
+        if ($result[$keys[4]] instanceof \DateTime) {
+            $result[$keys[4]] = $result[$keys[4]]->format('c');
         }
 
-        if ($result[$keys[13]] instanceof \DateTime) {
-            $result[$keys[13]] = $result[$keys[13]]->format('c');
+        if ($result[$keys[7]] instanceof \DateTime) {
+            $result[$keys[7]] = $result[$keys[7]]->format('c');
         }
 
         if ($result[$keys[14]] instanceof \DateTime) {
@@ -1872,6 +1935,10 @@ abstract class User implements ActiveRecordInterface
 
         if ($result[$keys[15]] instanceof \DateTime) {
             $result[$keys[15]] = $result[$keys[15]]->format('c');
+        }
+
+        if ($result[$keys[16]] instanceof \DateTime) {
+            $result[$keys[16]] = $result[$keys[16]]->format('c');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -2092,39 +2159,42 @@ abstract class User implements ActiveRecordInterface
                 $this->setSurname($value);
                 break;
             case 4:
-                $this->setUrl($value);
+                $this->setMemberFrom($value);
                 break;
             case 5:
-                $this->setEmail($value);
+                $this->setUrl($value);
                 break;
             case 6:
-                $this->setEmailConfirmedAt($value);
+                $this->setEmail($value);
                 break;
             case 7:
-                $this->setEmailConfirmToken($value);
+                $this->setEmailConfirmedAt($value);
                 break;
             case 8:
-                $this->setPassword($value);
+                $this->setEmailConfirmToken($value);
                 break;
             case 9:
-                $this->setPasswordResetToken($value);
+                $this->setPassword($value);
                 break;
             case 10:
-                $this->setPermissions($value);
+                $this->setPasswordResetToken($value);
                 break;
             case 11:
-                $this->setSigninCount($value);
+                $this->setPermissions($value);
                 break;
             case 12:
-                $this->setIdImage($value);
+                $this->setSigninCount($value);
                 break;
             case 13:
-                $this->setLastSigninAt($value);
+                $this->setIdImage($value);
                 break;
             case 14:
-                $this->setCreatedAt($value);
+                $this->setLastSigninAt($value);
                 break;
             case 15:
+                $this->setCreatedAt($value);
+                break;
+            case 16:
                 $this->setUpdatedAt($value);
                 break;
         } // switch()
@@ -2166,40 +2236,43 @@ abstract class User implements ActiveRecordInterface
             $this->setSurname($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setUrl($arr[$keys[4]]);
+            $this->setMemberFrom($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setEmail($arr[$keys[5]]);
+            $this->setUrl($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setEmailConfirmedAt($arr[$keys[6]]);
+            $this->setEmail($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setEmailConfirmToken($arr[$keys[7]]);
+            $this->setEmailConfirmedAt($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setPassword($arr[$keys[8]]);
+            $this->setEmailConfirmToken($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setPasswordResetToken($arr[$keys[9]]);
+            $this->setPassword($arr[$keys[9]]);
         }
         if (array_key_exists($keys[10], $arr)) {
-            $this->setPermissions($arr[$keys[10]]);
+            $this->setPasswordResetToken($arr[$keys[10]]);
         }
         if (array_key_exists($keys[11], $arr)) {
-            $this->setSigninCount($arr[$keys[11]]);
+            $this->setPermissions($arr[$keys[11]]);
         }
         if (array_key_exists($keys[12], $arr)) {
-            $this->setIdImage($arr[$keys[12]]);
+            $this->setSigninCount($arr[$keys[12]]);
         }
         if (array_key_exists($keys[13], $arr)) {
-            $this->setLastSigninAt($arr[$keys[13]]);
+            $this->setIdImage($arr[$keys[13]]);
         }
         if (array_key_exists($keys[14], $arr)) {
-            $this->setCreatedAt($arr[$keys[14]]);
+            $this->setLastSigninAt($arr[$keys[14]]);
         }
         if (array_key_exists($keys[15], $arr)) {
-            $this->setUpdatedAt($arr[$keys[15]]);
+            $this->setCreatedAt($arr[$keys[15]]);
+        }
+        if (array_key_exists($keys[16], $arr)) {
+            $this->setUpdatedAt($arr[$keys[16]]);
         }
     }
 
@@ -2253,6 +2326,9 @@ abstract class User implements ActiveRecordInterface
         }
         if ($this->isColumnModified(UserTableMap::COL_SURNAME)) {
             $criteria->add(UserTableMap::COL_SURNAME, $this->surname);
+        }
+        if ($this->isColumnModified(UserTableMap::COL_MEMBER_FROM)) {
+            $criteria->add(UserTableMap::COL_MEMBER_FROM, $this->member_from);
         }
         if ($this->isColumnModified(UserTableMap::COL_URL)) {
             $criteria->add(UserTableMap::COL_URL, $this->url);
@@ -2379,6 +2455,7 @@ abstract class User implements ActiveRecordInterface
         $copyObj->setUsername($this->getUsername());
         $copyObj->setName($this->getName());
         $copyObj->setSurname($this->getSurname());
+        $copyObj->setMemberFrom($this->getMemberFrom());
         $copyObj->setUrl($this->getUrl());
         $copyObj->setEmail($this->getEmail());
         $copyObj->setEmailConfirmedAt($this->getEmailConfirmedAt());
@@ -4965,6 +5042,7 @@ abstract class User implements ActiveRecordInterface
         $this->username = null;
         $this->name = null;
         $this->surname = null;
+        $this->member_from = null;
         $this->url = null;
         $this->email = null;
         $this->email_confirmed_at = null;

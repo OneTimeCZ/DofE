@@ -51,10 +51,12 @@
                             <a class="menu-item" href="/nastaveni">
                                 <i class="fa fa-cog"></i>
                             </a>
+                            <?php if($_SESSION["user"]->getPermissions() >= 1): ?>
                             <div class="divider"></div>
                             <a class="menu-item" href="/nahlasit-aktivitu">
                                 <i class="fa fa-check"></i>
                             </a>
+                            <?php endif; ?>
                             <a class="menu-item pull-right" href="/odhlasit">
                                 ODHLÁSIT SE
                             </a>
@@ -72,8 +74,10 @@
                                 <li><a href="/profil/<?= $_SESSION["user"]->getUrl() ?>">Váš profil</a></li>
                                 <li class="divider"></li>
                                 <li><a href="/nastaveni">Nastavení</a></li>
+                                <?php if($_SESSION["user"]->getPermissions() >= 1): ?>
                                 <li class="divider"></li>
                                 <li><a href="/nahlasit-aktivitu">Nahlásit aktivitu</a></li>
+                                <?php endif; ?>
                                 <li class="divider"></li>
                                 <li><a href="/odhlasit">Odhlásit</a></li>
                             </ul>

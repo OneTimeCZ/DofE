@@ -102,10 +102,11 @@
     $router->addPost('User.changeEmail', '/nastaveni/ulozit-email');
     $router->addPost('User.changePassword', '/nastaveni/ulozit-heslo');
     $router->addPost('User.changeUsername', '/nastaveni/ulozit-jmeno');
-    $router->addGet('User.changeAvatarForm', '/nastaveni/zmenit-avatar');
     $router->addPost('User.changeAvatar', '/nastaveni/ulozit-avatar');
     $router->addGet('User.changeDofeForm', '/nastaveni/zmenit-dofe');
     $router->addPost('User.changeDofe', '/nastaveni/ulozit-dofe');
+    $router->addGet('User.chooseDofeActivities', '/nastaveni/vybrat-aktivity');
+    $router->addGet('User.saveDofeActivities', '/nastaveni/ulozit-aktivity');
     $router->addGet('User.forgottenPasswordPage', '/zapomenute-heslo');
     $router->addPost('User.forgottenPassword', '/zapomenute-heslo-email');
     $router->addGet('User.resetPassword', '/obnovit-heslo/{username}/{token}')
@@ -113,17 +114,16 @@
             'username' => '\w+',
             'token' => '\w{50}',
         ]);
-    $router->addGet('User.logDofeActivityForm', '/nahlasit-aktivitu{/year,month,day}')
+    $router->addGet('User.logDofeActivityForm', '/nahlasit-aktivitu{/year,week}')
         ->setTokens([
             'year' => '\d{4}',
-            'month' => '\d{2}',
-            'day' => '\d{2}'
+            'week' => '\d{1,2}'
         ]);
-    $router->addPost('User.logDofeActivity', '/ulozit-aktivitu{/year,month,day}')
+$router->addPost('User.logDofeActivityFormDate', '/nahlasit-aktivitu-datum');
+    $router->addPost('User.logDofeActivity', '/ulozit-aktivitu{/year,week}')
         ->setTokens([
             'year' => '\d{4}',
-            'month' => '\d{2}',
-            'day' => '\d{2}'
+            'week' => '\d{1,2}'
         ]);
     $router->addGet('User.reportBugPage', '/nastaveni/nahlasit-chybu');
     $router->addPost('User.reportBug', '/nastaveni/nahlasit-chyba');
@@ -131,3 +131,6 @@
     $router->addPost('User.reportUser', '/nastaveni/nahlasit-uzivatel');
     $router->addGet('User.ideaSuggestionPage', '/nastaveni/navrhnout-zlepseni');
     $router->addPost('User.ideaSuggestion', '/nastaveni/navrh-zlepseni');
+
+//---SEARCH---
+$router->addPost('Search.searchBar', '/vyhledavani');

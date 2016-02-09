@@ -10,6 +10,7 @@
         <column name="username" type="varchar" size="50" required="true"/>
         <column name="name" type="varchar" size="50" required="true"/>
         <column name="surname" type="varchar" size="50" required="true"/>
+        <column name="member_from" type="timestamp"/>
         <column name="url" type="varchar" size="50" required="true"/>
         <column name="email" type="varchar" size="100" required="true"/>
         <column name="email_confirmed_at" type="timestamp"/>
@@ -150,6 +151,7 @@
     <table name="activity_logs" phpName="ActivityLog">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="id_week" type="integer" required="true"/>
+        <column name="id_year" type="integer" required="true"/>
         <column name="id_activity" type="integer" required="true"/>
         
         <foreign-key foreignTable="activities">

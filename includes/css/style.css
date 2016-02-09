@@ -322,6 +322,14 @@ body {
                   overflow: auto; }
                   body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.single div.content-box div.section-content {
                     overflow: auto; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.single div.content-box div.section-content.avatar form.avatar {
+                      margin-top: 20px;
+                      margin-bottom: 20px; }
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.single div.content-box div.section-content.avatar img.avatar {
+                      display: block;
+                      margin: auto;
+                      margin-top: 20px;
+                      margin-bottom: 20px; }
                     body div.page-container div.container-fluid div.main-content div.main div.content div.section div.column.single div.content-box div.section-content form.register {
                       margin-top: 20px;
                       padding-left: 0;
@@ -408,6 +416,9 @@ body {
               overflow: auto; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.log-dofe {
                 padding: 15px; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.log-dofe form.log-dofe input.log-dofe {
+                  margin: auto;
+                  display: block; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.settings {
                 padding: 0;
                 background: #e9eaed; }
@@ -1007,6 +1018,13 @@ div.main-alert {
 p.unspecified {
   margin-bottom: 0;
   color: gray; }
+
+div.progress-bar.physical {
+  background-color: #e1c72c; }
+div.progress-bar.volunteering {
+  background-color: #e40046; }
+div.progress-bar.skill {
+  background-color: #009edc; }
 
 .hidden {
   display: none;

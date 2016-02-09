@@ -1,0 +1,61 @@
+<div class="content">    
+    <div class="section">
+        <div class="page-heading register">
+            <h1>Výběr DofE aktivit</h1>
+        </div>
+    </div>
+    
+    <div class="section">
+        <div class="column single">
+            <div class="content-box">
+                <div class="section-content">
+                    <form role="form" class="register col-xs-offset-1 col-xs-10" method="post" action="/nastaveni/ulozit-aktivity">
+                        <div class="form-group">
+                            <label for="level">Úroveň programu</label>
+                            <select class="form-control" name="level" id="level" required>
+                                <option value="1">Bronzová</option>
+                                <option value="2">Stříbrná</option>
+                                <option value="3">Zlatá</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="type_longer">Prodloužená aktivita</label>
+                            <select class="form-control" name="type_longer" id="type_longer" required>
+                                <option value="1">Rozvoj talentu</option>
+                                <option value="2">Sportovní aktivita</option>
+                                <option value="3">Dobrovolnictví</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="skill_desc">Rozvoj talentu - popis</label>
+                            <input class="form-control" name="skill_desc" id="skill_desc" placeholder="Stručně popište vaší aktivitu v sekci Rozvoj talentu." required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="skill_goal">Rozvoj talentu - cíl</label>
+                            <input class="form-control" name="skill_goal" id="skill_goal" placeholder="Blíže specifikujte čeho hodláte dosáhnout." required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="phys_desc">Sportovní aktivita - popis</label>
+                            <input class="form-control" name="phys_desc" id="phys_desc" placeholder="Stručně popište vaší aktivitu v sekci Sportovní aktivita." required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="phys_goal">Sportovní aktivita - cíl</label>
+                            <input class="form-control" name="phys_goal" id="phys_goal" placeholder="Blíže specifikujte čeho hodláte dosáhnout." required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="vol_desc">Dobrovolnictví - popis</label>
+                            <input class="form-control" name="vol_desc" id="vol_desc" placeholder="Stručně popište vaší aktivitu v sekci Dobrovolnictví." required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="vol_goal">Dobrovolnictví - cíl</label>
+                            <input class="form-control" name="vol_goal" id="vol_goal" placeholder="Blíže specifikujte čeho hodláte dosáhnout." required/>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-default" value="Uložit" name="save"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

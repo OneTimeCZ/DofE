@@ -571,6 +571,20 @@ body {
                                         div.section-content {
                                             overflow: auto;
                                             
+                                            &.avatar {
+                                                form.avatar {
+                                                    margin-top: 20px;
+                                                    margin-bottom: 20px;
+                                                }
+                                                
+                                                img.avatar {
+                                                    display: block;
+                                                    margin: auto;
+                                                    margin-top: 20px;
+                                                    margin-bottom: 20px;
+                                                }
+                                            }
+                                            
                                             form.register {
                                                 margin-top: 20px;
                                                 padding-left: 0;
@@ -714,6 +728,13 @@ body {
                                 
                                 &.log-dofe {
                                     padding: 15px;
+                                    
+                                    form.log-dofe {
+                                        input.log-dofe {
+                                            margin: auto;
+                                            display: block;
+                                        }
+                                    }
                                 }
                                 
                                 &.settings {
@@ -1684,6 +1705,20 @@ div.main-alert {
 p.unspecified {
     margin-bottom: 0;
     color: gray;
+}
+
+div.progress-bar {
+    &.physical {
+        background-color: $physical;
+    }
+    
+    &.volunteering {
+        background-color: $volunteering;
+    }
+    
+    &.skill {
+        background-color: $skills;
+    }
 }
 
 .hidden {

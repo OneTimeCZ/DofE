@@ -6,29 +6,83 @@
     </div>
     
     <div class="section">
-        <div class="column single">
+        <div class="column double col-md-6">
             <div class="content-box">
                 <div class="section-header smaller log-dofe">
-                    <h2><a class="pull-left" href="/nahlasit-aktivitu">&lt;&lt;</a>Datum...<a class="pull-right" href="/nahlasit-aktivitu">&gt;&gt;</a></h2>
+                    <h2>
+                        Navigace
+                    </h2>
                 </div>
                 <div class="section-content log-dofe">
-                    <form class="log-dofe" role="form" method="post" action="/ulozit-aktivitu">
+                    <form role="form" class="log-dofe" method="post" action="/nahlasit-aktivitu-datum">
                         <div class="form-group">
+                            <input class="form-control" type="date" name="date" id="date" required/>
+                        </div>
+                        <input class="btn btn-default log-dofe" type="submit" value="Přejít na datum" name="date_redirect"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="column double col-md-6">
+            <div class="content-box">
+                <div class="section-header smaller log-dofe">
+                    <h2>
+                        <?= $data["date"]->format('W') ?>. týden <?= $data["date"]->format('Y') ?>
+                    </h2>
+                </div>
+                <div class="section-content log-dofe">
+                    <form role="form" class="log-dofe" method="post" action="/ulozit-aktivitu">
+                        <div class="form-group text-center">
                             <input type="checkbox" name="activity" value="skill"> Rozvoj talentu
                         </div>
-                        <div class="form-group">
+                        <div class="form-group text-center">
                             <input type="checkbox" name="activity" value="physical"> Sportovní aktivita
                         </div>
-                        <div class="form-group">
+                        <div class="form-group text-center">
                             <input type="checkbox" name="activity" value="volunteering"> Dobrovolnictví
                         </div>
                         
-                        <input class="btn btn-default" type="submit" value="Odeslat" name="log-dofe">
-                        <br>
-                        <?= "rok: " . $data["date"]["year"] . "<br>" ?>
-                        <?= "měsíc: " . $data["date"]["month"] . "<br>" ?>
-                        <?= "den: " . $data["date"]["day"] . "<br>" ?>
+                        <input class="btn btn-default log-dofe" type="submit" value="Odeslat" name="log-dofe">
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <div class="column single">
+            <div class="content-box">
+                <div class="section-header smaller log-dofe">
+                    <h2>
+                        Přehled aktivit
+                    </h2>
+                </div>
+                <div class="section-content log-dofe">
+                    <div class="item">
+                        <h4>Rozvoj talentu: <small>Něměcký jazyk</small></h4>
+                        <div class="progress">
+                            <div class="progress-bar skills" role="progressbar" aria-valuenow="11" aria-valuemin="0" aria-valuemax="52" style="width: <?= ceil((15/52)*100) ?>%;min-width: 2em;">
+                                <?= ceil((15/52)*100) ?>%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <h4>Sportovní aktivita: <small>Freediving - nádechové potápění</small></h4>
+                        <div class="progress">
+                            <div class="progress-bar physical" role="progressbar" aria-valuenow="11" aria-valuemin="0" aria-valuemax="52" style="width: <?= ceil((26/52)*100) ?>%;min-width: 2em;">
+                                <?= ceil((26/52)*100) ?>%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <h4>Dobrovolnictví: <small>Doučování anglického jazyka</small></h4>
+                        <div class="progress">
+                            <div class="progress-bar volunteering" role="progressbar" aria-valuenow="11" aria-valuemin="0" aria-valuemax="52" style="width: <?= ceil((9/52)*100) ?>%;min-width: 2em;">
+                                <?= ceil((9/52)*100) ?>%
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

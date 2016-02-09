@@ -22,13 +22,20 @@
                                 <a href="/nastaveni/zmenit-udaje#email"><i class="fa fa-envelope"></i> Změnit emailovou adresu</a>
                             </li>
                             <li class="item col-sm-6 col-lg-4">
-                                <a href="/nastaveni/zmenit-avatar"><i class="fa fa-image"></i> Změnit profilový obrázek</a>
+                                <a href="/nastaveni/zmenit-udaje#avatar"><i class="fa fa-image"></i> Změnit profilový obrázek</a>
                             </li>
+                            <?php if($_SESSION["user"]->getPermissions() == 0): ?>
                             <li class="item col-sm-6 col-lg-4">
                                 <a href="#"><i class="fa fa-users"></i> Zažádat o členství v programu</a>
                             </li>
+                            <?php elseif($_SESSION["user"]->getPermissions() == 1): ?>
+                            <li class="item col-sm-6 col-lg-4">
+                                <a href="/nastaveni/vybrat-aktivity"><i class="fa fa-plus"></i> Vybrat kategorie programu</a>
+                            </li>
+                            <?php endif; ?>
                         </ul>
                     </div>
+                    <?php if($_SESSION["user"]->getPermissions() >= 1 && $data["activities"] >= 3): ?>
                     <div class="dofe">
                         <h2 class="settings-heading">DOFE</h2>
                         <ul class="settings">
@@ -43,6 +50,7 @@
                             </li>
                         </ul>
                     </div>
+                    <?php endif; ?>
                     <div class="general">
                         <h2 class="settings-heading">OBECNÉ</h2>
                         <ul class="settings">

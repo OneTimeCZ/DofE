@@ -77,5 +77,33 @@
                 </div>
             </div>
         </div>
+    </div>    
+        
+    <div class="section">
+        <div class="column single">
+            <div class="content-box">
+                <div class="section-header smaller">
+                    <h2 id="avatar">Změna profilového obrázku</h2>
+                </div>
+                <div class="section-content avatar">
+                    <div class="col-xs-6">
+                        <form enctype="multipart/form-data" class="personal avatar col-xs-offset-1 col-xs-10" role="form" action="/nastaveni/ulozit-avatar" method="post">
+                            <div class="form-group">
+                                <label for="img">Nahrát avatar</label>
+                                <input type="file" class="btn btn-default" value="Zvolit avatar" name="img" id="img" required/>
+                            </div>
+
+                            <div class="form-group">
+                                <input class="btn btn-default" type="submit" name="save" value="Změnit avatar" >
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="col-xs-6">
+                        <img class="img img-responsive img-thumbnail avatar" src="/includes/images/200x200/<?= $_SESSION["user"]->getImage()->getPath() ?>" alt="momentální avatar" title="Profilový obrázek uživatele <?= $_SESSION["user"]->getUsername() ?>">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

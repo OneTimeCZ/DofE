@@ -152,16 +152,19 @@ class UserController extends Controller{
     
     public function profileSettings(){
         if(!$this->isLogged()){
-            $this->addPopup('danger', 'Pro zobrazení vašeho profilu se musíte nejprve přihlásit.');
+            $this->addPopup('danger', 'Pro zobrazení nastavení profilu se musíte nejprve přihlásit.');
             redirectTo('/');
         }
         
-        //SQL ??
+        $activities = ActivityQuery::create()
+            ->filterByIdUser($_SESSION["user"]->getId())
+            ->count();
         
         $this->view('Profile/settings', 'base_template', [
             'active' => 'profile',
             'title' => 'Nastavení profilu',
-            'recent' => ArticleQuery::recent()
+            'recent' => ArticleQuery::recent(),
+            'activities' => $activities
         ]);
     }
     
@@ -243,32 +246,62 @@ class UserController extends Controller{
     
     }
     
-    public function logDofeActivityForm($year = '', $month = '', $day = ''){
+    public function logDofeActivityFormDate(){
+        if(!isset($_POST["date"])){
+            $this->addPopup('danger', 'Pro nahlášení aktivit musíte specifikovat přesné datum.');
+            redirectTo('/nahlasit-aktivitu');
+        }
+        
+        $date = new DateTime($_POST["date"]);
+        $year = $date->format("Y");
+        $week = $date->format("W");
+        
+        redirectTo('/nahlasit-aktivitu/' . $year . '/' . $week);
+    }
+    
+    public function logDofeActivityForm($year = '', $week = ''){
+        //either both year and week, or none of them have to be specified
         if($year == ''){
-            $id_year = date("Y");
-            $id_month = date("m");
-            $id_day = date("d");
+            $date = new DateTime;
+            
+            $a = new DateTime($date->format('Y') . '-12-28');
+            $week_count = $a->format('W');
         } else {
-            if($month == ''){
-                $id_month = 01;
-                $id_day = 01;
-            } else {
-                $id_month = $month;
-                $id_day = $day == '' ? 01 : $day;
+            if($week == ''){
+                $this->addPopup('danger', 'Pro nahlášení aktivit musíte specifikovat rok i číslo týdne.');
+                redirectTo('/nahlasit-aktivitu');
             }
             
-            $id_year = $year;
+            //28th December is always in the last week - coresponding to ISO-8601
+            $a = new DateTime($year . '-12-28');
+            $week_count = $a->format('W');
+            
+            //checks if user tries to show invalid week
+            if($week > $week_count){
+                $this->addPopup('danger', 'Zadaný týden neexistuje.');
+                redirectTo('/nahlasit-aktivitu');
+            }
+            
+            //if the current year is specified, check if user tries to log activity to future
+            if($year == date('Y')){
+                if($week > date('W')){
+                    $this->addPopup('danger', 'Aktivity není možno nahlašovat do budoucna.');
+                    redirectTo('/nahlasit-aktivitu');
+                }
+            }
+            
+            $date = new DateTime();
+            $date->setISODate($year, $week);
         }
+        
+        //SQL for users logged weeks and activities
         
         $this->view('Profile/logDofe', 'base_template', [
             'active' => 'logActivity',
             'title' => 'Nahlášení aktivit',
             'recent' => ArticleQuery::recent(),
-            'date' => [
-                'year' => $id_year,
-                'month' => $id_month,
-                'day' => $id_day
-            ]
+            'date' => $date,
+            'week_count' => $week_count
         ]);
     }
     
@@ -363,7 +396,7 @@ class UserController extends Controller{
     }
     
     public function changeAvatar(){
-    
+        
     }
     
     public function logDofeActivity(){
@@ -372,6 +405,20 @@ class UserController extends Controller{
     
     public function changeDofe(){
     
+    }
+    
+    public function saveDofeActivities(){
+    
+    }
+    
+    public function chooseDofeActivities(){
+        //SQL
+        
+        $this->view('Profile/chooseDofeActivities', 'base_template', [
+            'active' => 'chooseActivities',
+            'title' => 'Vybrat aktivity',
+            'recent' => ArticleQuery::recent()
+        ]);
     }
     
     public function forgottenPassword(){

@@ -24,6 +24,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery orderByUsername($order = Criteria::ASC) Order by the username column
  * @method     ChildUserQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method     ChildUserQuery orderBySurname($order = Criteria::ASC) Order by the surname column
+ * @method     ChildUserQuery orderByMemberFrom($order = Criteria::ASC) Order by the member_from column
  * @method     ChildUserQuery orderByUrl($order = Criteria::ASC) Order by the url column
  * @method     ChildUserQuery orderByEmail($order = Criteria::ASC) Order by the email column
  * @method     ChildUserQuery orderByEmailConfirmedAt($order = Criteria::ASC) Order by the email_confirmed_at column
@@ -41,6 +42,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery groupByUsername() Group by the username column
  * @method     ChildUserQuery groupByName() Group by the name column
  * @method     ChildUserQuery groupBySurname() Group by the surname column
+ * @method     ChildUserQuery groupByMemberFrom() Group by the member_from column
  * @method     ChildUserQuery groupByUrl() Group by the url column
  * @method     ChildUserQuery groupByEmail() Group by the email column
  * @method     ChildUserQuery groupByEmailConfirmedAt() Group by the email_confirmed_at column
@@ -181,6 +183,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUser findOneByUsername(string $username) Return the first ChildUser filtered by the username column
  * @method     ChildUser findOneByName(string $name) Return the first ChildUser filtered by the name column
  * @method     ChildUser findOneBySurname(string $surname) Return the first ChildUser filtered by the surname column
+ * @method     ChildUser findOneByMemberFrom(string $member_from) Return the first ChildUser filtered by the member_from column
  * @method     ChildUser findOneByUrl(string $url) Return the first ChildUser filtered by the url column
  * @method     ChildUser findOneByEmail(string $email) Return the first ChildUser filtered by the email column
  * @method     ChildUser findOneByEmailConfirmedAt(string $email_confirmed_at) Return the first ChildUser filtered by the email_confirmed_at column
@@ -201,6 +204,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUser requireOneByUsername(string $username) Return the first ChildUser filtered by the username column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByName(string $name) Return the first ChildUser filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneBySurname(string $surname) Return the first ChildUser filtered by the surname column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByMemberFrom(string $member_from) Return the first ChildUser filtered by the member_from column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByUrl(string $url) Return the first ChildUser filtered by the url column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByEmail(string $email) Return the first ChildUser filtered by the email column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByEmailConfirmedAt(string $email_confirmed_at) Return the first ChildUser filtered by the email_confirmed_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -219,6 +223,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUser[]|ObjectCollection findByUsername(string $username) Return ChildUser objects filtered by the username column
  * @method     ChildUser[]|ObjectCollection findByName(string $name) Return ChildUser objects filtered by the name column
  * @method     ChildUser[]|ObjectCollection findBySurname(string $surname) Return ChildUser objects filtered by the surname column
+ * @method     ChildUser[]|ObjectCollection findByMemberFrom(string $member_from) Return ChildUser objects filtered by the member_from column
  * @method     ChildUser[]|ObjectCollection findByUrl(string $url) Return ChildUser objects filtered by the url column
  * @method     ChildUser[]|ObjectCollection findByEmail(string $email) Return ChildUser objects filtered by the email column
  * @method     ChildUser[]|ObjectCollection findByEmailConfirmedAt(string $email_confirmed_at) Return ChildUser objects filtered by the email_confirmed_at column
@@ -323,7 +328,7 @@ abstract class UserQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, username, name, surname, url, email, email_confirmed_at, email_confirm_token, password, password_reset_token, permissions, signin_count, id_image, last_signin_at, created_at, updated_at FROM users WHERE id = :p0';
+        $sql = 'SELECT id, username, name, surname, member_from, url, email, email_confirmed_at, email_confirm_token, password, password_reset_token, permissions, signin_count, id_image, last_signin_at, created_at, updated_at FROM users WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -539,6 +544,49 @@ abstract class UserQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(UserTableMap::COL_SURNAME, $surname, $comparison);
+    }
+
+    /**
+     * Filter the query on the member_from column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByMemberFrom('2011-03-14'); // WHERE member_from = '2011-03-14'
+     * $query->filterByMemberFrom('now'); // WHERE member_from = '2011-03-14'
+     * $query->filterByMemberFrom(array('max' => 'yesterday')); // WHERE member_from > '2011-03-13'
+     * </code>
+     *
+     * @param     mixed $memberFrom The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByMemberFrom($memberFrom = null, $comparison = null)
+    {
+        if (is_array($memberFrom)) {
+            $useMinMax = false;
+            if (isset($memberFrom['min'])) {
+                $this->addUsingAlias(UserTableMap::COL_MEMBER_FROM, $memberFrom['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($memberFrom['max'])) {
+                $this->addUsingAlias(UserTableMap::COL_MEMBER_FROM, $memberFrom['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(UserTableMap::COL_MEMBER_FROM, $memberFrom, $comparison);
     }
 
     /**

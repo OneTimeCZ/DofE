@@ -16,5 +16,5 @@ use Models\Base\Image as BaseImage;
  */
 class Image extends BaseImage
 {
-
+    
 }

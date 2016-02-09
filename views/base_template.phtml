@@ -10,6 +10,7 @@
 		<title>DofE | <?= $data["title"] ?></title>
 		<script src="includes/scripts/jquery-1.11.3.js"></script>
 		<script src="includes/scripts/bootstrap.min.js"></script>
+        <script src="includes/scripts/searchbar.js"></script>
         <?php if(isset($data["js"])): ?>
             <?php $scripts = is_array($data["js"]) ? $data["js"] : array($data["js"]); foreach($scripts as $js): ?>
             <script src="includes/<?= $js ?>.js"></script>

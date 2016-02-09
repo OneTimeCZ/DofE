@@ -38,32 +38,30 @@ class AdminController extends Controller{
     
     public function index(){  
         $users = UserQuery::create()
-            ->filterByCreatedAt(array('min' => 'yesterday'))
+            ->filterByCreatedAt(array('min' => time() - (7*24*60*60)))
             ->count();
         
         $comments = CommentQuery::create()
-            ->filterByCreatedAt(array('min' => 'yesterday'))
+            ->filterByCreatedAt(array('min' => time() - (7*24*60*60)))
             ->count();
         
         $articles = ArticleQuery::create()
-            ->filterByCreatedAt(array('min' => 'yesterday'))
+            ->filterByCreatedAt(array('min' => time() - (7*24*60*60)))
             ->count();
         
         $images = ImageQuery::create()
-            ->filterByCreatedAt(array('min' => 'yesterday'))
+            ->filterByCreatedAt(array('min' => time() - (7*24*60*60)))
             ->count();
         
         $user_reports = UserReportQuery::create()
-            ->filterByCreatedAt(array('min' => 'yesterday'))
+            ->filterByCreatedAt(array('min' => time() - (7*24*60*60)))
             ->count();
         
         $unsolved_bugs = BugReportQuery::create()
-            ->filterByCreatedAt(array('min' => 'yesterday'))
             ->filterByFixedAt(NULL)
             ->count();
         
         $solved_bugs = BugReportQuery::create()
-            ->filterByCreatedAt(array('min' => 'yesterday'))
             ->filterByFixedAt(NULL, Criteria::NOT_EQUAL)
             ->count();
         
@@ -357,12 +355,12 @@ class AdminController extends Controller{
     
     public function newUsersPage(){
         $users = UserQuery::create()
-            ->filterByCreatedAt(array('min' => 'yesterday'))
+            ->filterByCreatedAt(array('min' => time() - 7*24*60*60))
             ->orderByUsername()
             ->find();
         
         if($users->isEmpty()){
-            $this->addPopup('danger', 'Za posledních 24 hodin se nezaregistrovali žádní noví uživatelé.');
+            $this->addPopup('danger', 'Za poslední týden se nezaregistrovali žádní noví uživatelé.');
         }
         
         $this->view('Admin/newUsers', 'admin_template', [
@@ -374,14 +372,14 @@ class AdminController extends Controller{
     
     public function newCommentsPage(){
         $comments = CommentQuery::create()
-            ->filterByCreatedAt(array('min' => 'yesterday'))
+            ->filterByCreatedAt(array('min' => time() - 7*24*60*60))
             ->joinWith('Article')
             ->joinWith('User')
             ->orderByCreatedAt('desc')
             ->find();
         
         if($comments->isEmpty()){
-            $this->addPopup('danger', 'Za posledních 24 hodin nebyly přidány žádné komentáře.');
+            $this->addPopup('danger', 'Za poslední týden nebyly přidány žádné komentáře.');
         }
         
         $this->view('Admin/newComments', 'admin_template', [
@@ -393,13 +391,13 @@ class AdminController extends Controller{
     
     public function newArticlesPage(){
         $articles = ArticleQuery::create()
-            ->filterByCreatedAt(array('min' => 'yesterday'))
+            ->filterByCreatedAt(array('min' => time() - 7*24*60*60))
             ->joinWith('User')
             ->orderByCreatedAt('desc')
             ->find();
         
         if($articles->isEmpty()){
-            $this->addPopup('danger', 'Za posledních 24 hodin nebyly přidány žádné články.');
+            $this->addPopup('danger', 'Za poslední týden nebyly přidány žádné články.');
         }
         
         $this->view('Admin/newArticles', 'admin_template', [
@@ -411,13 +409,13 @@ class AdminController extends Controller{
     
     public function newPhotosPage(){
         $images = ImageQuery::create()
-            ->filterByCreatedAt(array('min' => 'yesterday'))
+            ->filterByCreatedAt(array('min' => time() - 7*24*60*60))
             ->filterByType('fullsize')
             ->orderByCreatedAt('desc')
             ->find();
         
         if($images->isEmpty()){
-            $this->addPopup('danger', 'Za posledních 24 hodin nebyly přidány žádné fotografie.');
+            $this->addPopup('danger', 'Za poslední týden nebyly přidány žádné fotografie.');
         }
         
         $this->view('Admin/newImages', 'admin_template', [
@@ -505,7 +503,7 @@ class AdminController extends Controller{
             ->with('UserAuthor', 'UserAuthor')
             ->joinUserReported('UserReported')
             ->with('UserReported', 'UserReported')
-            ->filterByCreatedAt(array('min' => 'yesterday'))
+            ->filterByCreatedAt(array('min' => time() - 7*24*60*60))
             ->orderByCreatedAt('desc')
             ->find();
         
