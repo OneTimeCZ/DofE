@@ -85,6 +85,15 @@
         ->setTokens([
             'id' => '[1-9]\d*'
         ]);
+    $router->addGet('Admin.membershipApplications', '/administrace/zadosti-o-clenstvi');
+    $router->addGet('Admin.acceptMembershipApplication', '/administrace/zadosti-o-clenstvi/{id}/schvalit')
+        ->setTokens([
+            'id' => '[1-9]\d*'
+        ]);
+    $router->addGet('Admin.rejectMembershipApplication', '/administrace/zadosti-o-clenstvi/{id}/zamitnout')
+        ->setTokens([
+            'id' => '[1-9]\d*'
+        ]);
 
 //---USER---
     $router->addGet('User.profilePublic', '/profil/{name}');
@@ -109,7 +118,12 @@
     $router->addGet('User.saveDofeActivities', '/nastaveni/ulozit-aktivity');
     $router->addGet('User.forgottenPasswordPage', '/zapomenute-heslo');
     $router->addPost('User.forgottenPassword', '/zapomenute-heslo-email');
-    $router->addGet('User.resetPassword', '/obnovit-heslo/{username}/{token}')
+    $router->addGet('User.resetPasswordPage', '/obnovit-heslo/{username}/{token}')
+        ->setTokens([
+            'username' => '\w+',
+            'token' => '\w{50}',
+        ]);
+    $router->addPost('User.resetPassword', '/obnoveni-heslo/{username}/{token}')
         ->setTokens([
             'username' => '\w+',
             'token' => '\w{50}',
@@ -119,12 +133,14 @@
             'year' => '\d{4}',
             'week' => '\d{1,2}'
         ]);
-$router->addPost('User.logDofeActivityFormDate', '/nahlasit-aktivitu-datum');
+    $router->addPost('User.logDofeActivityFormDate', '/nahlasit-aktivitu-datum');
     $router->addPost('User.logDofeActivity', '/ulozit-aktivitu{/year,week}')
         ->setTokens([
             'year' => '\d{4}',
             'week' => '\d{1,2}'
         ]);
+    $router->addGet('User.applyForMembershipPage', '/nastaveni/zazadat-o-clenstvi');
+    $router->addPost('User.applyForMembership', '/nastaveni/ulozit-zadost-o-clenstvi');
     $router->addGet('User.reportBugPage', '/nastaveni/nahlasit-chybu');
     $router->addPost('User.reportBug', '/nastaveni/nahlasit-chyba');
     $router->addGet('User.reportUserPage', '/nastaveni/nahlasit-uzivatele');
@@ -133,4 +149,4 @@ $router->addPost('User.logDofeActivityFormDate', '/nahlasit-aktivitu-datum');
     $router->addPost('User.ideaSuggestion', '/nastaveni/navrh-zlepseni');
 
 //---SEARCH---
-$router->addPost('Search.searchBar', '/vyhledavani');
+    $router->addPost('Search.searchBar', '/vyhledavani');

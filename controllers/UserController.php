@@ -17,6 +17,10 @@ use Models\ActivityType;
 use Models\ActivityTypeQuery;
 use Models\Level;
 use Models\LevelQuery;
+use Models\Member;
+use Models\MemberQuery;
+use Models\MembershipApplication;
+use Models\MembershipApplicationQuery;
 use Models\BugReport;
 use Models\BugReportQuery;
 use Models\UserReport;
@@ -66,19 +70,18 @@ class UserController extends Controller{
     
     public function profilePublic($url){
         $user = UserQuery::create()
+            ->joinWith('Member')
             ->joinWith('Image')
             ->filterByUrl($url)
             ->findOne();
         
         if(!$user){
-            $this->addPopup('danger', 'Hledaný uživatel nebyl nalezen.');
+            $this->addPopup('danger', 'Hledaný uživatel nebyl nalezen nebo není členem organizace.');
             redirectTo('/');
         }
-        
-        //CHECK IF USER IS A DOFE MEMBER WITH SET ACTIVITIES ELSE ERROR 
           
         $activities = ActivityQuery::create()
-            ->filterByIdUser($user->getId())
+            ->filterByIdMember($user->getMember()->getId())
             ->joinWith("ActivityType")
             ->joinWith("Level")
             ->leftJoinWith("ActivityLog")
@@ -157,7 +160,7 @@ class UserController extends Controller{
         }
         
         $activities = ActivityQuery::create()
-            ->filterByIdUser($_SESSION["user"]->getId())
+            ->filterByIdMember($_SESSION["user"]->getIdMember())
             ->count();
         
         $this->view('Profile/settings', 'base_template', [
@@ -213,6 +216,7 @@ class UserController extends Controller{
             //EMAIL THE USER WITH CODE FOR EMAIL CONFIRMATION $token
             
             $user = new User();
+            $user->setIdImage(6);
             $user->setUsername($_POST['regUsername']);
             $user->setPassword(sha1($_POST['regPassword']));
             $user->setEmail($_POST['regEmail']);
@@ -260,6 +264,11 @@ class UserController extends Controller{
     }
     
     public function logDofeActivityForm($year = '', $week = ''){
+        if($_SESSION["user"]->getIdMember() == NULL){
+            $this->addPopup('danger', 'Pro nahlášení aktivit musíte být členem DofE týmu.');
+            redirectTo('/');
+        }
+        
         //either both year and week, or none of them have to be specified
         if($year == ''){
             $date = new DateTime;
@@ -283,15 +292,20 @@ class UserController extends Controller{
             }
             
             //if the current year is specified, check if user tries to log activity to future
-            if($year == date('Y')){
-                if($week > date('W')){
-                    $this->addPopup('danger', 'Aktivity není možno nahlašovat do budoucna.');
-                    redirectTo('/nahlasit-aktivitu');
-                }
+            if(($year == date('Y') && $week > date('W')) || $year > date('Y')){
+                $this->addPopup('danger', 'Aktivity není možno nahlašovat do budoucna.');
+                redirectTo('/nahlasit-aktivitu');
             }
             
             $date = new DateTime();
             $date->setISODate($year, $week);
+            
+            $from = $_SESSION["user"]->getMember()->getMemberFrom();
+            
+            if($from->format("Y") > $date->format("Y") || ($from->format("Y") == $date->format("Y") && $from->format("W") > $date->format("W"))){
+                $this->addPopup('danger', 'Aktivity není možno nahlašovat v datu před vstupem do programu.');
+                redirectTo('/nahlasit-aktivitu');
+            }
         }
         
         //SQL for users logged weeks and activities
@@ -317,6 +331,11 @@ class UserController extends Controller{
         
         if($_SESSION["user"]->getUsername() == $_POST["username"]) {
             $this->addPopup('danger', 'Toto jméno je již přiřazeno k vašemu účtu.');
+            redirectTo('/nastaveni/zmenit-udaje');
+        }
+        
+        if(preg_match('/@/', $_POST["username"])){
+            $this->addPopup('danger', 'Vaše uživatelské jméno obsahuje nepovolené znaky.');
             redirectTo('/nastaveni/zmenit-udaje');
         }
             
@@ -399,6 +418,56 @@ class UserController extends Controller{
         
     }
     
+    public function applyForMembershipPage(){
+        if($_SESSION["user"]->getIdMember() != NULL){
+            $this->addPopup('danger', 'Nemůžete žádat o členství, protože již jste členem organizace.');
+            redirectTo('/nastaveni');
+        }
+        
+        $existing = MembershipApplicationQuery::create()
+            ->filterByIdUser($_SESSION["user"]->getId())
+            ->filterByState("pending")
+            ->find();
+        
+        if(!$existing->isEmpty()){
+            $this->addPopup('danger', 'Nemůžete žádat o členství, protože jste již o členství zažádali.');
+            redirectTo('/nastaveni');
+        }
+        
+        $this->view('Profile/membershipApplication', 'base_template', [
+            'active' => 'membershipApplication',
+            'title' => 'Žádost o členství',
+            'recent' => ArticleQuery::recent()
+        ]);
+    }
+    
+    public function applyForMembership(){
+        if($_SESSION["user"]->getIdMember() != NULL){
+            $this->addPopup('danger', 'Nemůžete žádat o členství, protože již jste členem organizace.');
+            redirectTo('/nastaveni');
+        }
+        
+        $existing = MembershipApplicationQuery::create()
+            ->filterByIdUser($_SESSION["user"]->getId())
+            ->filterByState("pending")
+            ->find();
+        
+        if(!$existing->isEmpty()){
+            $this->addPopup('danger', 'Nemůžete žádat o členství, protože jste již o členství zažádali.');
+            redirectTo('/nastaveni');
+        }
+        
+        $app = new MembershipApplication;
+        $app->setName($_POST["name"]);
+        $app->setSurname($_POST["surname"]);
+        $app->setIdUser($_SESSION["user"]->getId());
+        $app->setState("pending");
+        $app->save();
+        
+        $this->addPopup("success", "Vaše žádost byla úspěšně odeslána.");
+        redirectTo("/nastaveni");
+    }
+    
     public function logDofeActivity(){
     
     }
@@ -452,14 +521,19 @@ class UserController extends Controller{
         redirectTo('/');
     }
     
-    public function resetPassword($username, $token){
+    public function resetPasswordPage($username, $token){
+        if($this->isLogged()){
+            $this->addPopup('danger', 'Obnova hesla není možná, pokud jste přihlášeni.');
+            redirectTo('/');
+        }
+        
         if($username == ''){
             $this->addPopup('danger', 'Při obnově hesla je nutné zadat uživatelské jméno.');
             redirectTo('/');
         }
         
         if($token == ''){
-            $this->addPopup('danger', 'Při obnově hesla je nutné zadat potvrzovací kód. který byl poslán na vaši emailovou adresu.');
+            $this->addPopup('danger', 'Při obnově hesla je nutné zadat potvrzovací kód, který byl poslán na vaši emailovou adresu.');
             redirectTo('/');
         }
         
@@ -473,15 +547,71 @@ class UserController extends Controller{
             redirectTo("/");
         }
         
-        $new_password = token(12);
-        $user->setPassword(sha1($new_password));
+        $this->view('Profile/newPassword', 'base_template', [
+            'active' => 'newPassword',
+            'title' => 'Nové heslo',
+            'recent' => ArticleQuery::recent(),
+            'username' => $username,
+            'token' => $token
+        ]);
+    }
+    
+    public function resetPassword($username, $token){
+        if($this->isLogged()){
+            $this->addPopup('danger', 'Obnova hesla není možná, pokud jste přihlášeni.');
+            redirectTo('/');
+        }
+        
+        if($username == ''){
+            $this->addPopup('danger', 'Při obnově hesla je nutné zadat uživatelské jméno.');
+            redirectTo('/');
+        }
+        
+        if($token == ''){
+            $this->addPopup('danger', 'Při obnově hesla je nutné zadat potvrzovací kód, který byl poslán na vaši emailovou adresu.');
+            redirectTo('/');
+        }
+        
+        $user = UserQuery::create()
+            ->filterByUsername($username)
+            ->filterByPasswordResetToken($token)
+            ->findOne();
+            
+        if(!isset($user)){
+            $this->addPopup('danger', 'Při obnově hesla byl zadán špatný kód nebo uživatelské jméno.');
+            redirectTo("/");
+        }
+        
+        if($_POST['password'] != $_POST['password_again']){
+			$popups[] = array('type' => 'danger', 'content' => 'Hesla se neshodují.');
+        }
+        
+        if(preg_match('/[^a-zA-Z0-9]/', $_POST['password'])){
+            $popups[] = array('type' => 'danger', 'content' => 'Vaše heslo obsahuje nepovolené znaky nebo mezeru.');
+        }
+        
+        if(strlen(utf8_decode($_POST["password"])) < 8){
+            $popups[] = array('type' => 'danger', 'content' => 'Vaše heslo je příliš krátké.');
+        }
+        
+        if(strlen(utf8_decode($_POST["password"])) > 32){
+            $popups[] = array('type' => 'danger', 'content' => 'Vaše heslo je příliš dlouhé.');
+        }
+        
+        if(isset($popups)){
+            foreach ($popups as $pop){
+                $this->addPopup($pop["type"], $pop["content"]);
+            }
+            
+            redirectTo("/");
+        }
+        
+        $user->setPassword(sha1($_POST["password"]));
         $user->setPasswordResetToken(NULL);
         $user->save();
-            
-        //send email to the user with new password ($new_password)
         
-        $this->addPopup('success', 'Na vaši emailovou adresu bylo odesláno nové heslo.');
-        redirectTo('/');
+        $this->addPopup('success', 'Vaše heslo bylo úspěšně změněno.');
+        redirectTo("/");
     }
     
     public function forgottenPasswordPage(){

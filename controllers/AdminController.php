@@ -19,7 +19,12 @@ use Models\BugReport;
 use Models\BugReportQuery;
 use Models\Idea;
 use Models\IdeaQuery;
+use Models\Member;
+use Models\MemberQuery;
+use Models\MembershipApplication;
+use Models\MembershipApplicationQuery;
 use Propel\Runtime\ActiveQuery\Criteria;
+use \DateTime;
 
 require_once '/helpers/helper.php';
 
@@ -50,6 +55,7 @@ class AdminController extends Controller{
             ->count();
         
         $images = ImageQuery::create()
+            ->filterByType('fullsize')
             ->filterByCreatedAt(array('min' => time() - (7*24*60*60)))
             ->count();
         
@@ -61,8 +67,8 @@ class AdminController extends Controller{
             ->filterByFixedAt(NULL)
             ->count();
         
-        $solved_bugs = BugReportQuery::create()
-            ->filterByFixedAt(NULL, Criteria::NOT_EQUAL)
+        $applications = MembershipApplicationQuery::create()
+            ->filterByState("pending")
             ->count();
         
         $ideas = IdeaQuery::create()
@@ -79,7 +85,7 @@ class AdminController extends Controller{
                 'images' => $images,
                 'user_reports' => $user_reports,
                 'unsolved_bugs' => $unsolved_bugs,
-                'solved_bugs' => $solved_bugs,
+                'applications' => $applications,
                 'ideas' => $ideas,
             ]
         ]);
@@ -576,5 +582,86 @@ class AdminController extends Controller{
             'title' => 'Návrh na zlepšení',
             'idea' => $idea
         ]);
+    }
+    
+    public function membershipApplications(){
+        $apps = MembershipApplicationQuery::create()
+            ->filterByState("pending")
+            ->joinWith("User")
+            ->orderByCreatedAt("desc")
+            ->find();
+            
+        if($apps->isEmpty()){
+            $this->addPopup("danger", "V databázi se momentálně nenachází žádné žádosti o členství.");
+        }
+        
+        $this->view('Admin/membershipApplications', 'admin_template', [
+            'active' => 'membershipApplications',
+            'title' => 'Žádosti o členství',
+            'apps' => $apps
+        ]);
+    }
+    
+    public function acceptMembershipApplication($id){
+        $app = MembershipApplicationQuery::create()
+            ->findPk($id);
+        
+        if($app == NULL){
+            $this->addPopup("danger", "Žádost o členství se zadaným identifikačním číslem se v databázi nenachází.");
+            redirectTo("/administrace/zadosti-o-clenstvi");
+        }
+        
+        if($app->getState() != "pending"){
+            $this->addPopup("danger", "Žádost o členství se zadaným identifikačním číslem již byla schválena nebo zamítnuta.");
+            redirectTo("/administrace/zadosti-o-clenstvi");
+        }
+        
+        $app->setState('accepted');
+        $app->setAcceptedAt(time());
+        $app->save();
+        
+        $token = token(30);
+        $member = new Member;
+        $member->setName($app->getName());
+        $member->setSurname($token);
+        $member->setMemberFrom($app->getCreatedAt());
+        $member->save();
+            
+        $member_id = MemberQuery::create()
+            ->filterBySurname($token)
+            ->findOne();
+        
+        $member_id->setSurname($app->getSurname());
+        $member_id->save();
+        
+        $user = UserQuery::create()
+            ->findPk($app->getIdUser());
+        $user->setIdMember($member_id->getId());
+        if($user->getPermissions() == 0)$user->setPermissions(1);
+        $user->save();
+        
+        $this->addPopup("success", "Žádost o členství byla úspěšně přijata. Uživateli byl vytvořen DofE účet.");
+        redirectTo("/administrace/zadosti-o-clenstvi");
+    }
+    
+    public function rejectMembershipApplication($id){
+        $app = MembershipApplicationQuery::create()
+            ->findPk($id);
+        
+        if($app == NULL){
+            $this->addPopup("danger", "Žádost o členství se zadaným identifikačním číslem se v databázi nenachází.");
+            redirectTo("/administrace/zadosti-o-clenstvi");
+        }
+        
+        if($app->getState() != "pending"){
+            $this->addPopup("danger", "Žádost o členství se zadaným identifikačním číslem již byla schválena nebo zamítnuta.");
+            redirectTo("/administrace/zadosti-o-clenstvi");
+        }
+        
+        $app->setState('rejected');
+        $app->save();
+        
+        $this->addPopup("success", "Žádost o členství byla úspěšně zamítnuta.");
+        redirectTo("/administrace/zadosti-o-clenstvi");
     }
 }

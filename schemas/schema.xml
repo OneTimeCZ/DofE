@@ -7,9 +7,8 @@
     <!-- Users -->
     <table name="users" phpName="User">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="id_member" type="integer"/>
         <column name="username" type="varchar" size="50" required="true"/>
-        <column name="name" type="varchar" size="50" required="true"/>
-        <column name="surname" type="varchar" size="50" required="true"/>
         <column name="member_from" type="timestamp"/>
         <column name="url" type="varchar" size="50" required="true"/>
         <column name="email" type="varchar" size="100" required="true"/>
@@ -24,6 +23,10 @@
 
         <foreign-key foreignTable="images">
             <reference local="id_image" foreign="id"/>
+        </foreign-key>
+        
+        <foreign-key foreignTable="members">
+            <reference local="id_member" foreign="id"/>
         </foreign-key>
         
         <behavior name="timestampable" />
@@ -116,7 +119,7 @@
     <!-- DofE Activities(name+description with a goal) -->
     <table name="activities" phpName="Activity">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
-        <column name="id_user" type="integer" required="true"/>
+        <column name="id_member" type="integer" required="true"/>
         <column name="id_level" type="integer" required="true"/>
         <column name="id_activity_type" type="integer" required="true"/>
         <column name="name" type="varchar" size="100" required="true"/>
@@ -125,8 +128,8 @@
         <column name="description" type="varchar" size="250"/>
         <column name="goal" type="varchar" size="250" required="true"/>
         
-        <foreign-key foreignTable="users">
-            <reference local="id_user" foreign="id"/>
+        <foreign-key foreignTable="members">
+            <reference local="id_member" foreign="id"/>
         </foreign-key>
     
         <foreign-key foreignTable="levels">
@@ -172,11 +175,11 @@
     <!-- Quotes -->
     <table name="quotes" phpName="Quote">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
-        <column name="id_user" type="integer" required="true"/>
+        <column name="id_member" type="integer" required="true"/>
         <column name="content" type="varchar" size="350" required="true"/>
         
-        <foreign-key foreignTable="users">
-            <reference local="id_user" foreign="id"/>
+        <foreign-key foreignTable="members">
+            <reference local="id_member" foreign="id"/>
         </foreign-key>
         
         <behavior name="timestampable" />
@@ -233,6 +236,32 @@
         
         <foreign-key foreignTable="users" phpName="UserApproved">
             <reference local="approved_by" foreign="id"/>
+        </foreign-key>
+        
+        <behavior name="timestampable" />
+    </table>
+    
+    <!-- Members --> 
+    <table name="members" phpName="Member">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="name" type="varchar" size="50" required="true"/>
+        <column name="surname" type="varchar" size="50" required="true"/>
+        <column name="member_from" type="timestamp"/>
+        
+        <behavior name="timestampable" />
+    </table>
+    
+    <!-- Applications for membership -->
+    <table name="membership_applications" phpName="MembershipApplication">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="id_user" type="integer" required="true"/>
+        <column name="name" type="varchar" size="50" required="true"/>
+        <column name="surname" type="varchar" size="50" required="true"/>
+        <column name="accepted_at" type="timestamp"/>
+        <column name="state" type="varchar" size="15"/>
+    
+        <foreign-key foreignTable="users">
+            <reference local="id_user" foreign="id"/>
         </foreign-key>
         
         <behavior name="timestampable" />

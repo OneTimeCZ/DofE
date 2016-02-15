@@ -59,10 +59,10 @@
                         <div class="col-xs-6 col-md-12">
                             <blockquote>
                                 <p>
-                                    <?php foreach($user->getQuotes() as $quote)echo $quote->getContent() ?>
+                                    <?php foreach($user->getMember()->getQuotes() as $quote)echo $quote->getContent() ?>
                                 </p>
                                 <footer>
-                                    <?= $user->getName().' '.$user->getSurname() ?>
+                                    <?= $user->getMember()->getName().' '.$user->getMember()->getSurname() ?>
                                 </footer>
                             </blockquote>
                         </div>

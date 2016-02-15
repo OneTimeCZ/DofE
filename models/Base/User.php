@@ -5,8 +5,6 @@ namespace Models\Base;
 use \DateTime;
 use \Exception;
 use \PDO;
-use Models\Activity as ChildActivity;
-use Models\ActivityQuery as ChildActivityQuery;
 use Models\Article as ChildArticle;
 use Models\ArticleQuery as ChildArticleQuery;
 use Models\BugReport as ChildBugReport;
@@ -17,8 +15,10 @@ use Models\Idea as ChildIdea;
 use Models\IdeaQuery as ChildIdeaQuery;
 use Models\Image as ChildImage;
 use Models\ImageQuery as ChildImageQuery;
-use Models\Quote as ChildQuote;
-use Models\QuoteQuery as ChildQuoteQuery;
+use Models\Member as ChildMember;
+use Models\MemberQuery as ChildMemberQuery;
+use Models\MembershipApplication as ChildMembershipApplication;
+use Models\MembershipApplicationQuery as ChildMembershipApplicationQuery;
 use Models\Rating as ChildRating;
 use Models\RatingQuery as ChildRatingQuery;
 use Models\User as ChildUser;
@@ -89,25 +89,18 @@ abstract class User implements ActiveRecordInterface
     protected $id;
 
     /**
+     * The value for the id_member field.
+     *
+     * @var        int
+     */
+    protected $id_member;
+
+    /**
      * The value for the username field.
      *
      * @var        string
      */
     protected $username;
-
-    /**
-     * The value for the name field.
-     *
-     * @var        string
-     */
-    protected $name;
-
-    /**
-     * The value for the surname field.
-     *
-     * @var        string
-     */
-    protected $surname;
 
     /**
      * The value for the member_from field.
@@ -206,6 +199,11 @@ abstract class User implements ActiveRecordInterface
     protected $aImage;
 
     /**
+     * @var        ChildMember
+     */
+    protected $aMember;
+
+    /**
      * @var        ObjectCollection|ChildArticle[] Collection to store aggregation of ChildArticle objects.
      */
     protected $collArticles;
@@ -222,18 +220,6 @@ abstract class User implements ActiveRecordInterface
      */
     protected $collRatings;
     protected $collRatingsPartial;
-
-    /**
-     * @var        ObjectCollection|ChildActivity[] Collection to store aggregation of ChildActivity objects.
-     */
-    protected $collActivities;
-    protected $collActivitiesPartial;
-
-    /**
-     * @var        ObjectCollection|ChildQuote[] Collection to store aggregation of ChildQuote objects.
-     */
-    protected $collQuotes;
-    protected $collQuotesPartial;
 
     /**
      * @var        ObjectCollection|ChildUserReport[] Collection to store aggregation of ChildUserReport objects.
@@ -266,6 +252,12 @@ abstract class User implements ActiveRecordInterface
     protected $collIdeasRelatedByApprovedByPartial;
 
     /**
+     * @var        ObjectCollection|ChildMembershipApplication[] Collection to store aggregation of ChildMembershipApplication objects.
+     */
+    protected $collMembershipApplications;
+    protected $collMembershipApplicationsPartial;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
@@ -290,18 +282,6 @@ abstract class User implements ActiveRecordInterface
      * @var ObjectCollection|ChildRating[]
      */
     protected $ratingsScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildActivity[]
-     */
-    protected $activitiesScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildQuote[]
-     */
-    protected $quotesScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -332,6 +312,12 @@ abstract class User implements ActiveRecordInterface
      * @var ObjectCollection|ChildIdea[]
      */
     protected $ideasRelatedByApprovedByScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildMembershipApplication[]
+     */
+    protected $membershipApplicationsScheduledForDeletion = null;
 
     /**
      * Initializes internal state of Models\Base\User object.
@@ -569,6 +555,16 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
+     * Get the [id_member] column value.
+     *
+     * @return int
+     */
+    public function getIdMember()
+    {
+        return $this->id_member;
+    }
+
+    /**
      * Get the [username] column value.
      *
      * @return string
@@ -576,26 +572,6 @@ abstract class User implements ActiveRecordInterface
     public function getUsername()
     {
         return $this->username;
-    }
-
-    /**
-     * Get the [name] column value.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Get the [surname] column value.
-     *
-     * @return string
-     */
-    public function getSurname()
-    {
-        return $this->surname;
     }
 
     /**
@@ -799,6 +775,30 @@ abstract class User implements ActiveRecordInterface
     } // setId()
 
     /**
+     * Set the value of [id_member] column.
+     *
+     * @param int $v new value
+     * @return $this|\Models\User The current object (for fluent API support)
+     */
+    public function setIdMember($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->id_member !== $v) {
+            $this->id_member = $v;
+            $this->modifiedColumns[UserTableMap::COL_ID_MEMBER] = true;
+        }
+
+        if ($this->aMember !== null && $this->aMember->getId() !== $v) {
+            $this->aMember = null;
+        }
+
+        return $this;
+    } // setIdMember()
+
+    /**
      * Set the value of [username] column.
      *
      * @param string $v new value
@@ -817,46 +817,6 @@ abstract class User implements ActiveRecordInterface
 
         return $this;
     } // setUsername()
-
-    /**
-     * Set the value of [name] column.
-     *
-     * @param string $v new value
-     * @return $this|\Models\User The current object (for fluent API support)
-     */
-    public function setName($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->name !== $v) {
-            $this->name = $v;
-            $this->modifiedColumns[UserTableMap::COL_NAME] = true;
-        }
-
-        return $this;
-    } // setName()
-
-    /**
-     * Set the value of [surname] column.
-     *
-     * @param string $v new value
-     * @return $this|\Models\User The current object (for fluent API support)
-     */
-    public function setSurname($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->surname !== $v) {
-            $this->surname = $v;
-            $this->modifiedColumns[UserTableMap::COL_SURNAME] = true;
-        }
-
-        return $this;
-    } // setSurname()
 
     /**
      * Sets the value of [member_from] column to a normalized version of the date/time value specified.
@@ -1161,64 +1121,61 @@ abstract class User implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : UserTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : UserTableMap::translateFieldName('Username', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : UserTableMap::translateFieldName('IdMember', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->id_member = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : UserTableMap::translateFieldName('Username', TableMap::TYPE_PHPNAME, $indexType)];
             $this->username = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : UserTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->name = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : UserTableMap::translateFieldName('Surname', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->surname = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : UserTableMap::translateFieldName('MemberFrom', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : UserTableMap::translateFieldName('MemberFrom', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->member_from = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : UserTableMap::translateFieldName('Url', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : UserTableMap::translateFieldName('Url', TableMap::TYPE_PHPNAME, $indexType)];
             $this->url = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : UserTableMap::translateFieldName('Email', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : UserTableMap::translateFieldName('Email', TableMap::TYPE_PHPNAME, $indexType)];
             $this->email = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : UserTableMap::translateFieldName('EmailConfirmedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : UserTableMap::translateFieldName('EmailConfirmedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->email_confirmed_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : UserTableMap::translateFieldName('EmailConfirmToken', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : UserTableMap::translateFieldName('EmailConfirmToken', TableMap::TYPE_PHPNAME, $indexType)];
             $this->email_confirm_token = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : UserTableMap::translateFieldName('Password', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : UserTableMap::translateFieldName('Password', TableMap::TYPE_PHPNAME, $indexType)];
             $this->password = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : UserTableMap::translateFieldName('PasswordResetToken', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : UserTableMap::translateFieldName('PasswordResetToken', TableMap::TYPE_PHPNAME, $indexType)];
             $this->password_reset_token = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : UserTableMap::translateFieldName('Permissions', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : UserTableMap::translateFieldName('Permissions', TableMap::TYPE_PHPNAME, $indexType)];
             $this->permissions = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : UserTableMap::translateFieldName('SigninCount', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : UserTableMap::translateFieldName('SigninCount', TableMap::TYPE_PHPNAME, $indexType)];
             $this->signin_count = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : UserTableMap::translateFieldName('IdImage', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : UserTableMap::translateFieldName('IdImage', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id_image = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : UserTableMap::translateFieldName('LastSigninAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : UserTableMap::translateFieldName('LastSigninAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->last_signin_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 15 + $startcol : UserTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : UserTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 16 + $startcol : UserTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 15 + $startcol : UserTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -1231,7 +1188,7 @@ abstract class User implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 17; // 17 = UserTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 16; // 16 = UserTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Models\\User'), 0, $e);
@@ -1253,6 +1210,9 @@ abstract class User implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
+        if ($this->aMember !== null && $this->id_member !== $this->aMember->getId()) {
+            $this->aMember = null;
+        }
         if ($this->aImage !== null && $this->id_image !== $this->aImage->getId()) {
             $this->aImage = null;
         }
@@ -1296,15 +1256,12 @@ abstract class User implements ActiveRecordInterface
         if ($deep) {  // also de-associate any related objects?
 
             $this->aImage = null;
+            $this->aMember = null;
             $this->collArticles = null;
 
             $this->collComments = null;
 
             $this->collRatings = null;
-
-            $this->collActivities = null;
-
-            $this->collQuotes = null;
 
             $this->collUserReportsRelatedByIdUser = null;
 
@@ -1315,6 +1272,8 @@ abstract class User implements ActiveRecordInterface
             $this->collIdeasRelatedByIdUser = null;
 
             $this->collIdeasRelatedByApprovedBy = null;
+
+            $this->collMembershipApplications = null;
 
         } // if (deep)
     }
@@ -1439,6 +1398,13 @@ abstract class User implements ActiveRecordInterface
                 $this->setImage($this->aImage);
             }
 
+            if ($this->aMember !== null) {
+                if ($this->aMember->isModified() || $this->aMember->isNew()) {
+                    $affectedRows += $this->aMember->save($con);
+                }
+                $this->setMember($this->aMember);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -1495,40 +1461,6 @@ abstract class User implements ActiveRecordInterface
 
             if ($this->collRatings !== null) {
                 foreach ($this->collRatings as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
-            if ($this->activitiesScheduledForDeletion !== null) {
-                if (!$this->activitiesScheduledForDeletion->isEmpty()) {
-                    \Models\ActivityQuery::create()
-                        ->filterByPrimaryKeys($this->activitiesScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->activitiesScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collActivities !== null) {
-                foreach ($this->collActivities as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
-            if ($this->quotesScheduledForDeletion !== null) {
-                if (!$this->quotesScheduledForDeletion->isEmpty()) {
-                    \Models\QuoteQuery::create()
-                        ->filterByPrimaryKeys($this->quotesScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->quotesScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collQuotes !== null) {
-                foreach ($this->collQuotes as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1621,6 +1553,23 @@ abstract class User implements ActiveRecordInterface
                 }
             }
 
+            if ($this->membershipApplicationsScheduledForDeletion !== null) {
+                if (!$this->membershipApplicationsScheduledForDeletion->isEmpty()) {
+                    \Models\MembershipApplicationQuery::create()
+                        ->filterByPrimaryKeys($this->membershipApplicationsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->membershipApplicationsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collMembershipApplications !== null) {
+                foreach ($this->collMembershipApplications as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
             $this->alreadyInSave = false;
 
         }
@@ -1650,14 +1599,11 @@ abstract class User implements ActiveRecordInterface
         if ($this->isColumnModified(UserTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
+        if ($this->isColumnModified(UserTableMap::COL_ID_MEMBER)) {
+            $modifiedColumns[':p' . $index++]  = 'id_member';
+        }
         if ($this->isColumnModified(UserTableMap::COL_USERNAME)) {
             $modifiedColumns[':p' . $index++]  = 'username';
-        }
-        if ($this->isColumnModified(UserTableMap::COL_NAME)) {
-            $modifiedColumns[':p' . $index++]  = 'name';
-        }
-        if ($this->isColumnModified(UserTableMap::COL_SURNAME)) {
-            $modifiedColumns[':p' . $index++]  = 'surname';
         }
         if ($this->isColumnModified(UserTableMap::COL_MEMBER_FROM)) {
             $modifiedColumns[':p' . $index++]  = 'member_from';
@@ -1712,14 +1658,11 @@ abstract class User implements ActiveRecordInterface
                     case 'id':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
+                    case 'id_member':
+                        $stmt->bindValue($identifier, $this->id_member, PDO::PARAM_INT);
+                        break;
                     case 'username':
                         $stmt->bindValue($identifier, $this->username, PDO::PARAM_STR);
-                        break;
-                    case 'name':
-                        $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
-                        break;
-                    case 'surname':
-                        $stmt->bindValue($identifier, $this->surname, PDO::PARAM_STR);
                         break;
                     case 'member_from':
                         $stmt->bindValue($identifier, $this->member_from ? $this->member_from->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
@@ -1826,51 +1769,48 @@ abstract class User implements ActiveRecordInterface
                 return $this->getId();
                 break;
             case 1:
-                return $this->getUsername();
+                return $this->getIdMember();
                 break;
             case 2:
-                return $this->getName();
+                return $this->getUsername();
                 break;
             case 3:
-                return $this->getSurname();
-                break;
-            case 4:
                 return $this->getMemberFrom();
                 break;
-            case 5:
+            case 4:
                 return $this->getUrl();
                 break;
-            case 6:
+            case 5:
                 return $this->getEmail();
                 break;
-            case 7:
+            case 6:
                 return $this->getEmailConfirmedAt();
                 break;
-            case 8:
+            case 7:
                 return $this->getEmailConfirmToken();
                 break;
-            case 9:
+            case 8:
                 return $this->getPassword();
                 break;
-            case 10:
+            case 9:
                 return $this->getPasswordResetToken();
                 break;
-            case 11:
+            case 10:
                 return $this->getPermissions();
                 break;
-            case 12:
+            case 11:
                 return $this->getSigninCount();
                 break;
-            case 13:
+            case 12:
                 return $this->getIdImage();
                 break;
-            case 14:
+            case 13:
                 return $this->getLastSigninAt();
                 break;
-            case 15:
+            case 14:
                 return $this->getCreatedAt();
                 break;
-            case 16:
+            case 15:
                 return $this->getUpdatedAt();
                 break;
             default:
@@ -1904,29 +1844,32 @@ abstract class User implements ActiveRecordInterface
         $keys = UserTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getUsername(),
-            $keys[2] => $this->getName(),
-            $keys[3] => $this->getSurname(),
-            $keys[4] => $this->getMemberFrom(),
-            $keys[5] => $this->getUrl(),
-            $keys[6] => $this->getEmail(),
-            $keys[7] => $this->getEmailConfirmedAt(),
-            $keys[8] => $this->getEmailConfirmToken(),
-            $keys[9] => $this->getPassword(),
-            $keys[10] => $this->getPasswordResetToken(),
-            $keys[11] => $this->getPermissions(),
-            $keys[12] => $this->getSigninCount(),
-            $keys[13] => $this->getIdImage(),
-            $keys[14] => $this->getLastSigninAt(),
-            $keys[15] => $this->getCreatedAt(),
-            $keys[16] => $this->getUpdatedAt(),
+            $keys[1] => $this->getIdMember(),
+            $keys[2] => $this->getUsername(),
+            $keys[3] => $this->getMemberFrom(),
+            $keys[4] => $this->getUrl(),
+            $keys[5] => $this->getEmail(),
+            $keys[6] => $this->getEmailConfirmedAt(),
+            $keys[7] => $this->getEmailConfirmToken(),
+            $keys[8] => $this->getPassword(),
+            $keys[9] => $this->getPasswordResetToken(),
+            $keys[10] => $this->getPermissions(),
+            $keys[11] => $this->getSigninCount(),
+            $keys[12] => $this->getIdImage(),
+            $keys[13] => $this->getLastSigninAt(),
+            $keys[14] => $this->getCreatedAt(),
+            $keys[15] => $this->getUpdatedAt(),
         );
-        if ($result[$keys[4]] instanceof \DateTime) {
-            $result[$keys[4]] = $result[$keys[4]]->format('c');
+        if ($result[$keys[3]] instanceof \DateTime) {
+            $result[$keys[3]] = $result[$keys[3]]->format('c');
         }
 
-        if ($result[$keys[7]] instanceof \DateTime) {
-            $result[$keys[7]] = $result[$keys[7]]->format('c');
+        if ($result[$keys[6]] instanceof \DateTime) {
+            $result[$keys[6]] = $result[$keys[6]]->format('c');
+        }
+
+        if ($result[$keys[13]] instanceof \DateTime) {
+            $result[$keys[13]] = $result[$keys[13]]->format('c');
         }
 
         if ($result[$keys[14]] instanceof \DateTime) {
@@ -1935,10 +1878,6 @@ abstract class User implements ActiveRecordInterface
 
         if ($result[$keys[15]] instanceof \DateTime) {
             $result[$keys[15]] = $result[$keys[15]]->format('c');
-        }
-
-        if ($result[$keys[16]] instanceof \DateTime) {
-            $result[$keys[16]] = $result[$keys[16]]->format('c');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1961,6 +1900,21 @@ abstract class User implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->aImage->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aMember) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'member';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'members';
+                        break;
+                    default:
+                        $key = 'Member';
+                }
+
+                $result[$key] = $this->aMember->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->collArticles) {
 
@@ -2006,36 +1960,6 @@ abstract class User implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->collRatings->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
-            if (null !== $this->collActivities) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'activities';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'activitiess';
-                        break;
-                    default:
-                        $key = 'Activities';
-                }
-
-                $result[$key] = $this->collActivities->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
-            if (null !== $this->collQuotes) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'quotes';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'quotess';
-                        break;
-                    default:
-                        $key = 'Quotes';
-                }
-
-                $result[$key] = $this->collQuotes->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collUserReportsRelatedByIdUser) {
 
@@ -2112,6 +2036,21 @@ abstract class User implements ActiveRecordInterface
 
                 $result[$key] = $this->collIdeasRelatedByApprovedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
+            if (null !== $this->collMembershipApplications) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'membershipApplications';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'membership_applicationss';
+                        break;
+                    default:
+                        $key = 'MembershipApplications';
+                }
+
+                $result[$key] = $this->collMembershipApplications->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
         }
 
         return $result;
@@ -2150,51 +2089,48 @@ abstract class User implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setUsername($value);
+                $this->setIdMember($value);
                 break;
             case 2:
-                $this->setName($value);
+                $this->setUsername($value);
                 break;
             case 3:
-                $this->setSurname($value);
-                break;
-            case 4:
                 $this->setMemberFrom($value);
                 break;
-            case 5:
+            case 4:
                 $this->setUrl($value);
                 break;
-            case 6:
+            case 5:
                 $this->setEmail($value);
                 break;
-            case 7:
+            case 6:
                 $this->setEmailConfirmedAt($value);
                 break;
-            case 8:
+            case 7:
                 $this->setEmailConfirmToken($value);
                 break;
-            case 9:
+            case 8:
                 $this->setPassword($value);
                 break;
-            case 10:
+            case 9:
                 $this->setPasswordResetToken($value);
                 break;
-            case 11:
+            case 10:
                 $this->setPermissions($value);
                 break;
-            case 12:
+            case 11:
                 $this->setSigninCount($value);
                 break;
-            case 13:
+            case 12:
                 $this->setIdImage($value);
                 break;
-            case 14:
+            case 13:
                 $this->setLastSigninAt($value);
                 break;
-            case 15:
+            case 14:
                 $this->setCreatedAt($value);
                 break;
-            case 16:
+            case 15:
                 $this->setUpdatedAt($value);
                 break;
         } // switch()
@@ -2227,52 +2163,49 @@ abstract class User implements ActiveRecordInterface
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setUsername($arr[$keys[1]]);
+            $this->setIdMember($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setName($arr[$keys[2]]);
+            $this->setUsername($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setSurname($arr[$keys[3]]);
+            $this->setMemberFrom($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setMemberFrom($arr[$keys[4]]);
+            $this->setUrl($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setUrl($arr[$keys[5]]);
+            $this->setEmail($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setEmail($arr[$keys[6]]);
+            $this->setEmailConfirmedAt($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setEmailConfirmedAt($arr[$keys[7]]);
+            $this->setEmailConfirmToken($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setEmailConfirmToken($arr[$keys[8]]);
+            $this->setPassword($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setPassword($arr[$keys[9]]);
+            $this->setPasswordResetToken($arr[$keys[9]]);
         }
         if (array_key_exists($keys[10], $arr)) {
-            $this->setPasswordResetToken($arr[$keys[10]]);
+            $this->setPermissions($arr[$keys[10]]);
         }
         if (array_key_exists($keys[11], $arr)) {
-            $this->setPermissions($arr[$keys[11]]);
+            $this->setSigninCount($arr[$keys[11]]);
         }
         if (array_key_exists($keys[12], $arr)) {
-            $this->setSigninCount($arr[$keys[12]]);
+            $this->setIdImage($arr[$keys[12]]);
         }
         if (array_key_exists($keys[13], $arr)) {
-            $this->setIdImage($arr[$keys[13]]);
+            $this->setLastSigninAt($arr[$keys[13]]);
         }
         if (array_key_exists($keys[14], $arr)) {
-            $this->setLastSigninAt($arr[$keys[14]]);
+            $this->setCreatedAt($arr[$keys[14]]);
         }
         if (array_key_exists($keys[15], $arr)) {
-            $this->setCreatedAt($arr[$keys[15]]);
-        }
-        if (array_key_exists($keys[16], $arr)) {
-            $this->setUpdatedAt($arr[$keys[16]]);
+            $this->setUpdatedAt($arr[$keys[15]]);
         }
     }
 
@@ -2318,14 +2251,11 @@ abstract class User implements ActiveRecordInterface
         if ($this->isColumnModified(UserTableMap::COL_ID)) {
             $criteria->add(UserTableMap::COL_ID, $this->id);
         }
+        if ($this->isColumnModified(UserTableMap::COL_ID_MEMBER)) {
+            $criteria->add(UserTableMap::COL_ID_MEMBER, $this->id_member);
+        }
         if ($this->isColumnModified(UserTableMap::COL_USERNAME)) {
             $criteria->add(UserTableMap::COL_USERNAME, $this->username);
-        }
-        if ($this->isColumnModified(UserTableMap::COL_NAME)) {
-            $criteria->add(UserTableMap::COL_NAME, $this->name);
-        }
-        if ($this->isColumnModified(UserTableMap::COL_SURNAME)) {
-            $criteria->add(UserTableMap::COL_SURNAME, $this->surname);
         }
         if ($this->isColumnModified(UserTableMap::COL_MEMBER_FROM)) {
             $criteria->add(UserTableMap::COL_MEMBER_FROM, $this->member_from);
@@ -2452,9 +2382,8 @@ abstract class User implements ActiveRecordInterface
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
+        $copyObj->setIdMember($this->getIdMember());
         $copyObj->setUsername($this->getUsername());
-        $copyObj->setName($this->getName());
-        $copyObj->setSurname($this->getSurname());
         $copyObj->setMemberFrom($this->getMemberFrom());
         $copyObj->setUrl($this->getUrl());
         $copyObj->setEmail($this->getEmail());
@@ -2492,18 +2421,6 @@ abstract class User implements ActiveRecordInterface
                 }
             }
 
-            foreach ($this->getActivities() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addActivity($relObj->copy($deepCopy));
-                }
-            }
-
-            foreach ($this->getQuotes() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addQuote($relObj->copy($deepCopy));
-                }
-            }
-
             foreach ($this->getUserReportsRelatedByIdUser() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addUserReportRelatedByIdUser($relObj->copy($deepCopy));
@@ -2531,6 +2448,12 @@ abstract class User implements ActiveRecordInterface
             foreach ($this->getIdeasRelatedByApprovedBy() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addIdeaRelatedByApprovedBy($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getMembershipApplications() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addMembershipApplication($relObj->copy($deepCopy));
                 }
             }
 
@@ -2615,6 +2538,57 @@ abstract class User implements ActiveRecordInterface
         return $this->aImage;
     }
 
+    /**
+     * Declares an association between this object and a ChildMember object.
+     *
+     * @param  ChildMember $v
+     * @return $this|\Models\User The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setMember(ChildMember $v = null)
+    {
+        if ($v === null) {
+            $this->setIdMember(NULL);
+        } else {
+            $this->setIdMember($v->getId());
+        }
+
+        $this->aMember = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildMember object, it will not be re-added.
+        if ($v !== null) {
+            $v->addUser($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildMember object
+     *
+     * @param  ConnectionInterface $con Optional Connection object.
+     * @return ChildMember The associated ChildMember object.
+     * @throws PropelException
+     */
+    public function getMember(ConnectionInterface $con = null)
+    {
+        if ($this->aMember === null && ($this->id_member !== null)) {
+            $this->aMember = ChildMemberQuery::create()->findPk($this->id_member, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aMember->addUsers($this);
+             */
+        }
+
+        return $this->aMember;
+    }
+
 
     /**
      * Initializes a collection based on the name of a relation.
@@ -2635,12 +2609,6 @@ abstract class User implements ActiveRecordInterface
         if ('Rating' == $relationName) {
             return $this->initRatings();
         }
-        if ('Activity' == $relationName) {
-            return $this->initActivities();
-        }
-        if ('Quote' == $relationName) {
-            return $this->initQuotes();
-        }
         if ('UserReportRelatedByIdUser' == $relationName) {
             return $this->initUserReportsRelatedByIdUser();
         }
@@ -2655,6 +2623,9 @@ abstract class User implements ActiveRecordInterface
         }
         if ('IdeaRelatedByApprovedBy' == $relationName) {
             return $this->initIdeasRelatedByApprovedBy();
+        }
+        if ('MembershipApplication' == $relationName) {
+            return $this->initMembershipApplications();
         }
     }
 
@@ -3422,500 +3393,6 @@ abstract class User implements ActiveRecordInterface
         $query->joinWith('Comment', $joinBehavior);
 
         return $this->getRatings($query, $con);
-    }
-
-    /**
-     * Clears out the collActivities collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addActivities()
-     */
-    public function clearActivities()
-    {
-        $this->collActivities = null; // important to set this to NULL since that means it is uninitialized
-    }
-
-    /**
-     * Reset is the collActivities collection loaded partially.
-     */
-    public function resetPartialActivities($v = true)
-    {
-        $this->collActivitiesPartial = $v;
-    }
-
-    /**
-     * Initializes the collActivities collection.
-     *
-     * By default this just sets the collActivities collection to an empty array (like clearcollActivities());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initActivities($overrideExisting = true)
-    {
-        if (null !== $this->collActivities && !$overrideExisting) {
-            return;
-        }
-        $this->collActivities = new ObjectCollection();
-        $this->collActivities->setModel('\Models\Activity');
-    }
-
-    /**
-     * Gets an array of ChildActivity objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildUser is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildActivity[] List of ChildActivity objects
-     * @throws PropelException
-     */
-    public function getActivities(Criteria $criteria = null, ConnectionInterface $con = null)
-    {
-        $partial = $this->collActivitiesPartial && !$this->isNew();
-        if (null === $this->collActivities || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collActivities) {
-                // return empty collection
-                $this->initActivities();
-            } else {
-                $collActivities = ChildActivityQuery::create(null, $criteria)
-                    ->filterByUser($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collActivitiesPartial && count($collActivities)) {
-                        $this->initActivities(false);
-
-                        foreach ($collActivities as $obj) {
-                            if (false == $this->collActivities->contains($obj)) {
-                                $this->collActivities->append($obj);
-                            }
-                        }
-
-                        $this->collActivitiesPartial = true;
-                    }
-
-                    return $collActivities;
-                }
-
-                if ($partial && $this->collActivities) {
-                    foreach ($this->collActivities as $obj) {
-                        if ($obj->isNew()) {
-                            $collActivities[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collActivities = $collActivities;
-                $this->collActivitiesPartial = false;
-            }
-        }
-
-        return $this->collActivities;
-    }
-
-    /**
-     * Sets a collection of ChildActivity objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param      Collection $activities A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildUser The current object (for fluent API support)
-     */
-    public function setActivities(Collection $activities, ConnectionInterface $con = null)
-    {
-        /** @var ChildActivity[] $activitiesToDelete */
-        $activitiesToDelete = $this->getActivities(new Criteria(), $con)->diff($activities);
-
-
-        $this->activitiesScheduledForDeletion = $activitiesToDelete;
-
-        foreach ($activitiesToDelete as $activityRemoved) {
-            $activityRemoved->setUser(null);
-        }
-
-        $this->collActivities = null;
-        foreach ($activities as $activity) {
-            $this->addActivity($activity);
-        }
-
-        $this->collActivities = $activities;
-        $this->collActivitiesPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related Activity objects.
-     *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related Activity objects.
-     * @throws PropelException
-     */
-    public function countActivities(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
-    {
-        $partial = $this->collActivitiesPartial && !$this->isNew();
-        if (null === $this->collActivities || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collActivities) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getActivities());
-            }
-
-            $query = ChildActivityQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByUser($this)
-                ->count($con);
-        }
-
-        return count($this->collActivities);
-    }
-
-    /**
-     * Method called to associate a ChildActivity object to this object
-     * through the ChildActivity foreign key attribute.
-     *
-     * @param  ChildActivity $l ChildActivity
-     * @return $this|\Models\User The current object (for fluent API support)
-     */
-    public function addActivity(ChildActivity $l)
-    {
-        if ($this->collActivities === null) {
-            $this->initActivities();
-            $this->collActivitiesPartial = true;
-        }
-
-        if (!$this->collActivities->contains($l)) {
-            $this->doAddActivity($l);
-
-            if ($this->activitiesScheduledForDeletion and $this->activitiesScheduledForDeletion->contains($l)) {
-                $this->activitiesScheduledForDeletion->remove($this->activitiesScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildActivity $activity The ChildActivity object to add.
-     */
-    protected function doAddActivity(ChildActivity $activity)
-    {
-        $this->collActivities[]= $activity;
-        $activity->setUser($this);
-    }
-
-    /**
-     * @param  ChildActivity $activity The ChildActivity object to remove.
-     * @return $this|ChildUser The current object (for fluent API support)
-     */
-    public function removeActivity(ChildActivity $activity)
-    {
-        if ($this->getActivities()->contains($activity)) {
-            $pos = $this->collActivities->search($activity);
-            $this->collActivities->remove($pos);
-            if (null === $this->activitiesScheduledForDeletion) {
-                $this->activitiesScheduledForDeletion = clone $this->collActivities;
-                $this->activitiesScheduledForDeletion->clear();
-            }
-            $this->activitiesScheduledForDeletion[]= clone $activity;
-            $activity->setUser(null);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this User is new, it will return
-     * an empty collection; or if this User has previously
-     * been saved, it will retrieve related Activities from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in User.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildActivity[] List of ChildActivity objects
-     */
-    public function getActivitiesJoinLevel(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildActivityQuery::create(null, $criteria);
-        $query->joinWith('Level', $joinBehavior);
-
-        return $this->getActivities($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this User is new, it will return
-     * an empty collection; or if this User has previously
-     * been saved, it will retrieve related Activities from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in User.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildActivity[] List of ChildActivity objects
-     */
-    public function getActivitiesJoinActivityType(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildActivityQuery::create(null, $criteria);
-        $query->joinWith('ActivityType', $joinBehavior);
-
-        return $this->getActivities($query, $con);
-    }
-
-    /**
-     * Clears out the collQuotes collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addQuotes()
-     */
-    public function clearQuotes()
-    {
-        $this->collQuotes = null; // important to set this to NULL since that means it is uninitialized
-    }
-
-    /**
-     * Reset is the collQuotes collection loaded partially.
-     */
-    public function resetPartialQuotes($v = true)
-    {
-        $this->collQuotesPartial = $v;
-    }
-
-    /**
-     * Initializes the collQuotes collection.
-     *
-     * By default this just sets the collQuotes collection to an empty array (like clearcollQuotes());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initQuotes($overrideExisting = true)
-    {
-        if (null !== $this->collQuotes && !$overrideExisting) {
-            return;
-        }
-        $this->collQuotes = new ObjectCollection();
-        $this->collQuotes->setModel('\Models\Quote');
-    }
-
-    /**
-     * Gets an array of ChildQuote objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildUser is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildQuote[] List of ChildQuote objects
-     * @throws PropelException
-     */
-    public function getQuotes(Criteria $criteria = null, ConnectionInterface $con = null)
-    {
-        $partial = $this->collQuotesPartial && !$this->isNew();
-        if (null === $this->collQuotes || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collQuotes) {
-                // return empty collection
-                $this->initQuotes();
-            } else {
-                $collQuotes = ChildQuoteQuery::create(null, $criteria)
-                    ->filterByUser($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collQuotesPartial && count($collQuotes)) {
-                        $this->initQuotes(false);
-
-                        foreach ($collQuotes as $obj) {
-                            if (false == $this->collQuotes->contains($obj)) {
-                                $this->collQuotes->append($obj);
-                            }
-                        }
-
-                        $this->collQuotesPartial = true;
-                    }
-
-                    return $collQuotes;
-                }
-
-                if ($partial && $this->collQuotes) {
-                    foreach ($this->collQuotes as $obj) {
-                        if ($obj->isNew()) {
-                            $collQuotes[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collQuotes = $collQuotes;
-                $this->collQuotesPartial = false;
-            }
-        }
-
-        return $this->collQuotes;
-    }
-
-    /**
-     * Sets a collection of ChildQuote objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param      Collection $quotes A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildUser The current object (for fluent API support)
-     */
-    public function setQuotes(Collection $quotes, ConnectionInterface $con = null)
-    {
-        /** @var ChildQuote[] $quotesToDelete */
-        $quotesToDelete = $this->getQuotes(new Criteria(), $con)->diff($quotes);
-
-
-        $this->quotesScheduledForDeletion = $quotesToDelete;
-
-        foreach ($quotesToDelete as $quoteRemoved) {
-            $quoteRemoved->setUser(null);
-        }
-
-        $this->collQuotes = null;
-        foreach ($quotes as $quote) {
-            $this->addQuote($quote);
-        }
-
-        $this->collQuotes = $quotes;
-        $this->collQuotesPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related Quote objects.
-     *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related Quote objects.
-     * @throws PropelException
-     */
-    public function countQuotes(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
-    {
-        $partial = $this->collQuotesPartial && !$this->isNew();
-        if (null === $this->collQuotes || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collQuotes) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getQuotes());
-            }
-
-            $query = ChildQuoteQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByUser($this)
-                ->count($con);
-        }
-
-        return count($this->collQuotes);
-    }
-
-    /**
-     * Method called to associate a ChildQuote object to this object
-     * through the ChildQuote foreign key attribute.
-     *
-     * @param  ChildQuote $l ChildQuote
-     * @return $this|\Models\User The current object (for fluent API support)
-     */
-    public function addQuote(ChildQuote $l)
-    {
-        if ($this->collQuotes === null) {
-            $this->initQuotes();
-            $this->collQuotesPartial = true;
-        }
-
-        if (!$this->collQuotes->contains($l)) {
-            $this->doAddQuote($l);
-
-            if ($this->quotesScheduledForDeletion and $this->quotesScheduledForDeletion->contains($l)) {
-                $this->quotesScheduledForDeletion->remove($this->quotesScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildQuote $quote The ChildQuote object to add.
-     */
-    protected function doAddQuote(ChildQuote $quote)
-    {
-        $this->collQuotes[]= $quote;
-        $quote->setUser($this);
-    }
-
-    /**
-     * @param  ChildQuote $quote The ChildQuote object to remove.
-     * @return $this|ChildUser The current object (for fluent API support)
-     */
-    public function removeQuote(ChildQuote $quote)
-    {
-        if ($this->getQuotes()->contains($quote)) {
-            $pos = $this->collQuotes->search($quote);
-            $this->collQuotes->remove($pos);
-            if (null === $this->quotesScheduledForDeletion) {
-                $this->quotesScheduledForDeletion = clone $this->collQuotes;
-                $this->quotesScheduledForDeletion->clear();
-            }
-            $this->quotesScheduledForDeletion[]= clone $quote;
-            $quote->setUser(null);
-        }
-
-        return $this;
     }
 
     /**
@@ -5029,6 +4506,228 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
+     * Clears out the collMembershipApplications collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addMembershipApplications()
+     */
+    public function clearMembershipApplications()
+    {
+        $this->collMembershipApplications = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collMembershipApplications collection loaded partially.
+     */
+    public function resetPartialMembershipApplications($v = true)
+    {
+        $this->collMembershipApplicationsPartial = $v;
+    }
+
+    /**
+     * Initializes the collMembershipApplications collection.
+     *
+     * By default this just sets the collMembershipApplications collection to an empty array (like clearcollMembershipApplications());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initMembershipApplications($overrideExisting = true)
+    {
+        if (null !== $this->collMembershipApplications && !$overrideExisting) {
+            return;
+        }
+        $this->collMembershipApplications = new ObjectCollection();
+        $this->collMembershipApplications->setModel('\Models\MembershipApplication');
+    }
+
+    /**
+     * Gets an array of ChildMembershipApplication objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildMembershipApplication[] List of ChildMembershipApplication objects
+     * @throws PropelException
+     */
+    public function getMembershipApplications(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collMembershipApplicationsPartial && !$this->isNew();
+        if (null === $this->collMembershipApplications || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collMembershipApplications) {
+                // return empty collection
+                $this->initMembershipApplications();
+            } else {
+                $collMembershipApplications = ChildMembershipApplicationQuery::create(null, $criteria)
+                    ->filterByUser($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collMembershipApplicationsPartial && count($collMembershipApplications)) {
+                        $this->initMembershipApplications(false);
+
+                        foreach ($collMembershipApplications as $obj) {
+                            if (false == $this->collMembershipApplications->contains($obj)) {
+                                $this->collMembershipApplications->append($obj);
+                            }
+                        }
+
+                        $this->collMembershipApplicationsPartial = true;
+                    }
+
+                    return $collMembershipApplications;
+                }
+
+                if ($partial && $this->collMembershipApplications) {
+                    foreach ($this->collMembershipApplications as $obj) {
+                        if ($obj->isNew()) {
+                            $collMembershipApplications[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collMembershipApplications = $collMembershipApplications;
+                $this->collMembershipApplicationsPartial = false;
+            }
+        }
+
+        return $this->collMembershipApplications;
+    }
+
+    /**
+     * Sets a collection of ChildMembershipApplication objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $membershipApplications A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setMembershipApplications(Collection $membershipApplications, ConnectionInterface $con = null)
+    {
+        /** @var ChildMembershipApplication[] $membershipApplicationsToDelete */
+        $membershipApplicationsToDelete = $this->getMembershipApplications(new Criteria(), $con)->diff($membershipApplications);
+
+
+        $this->membershipApplicationsScheduledForDeletion = $membershipApplicationsToDelete;
+
+        foreach ($membershipApplicationsToDelete as $membershipApplicationRemoved) {
+            $membershipApplicationRemoved->setUser(null);
+        }
+
+        $this->collMembershipApplications = null;
+        foreach ($membershipApplications as $membershipApplication) {
+            $this->addMembershipApplication($membershipApplication);
+        }
+
+        $this->collMembershipApplications = $membershipApplications;
+        $this->collMembershipApplicationsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related MembershipApplication objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related MembershipApplication objects.
+     * @throws PropelException
+     */
+    public function countMembershipApplications(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collMembershipApplicationsPartial && !$this->isNew();
+        if (null === $this->collMembershipApplications || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collMembershipApplications) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getMembershipApplications());
+            }
+
+            $query = ChildMembershipApplicationQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUser($this)
+                ->count($con);
+        }
+
+        return count($this->collMembershipApplications);
+    }
+
+    /**
+     * Method called to associate a ChildMembershipApplication object to this object
+     * through the ChildMembershipApplication foreign key attribute.
+     *
+     * @param  ChildMembershipApplication $l ChildMembershipApplication
+     * @return $this|\Models\User The current object (for fluent API support)
+     */
+    public function addMembershipApplication(ChildMembershipApplication $l)
+    {
+        if ($this->collMembershipApplications === null) {
+            $this->initMembershipApplications();
+            $this->collMembershipApplicationsPartial = true;
+        }
+
+        if (!$this->collMembershipApplications->contains($l)) {
+            $this->doAddMembershipApplication($l);
+
+            if ($this->membershipApplicationsScheduledForDeletion and $this->membershipApplicationsScheduledForDeletion->contains($l)) {
+                $this->membershipApplicationsScheduledForDeletion->remove($this->membershipApplicationsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildMembershipApplication $membershipApplication The ChildMembershipApplication object to add.
+     */
+    protected function doAddMembershipApplication(ChildMembershipApplication $membershipApplication)
+    {
+        $this->collMembershipApplications[]= $membershipApplication;
+        $membershipApplication->setUser($this);
+    }
+
+    /**
+     * @param  ChildMembershipApplication $membershipApplication The ChildMembershipApplication object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removeMembershipApplication(ChildMembershipApplication $membershipApplication)
+    {
+        if ($this->getMembershipApplications()->contains($membershipApplication)) {
+            $pos = $this->collMembershipApplications->search($membershipApplication);
+            $this->collMembershipApplications->remove($pos);
+            if (null === $this->membershipApplicationsScheduledForDeletion) {
+                $this->membershipApplicationsScheduledForDeletion = clone $this->collMembershipApplications;
+                $this->membershipApplicationsScheduledForDeletion->clear();
+            }
+            $this->membershipApplicationsScheduledForDeletion[]= clone $membershipApplication;
+            $membershipApplication->setUser(null);
+        }
+
+        return $this;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -5038,10 +4737,12 @@ abstract class User implements ActiveRecordInterface
         if (null !== $this->aImage) {
             $this->aImage->removeUser($this);
         }
+        if (null !== $this->aMember) {
+            $this->aMember->removeUser($this);
+        }
         $this->id = null;
+        $this->id_member = null;
         $this->username = null;
-        $this->name = null;
-        $this->surname = null;
         $this->member_from = null;
         $this->url = null;
         $this->email = null;
@@ -5088,16 +4789,6 @@ abstract class User implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collActivities) {
-                foreach ($this->collActivities as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
-            if ($this->collQuotes) {
-                foreach ($this->collQuotes as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
             if ($this->collUserReportsRelatedByIdUser) {
                 foreach ($this->collUserReportsRelatedByIdUser as $o) {
                     $o->clearAllReferences($deep);
@@ -5123,19 +4814,24 @@ abstract class User implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collMembershipApplications) {
+                foreach ($this->collMembershipApplications as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
         $this->collArticles = null;
         $this->collComments = null;
         $this->collRatings = null;
-        $this->collActivities = null;
-        $this->collQuotes = null;
         $this->collUserReportsRelatedByIdUser = null;
         $this->collUserReportsRelatedByIdUserReported = null;
         $this->collBugReports = null;
         $this->collIdeasRelatedByIdUser = null;
         $this->collIdeasRelatedByApprovedBy = null;
+        $this->collMembershipApplications = null;
         $this->aImage = null;
+        $this->aMember = null;
     }
 
     /**

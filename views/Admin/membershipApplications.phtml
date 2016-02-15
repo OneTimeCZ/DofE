@@ -1,0 +1,42 @@
+<div class="page-heading">
+    <h1>Žádosti o členství</h1>
+</div>
+
+<?php if(!$data["apps"]->isEmpty()): ?>
+<div class="section">
+    <div class="column single">
+        <div class="content-box">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th class="col-xs-3 text-center">Uživatel</th>
+                        <th class="col-xs-3 text-center">Datum</th>
+                        <th class="col-xs-4 text-center">Osobní údaje</th>
+                        <th class="col-xs-1 text-center">Schválit</th>
+                        <th class="col-xs-1 text-center">Zamítnout</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($data["apps"] as $app): ?>
+                    <tr>
+                        <td class="col-xs-3 text-center"><?= $app->getUser()->getUsername() ?></td>
+                        <td class="col-xs-3 text-center"><?= $app->getCreatedAt()->format("d.m.Y H:i:s") ?></td>
+                        <td class="col-xs-4 text-center"><?= $app->getName() ?> <?= $app->getSurname() ?></td>
+                        <td class="col-xs-1 text-center">
+                            <a href="/administrace/zadosti-o-clenstvi/<?= $app->getId() ?>/schvalit">
+                                <span class="fa fa-check"></span>
+                            </a>
+                        </td>
+                        <td class="col-xs-1 text-center">
+                            <a href="/administrace/zadosti-o-clenstvi/<?= $app->getId() ?>/zamitnout">
+                                <span class="fa fa-times"></span>
+                            </a>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<?php endif; ?>

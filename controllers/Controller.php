@@ -4,6 +4,10 @@ namespace Controllers;
 
 use Models\User;
 use Models\UserQuery;
+use Models\Image;
+use Models\ImageQuery;
+use Models\Member;
+use Models\MemberQuery;
 
 class Controller {
     
@@ -58,6 +62,7 @@ class Controller {
         if($this->isLogged()){
             $_SESSION["user"] = UserQuery::create()
                 ->joinWith("Image")
+                ->leftJoinWith("Member")
                 ->findPk($_SESSION["user"]->getId());
         }
     }

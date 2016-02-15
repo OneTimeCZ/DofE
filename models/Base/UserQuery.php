@@ -21,9 +21,8 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  * @method     ChildUserQuery orderById($order = Criteria::ASC) Order by the id column
+ * @method     ChildUserQuery orderByIdMember($order = Criteria::ASC) Order by the id_member column
  * @method     ChildUserQuery orderByUsername($order = Criteria::ASC) Order by the username column
- * @method     ChildUserQuery orderByName($order = Criteria::ASC) Order by the name column
- * @method     ChildUserQuery orderBySurname($order = Criteria::ASC) Order by the surname column
  * @method     ChildUserQuery orderByMemberFrom($order = Criteria::ASC) Order by the member_from column
  * @method     ChildUserQuery orderByUrl($order = Criteria::ASC) Order by the url column
  * @method     ChildUserQuery orderByEmail($order = Criteria::ASC) Order by the email column
@@ -39,9 +38,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  *
  * @method     ChildUserQuery groupById() Group by the id column
+ * @method     ChildUserQuery groupByIdMember() Group by the id_member column
  * @method     ChildUserQuery groupByUsername() Group by the username column
- * @method     ChildUserQuery groupByName() Group by the name column
- * @method     ChildUserQuery groupBySurname() Group by the surname column
  * @method     ChildUserQuery groupByMemberFrom() Group by the member_from column
  * @method     ChildUserQuery groupByUrl() Group by the url column
  * @method     ChildUserQuery groupByEmail() Group by the email column
@@ -74,6 +72,16 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoinWithImage() Adds a RIGHT JOIN clause and with to the query using the Image relation
  * @method     ChildUserQuery innerJoinWithImage() Adds a INNER JOIN clause and with to the query using the Image relation
  *
+ * @method     ChildUserQuery leftJoinMember($relationAlias = null) Adds a LEFT JOIN clause to the query using the Member relation
+ * @method     ChildUserQuery rightJoinMember($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Member relation
+ * @method     ChildUserQuery innerJoinMember($relationAlias = null) Adds a INNER JOIN clause to the query using the Member relation
+ *
+ * @method     ChildUserQuery joinWithMember($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Member relation
+ *
+ * @method     ChildUserQuery leftJoinWithMember() Adds a LEFT JOIN clause and with to the query using the Member relation
+ * @method     ChildUserQuery rightJoinWithMember() Adds a RIGHT JOIN clause and with to the query using the Member relation
+ * @method     ChildUserQuery innerJoinWithMember() Adds a INNER JOIN clause and with to the query using the Member relation
+ *
  * @method     ChildUserQuery leftJoinArticle($relationAlias = null) Adds a LEFT JOIN clause to the query using the Article relation
  * @method     ChildUserQuery rightJoinArticle($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Article relation
  * @method     ChildUserQuery innerJoinArticle($relationAlias = null) Adds a INNER JOIN clause to the query using the Article relation
@@ -103,26 +111,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery leftJoinWithRating() Adds a LEFT JOIN clause and with to the query using the Rating relation
  * @method     ChildUserQuery rightJoinWithRating() Adds a RIGHT JOIN clause and with to the query using the Rating relation
  * @method     ChildUserQuery innerJoinWithRating() Adds a INNER JOIN clause and with to the query using the Rating relation
- *
- * @method     ChildUserQuery leftJoinActivity($relationAlias = null) Adds a LEFT JOIN clause to the query using the Activity relation
- * @method     ChildUserQuery rightJoinActivity($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Activity relation
- * @method     ChildUserQuery innerJoinActivity($relationAlias = null) Adds a INNER JOIN clause to the query using the Activity relation
- *
- * @method     ChildUserQuery joinWithActivity($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Activity relation
- *
- * @method     ChildUserQuery leftJoinWithActivity() Adds a LEFT JOIN clause and with to the query using the Activity relation
- * @method     ChildUserQuery rightJoinWithActivity() Adds a RIGHT JOIN clause and with to the query using the Activity relation
- * @method     ChildUserQuery innerJoinWithActivity() Adds a INNER JOIN clause and with to the query using the Activity relation
- *
- * @method     ChildUserQuery leftJoinQuote($relationAlias = null) Adds a LEFT JOIN clause to the query using the Quote relation
- * @method     ChildUserQuery rightJoinQuote($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Quote relation
- * @method     ChildUserQuery innerJoinQuote($relationAlias = null) Adds a INNER JOIN clause to the query using the Quote relation
- *
- * @method     ChildUserQuery joinWithQuote($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Quote relation
- *
- * @method     ChildUserQuery leftJoinWithQuote() Adds a LEFT JOIN clause and with to the query using the Quote relation
- * @method     ChildUserQuery rightJoinWithQuote() Adds a RIGHT JOIN clause and with to the query using the Quote relation
- * @method     ChildUserQuery innerJoinWithQuote() Adds a INNER JOIN clause and with to the query using the Quote relation
  *
  * @method     ChildUserQuery leftJoinUserReportRelatedByIdUser($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserReportRelatedByIdUser relation
  * @method     ChildUserQuery rightJoinUserReportRelatedByIdUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserReportRelatedByIdUser relation
@@ -174,15 +162,24 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoinWithIdeaRelatedByApprovedBy() Adds a RIGHT JOIN clause and with to the query using the IdeaRelatedByApprovedBy relation
  * @method     ChildUserQuery innerJoinWithIdeaRelatedByApprovedBy() Adds a INNER JOIN clause and with to the query using the IdeaRelatedByApprovedBy relation
  *
- * @method     \Models\ImageQuery|\Models\ArticleQuery|\Models\CommentQuery|\Models\RatingQuery|\Models\ActivityQuery|\Models\QuoteQuery|\Models\UserReportQuery|\Models\BugReportQuery|\Models\IdeaQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     ChildUserQuery leftJoinMembershipApplication($relationAlias = null) Adds a LEFT JOIN clause to the query using the MembershipApplication relation
+ * @method     ChildUserQuery rightJoinMembershipApplication($relationAlias = null) Adds a RIGHT JOIN clause to the query using the MembershipApplication relation
+ * @method     ChildUserQuery innerJoinMembershipApplication($relationAlias = null) Adds a INNER JOIN clause to the query using the MembershipApplication relation
+ *
+ * @method     ChildUserQuery joinWithMembershipApplication($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the MembershipApplication relation
+ *
+ * @method     ChildUserQuery leftJoinWithMembershipApplication() Adds a LEFT JOIN clause and with to the query using the MembershipApplication relation
+ * @method     ChildUserQuery rightJoinWithMembershipApplication() Adds a RIGHT JOIN clause and with to the query using the MembershipApplication relation
+ * @method     ChildUserQuery innerJoinWithMembershipApplication() Adds a INNER JOIN clause and with to the query using the MembershipApplication relation
+ *
+ * @method     \Models\ImageQuery|\Models\MemberQuery|\Models\ArticleQuery|\Models\CommentQuery|\Models\RatingQuery|\Models\UserReportQuery|\Models\BugReportQuery|\Models\IdeaQuery|\Models\MembershipApplicationQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUser findOne(ConnectionInterface $con = null) Return the first ChildUser matching the query
  * @method     ChildUser findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUser matching the query, or a new ChildUser object populated from the query conditions when no match is found
  *
  * @method     ChildUser findOneById(int $id) Return the first ChildUser filtered by the id column
+ * @method     ChildUser findOneByIdMember(int $id_member) Return the first ChildUser filtered by the id_member column
  * @method     ChildUser findOneByUsername(string $username) Return the first ChildUser filtered by the username column
- * @method     ChildUser findOneByName(string $name) Return the first ChildUser filtered by the name column
- * @method     ChildUser findOneBySurname(string $surname) Return the first ChildUser filtered by the surname column
  * @method     ChildUser findOneByMemberFrom(string $member_from) Return the first ChildUser filtered by the member_from column
  * @method     ChildUser findOneByUrl(string $url) Return the first ChildUser filtered by the url column
  * @method     ChildUser findOneByEmail(string $email) Return the first ChildUser filtered by the email column
@@ -201,9 +198,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUser requireOne(ConnectionInterface $con = null) Return the first ChildUser matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildUser requireOneById(int $id) Return the first ChildUser filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByIdMember(int $id_member) Return the first ChildUser filtered by the id_member column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByUsername(string $username) Return the first ChildUser filtered by the username column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildUser requireOneByName(string $name) Return the first ChildUser filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildUser requireOneBySurname(string $surname) Return the first ChildUser filtered by the surname column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByMemberFrom(string $member_from) Return the first ChildUser filtered by the member_from column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByUrl(string $url) Return the first ChildUser filtered by the url column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByEmail(string $email) Return the first ChildUser filtered by the email column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -220,9 +216,8 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildUser[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildUser objects based on current ModelCriteria
  * @method     ChildUser[]|ObjectCollection findById(int $id) Return ChildUser objects filtered by the id column
+ * @method     ChildUser[]|ObjectCollection findByIdMember(int $id_member) Return ChildUser objects filtered by the id_member column
  * @method     ChildUser[]|ObjectCollection findByUsername(string $username) Return ChildUser objects filtered by the username column
- * @method     ChildUser[]|ObjectCollection findByName(string $name) Return ChildUser objects filtered by the name column
- * @method     ChildUser[]|ObjectCollection findBySurname(string $surname) Return ChildUser objects filtered by the surname column
  * @method     ChildUser[]|ObjectCollection findByMemberFrom(string $member_from) Return ChildUser objects filtered by the member_from column
  * @method     ChildUser[]|ObjectCollection findByUrl(string $url) Return ChildUser objects filtered by the url column
  * @method     ChildUser[]|ObjectCollection findByEmail(string $email) Return ChildUser objects filtered by the email column
@@ -328,7 +323,7 @@ abstract class UserQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, username, name, surname, member_from, url, email, email_confirmed_at, email_confirm_token, password, password_reset_token, permissions, signin_count, id_image, last_signin_at, created_at, updated_at FROM users WHERE id = :p0';
+        $sql = 'SELECT id, id_member, username, member_from, url, email, email_confirmed_at, email_confirm_token, password, password_reset_token, permissions, signin_count, id_image, last_signin_at, created_at, updated_at FROM users WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -460,6 +455,49 @@ abstract class UserQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the id_member column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByIdMember(1234); // WHERE id_member = 1234
+     * $query->filterByIdMember(array(12, 34)); // WHERE id_member IN (12, 34)
+     * $query->filterByIdMember(array('min' => 12)); // WHERE id_member > 12
+     * </code>
+     *
+     * @see       filterByMember()
+     *
+     * @param     mixed $idMember The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByIdMember($idMember = null, $comparison = null)
+    {
+        if (is_array($idMember)) {
+            $useMinMax = false;
+            if (isset($idMember['min'])) {
+                $this->addUsingAlias(UserTableMap::COL_ID_MEMBER, $idMember['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($idMember['max'])) {
+                $this->addUsingAlias(UserTableMap::COL_ID_MEMBER, $idMember['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(UserTableMap::COL_ID_MEMBER, $idMember, $comparison);
+    }
+
+    /**
      * Filter the query on the username column
      *
      * Example usage:
@@ -486,64 +524,6 @@ abstract class UserQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(UserTableMap::COL_USERNAME, $username, $comparison);
-    }
-
-    /**
-     * Filter the query on the name column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByName('fooValue');   // WHERE name = 'fooValue'
-     * $query->filterByName('%fooValue%'); // WHERE name LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $name The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildUserQuery The current query, for fluid interface
-     */
-    public function filterByName($name = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($name)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $name)) {
-                $name = str_replace('*', '%', $name);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(UserTableMap::COL_NAME, $name, $comparison);
-    }
-
-    /**
-     * Filter the query on the surname column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterBySurname('fooValue');   // WHERE surname = 'fooValue'
-     * $query->filterBySurname('%fooValue%'); // WHERE surname LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $surname The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this|ChildUserQuery The current query, for fluid interface
-     */
-    public function filterBySurname($surname = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($surname)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $surname)) {
-                $surname = str_replace('*', '%', $surname);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(UserTableMap::COL_SURNAME, $surname, $comparison);
     }
 
     /**
@@ -1109,6 +1089,83 @@ abstract class UserQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query by a related \Models\Member object
+     *
+     * @param \Models\Member|ObjectCollection $member The related object(s) to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByMember($member, $comparison = null)
+    {
+        if ($member instanceof \Models\Member) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID_MEMBER, $member->getId(), $comparison);
+        } elseif ($member instanceof ObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID_MEMBER, $member->toKeyValue('PrimaryKey', 'Id'), $comparison);
+        } else {
+            throw new PropelException('filterByMember() only accepts arguments of type \Models\Member or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Member relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinMember($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Member');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Member');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Member relation Member object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Models\MemberQuery A secondary query class using the current class as primary query
+     */
+    public function useMemberQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinMember($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Member', '\Models\MemberQuery');
+    }
+
+    /**
      * Filter the query by a related \Models\Article object
      *
      * @param \Models\Article|ObjectCollection $article the related object to use as filter
@@ -1325,152 +1382,6 @@ abstract class UserQuery extends ModelCriteria
         return $this
             ->joinRating($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Rating', '\Models\RatingQuery');
-    }
-
-    /**
-     * Filter the query by a related \Models\Activity object
-     *
-     * @param \Models\Activity|ObjectCollection $activity the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildUserQuery The current query, for fluid interface
-     */
-    public function filterByActivity($activity, $comparison = null)
-    {
-        if ($activity instanceof \Models\Activity) {
-            return $this
-                ->addUsingAlias(UserTableMap::COL_ID, $activity->getIdUser(), $comparison);
-        } elseif ($activity instanceof ObjectCollection) {
-            return $this
-                ->useActivityQuery()
-                ->filterByPrimaryKeys($activity->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterByActivity() only accepts arguments of type \Models\Activity or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the Activity relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this|ChildUserQuery The current query, for fluid interface
-     */
-    public function joinActivity($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Activity');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'Activity');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the Activity relation Activity object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \Models\ActivityQuery A secondary query class using the current class as primary query
-     */
-    public function useActivityQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        return $this
-            ->joinActivity($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Activity', '\Models\ActivityQuery');
-    }
-
-    /**
-     * Filter the query by a related \Models\Quote object
-     *
-     * @param \Models\Quote|ObjectCollection $quote the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildUserQuery The current query, for fluid interface
-     */
-    public function filterByQuote($quote, $comparison = null)
-    {
-        if ($quote instanceof \Models\Quote) {
-            return $this
-                ->addUsingAlias(UserTableMap::COL_ID, $quote->getIdUser(), $comparison);
-        } elseif ($quote instanceof ObjectCollection) {
-            return $this
-                ->useQuoteQuery()
-                ->filterByPrimaryKeys($quote->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterByQuote() only accepts arguments of type \Models\Quote or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the Quote relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this|ChildUserQuery The current query, for fluid interface
-     */
-    public function joinQuote($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Quote');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'Quote');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the Quote relation Quote object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \Models\QuoteQuery A secondary query class using the current class as primary query
-     */
-    public function useQuoteQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        return $this
-            ->joinQuote($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Quote', '\Models\QuoteQuery');
     }
 
     /**
@@ -1836,6 +1747,79 @@ abstract class UserQuery extends ModelCriteria
         return $this
             ->joinIdeaRelatedByApprovedBy($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'IdeaRelatedByApprovedBy', '\Models\IdeaQuery');
+    }
+
+    /**
+     * Filter the query by a related \Models\MembershipApplication object
+     *
+     * @param \Models\MembershipApplication|ObjectCollection $membershipApplication the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByMembershipApplication($membershipApplication, $comparison = null)
+    {
+        if ($membershipApplication instanceof \Models\MembershipApplication) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $membershipApplication->getIdUser(), $comparison);
+        } elseif ($membershipApplication instanceof ObjectCollection) {
+            return $this
+                ->useMembershipApplicationQuery()
+                ->filterByPrimaryKeys($membershipApplication->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByMembershipApplication() only accepts arguments of type \Models\MembershipApplication or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the MembershipApplication relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinMembershipApplication($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('MembershipApplication');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'MembershipApplication');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the MembershipApplication relation MembershipApplication object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Models\MembershipApplicationQuery A secondary query class using the current class as primary query
+     */
+    public function useMembershipApplicationQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinMembershipApplication($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'MembershipApplication', '\Models\MembershipApplicationQuery');
     }
 
     /**

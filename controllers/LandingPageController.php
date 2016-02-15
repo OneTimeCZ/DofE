@@ -9,18 +9,23 @@ use Models\Image;
 use Models\ImageQuery;
 use Models\User;
 use Models\UserQuery;
-use Models\Quotes;
-use Models\QuotesQuery;
+use Models\Quote;
+use Models\QuoteQuery;
+use Models\Member;
+use Models\MemberQuery;
 
 class LandingPageController extends Controller{
     
     public function index(){
-        $participants = array(1,8,7);
+        $participants = array(2, 1);
         
         $users = UserQuery::create()
-            ->filterById($participants)
+            ->filterByIdMember($participants)
             ->joinWith('Image')
-            ->joinWith('Quote')
+            ->joinWith('Member')
+            ->useMemberQuery()
+                ->joinWith('Quote')
+            ->endUse()
             ->find();
         
         $this->view('Landing/index', 'base_template', [
