@@ -6,3 +6,5 @@ includes/.sass-cache
 includes/images
 scripts/tinymce
 models
+app.log
+helpers/mail.php

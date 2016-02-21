@@ -48,7 +48,7 @@
                     ÚČASTNÍCI
                 </div>
                 <?php $i = 0; foreach($data["users"] as $user): ?>
-                <div class="section-content participants <?= $hidden = $i == 0 ? '' : 'hidden' ?>">
+                <div class="section-content participants  <?= $hidden = $i == 0 ? '' : 'hidden' ?>">
                     <div class="person">
                         <div class="col-xs-6 col-md-12">
                             <a href="/profil/<?= $user->getUrl() ?>">
@@ -59,7 +59,7 @@
                         <div class="col-xs-6 col-md-12">
                             <blockquote>
                                 <p>
-                                    <?php foreach($user->getMember()->getQuotes() as $quote)echo $quote->getContent() ?>
+                                    <?php foreach($user->getMember()->getQuotes() as $quote) echo $quote->getContent() ?>
                                 </p>
                                 <footer>
                                     <?= $user->getMember()->getName().' '.$user->getMember()->getSurname() ?>

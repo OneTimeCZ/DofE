@@ -289,7 +289,9 @@ class AdminController extends Controller{
     public function imageAdd(){
         $this->view('Admin/uploadPhoto', 'admin_template', [
             'active' => 'uploadPhoto',
-            'title' => 'Nahrát fotografii'
+            'title' => 'Nahrát fotografii',
+            'js' => array('plugins/jcrop/js/jquery.Jcrop.min', 'scripts/jcrop_admin'),
+            'css' => array('plugins/jcrop/css/jquery.Jcrop.min')
         ]);
     }
     

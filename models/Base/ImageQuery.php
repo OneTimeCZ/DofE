@@ -66,7 +66,17 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildImageQuery rightJoinWithArticle() Adds a RIGHT JOIN clause and with to the query using the Article relation
  * @method     ChildImageQuery innerJoinWithArticle() Adds a INNER JOIN clause and with to the query using the Article relation
  *
- * @method     \Models\UserQuery|\Models\ArticleQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     ChildImageQuery leftJoinImageGalleryMap($relationAlias = null) Adds a LEFT JOIN clause to the query using the ImageGalleryMap relation
+ * @method     ChildImageQuery rightJoinImageGalleryMap($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ImageGalleryMap relation
+ * @method     ChildImageQuery innerJoinImageGalleryMap($relationAlias = null) Adds a INNER JOIN clause to the query using the ImageGalleryMap relation
+ *
+ * @method     ChildImageQuery joinWithImageGalleryMap($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the ImageGalleryMap relation
+ *
+ * @method     ChildImageQuery leftJoinWithImageGalleryMap() Adds a LEFT JOIN clause and with to the query using the ImageGalleryMap relation
+ * @method     ChildImageQuery rightJoinWithImageGalleryMap() Adds a RIGHT JOIN clause and with to the query using the ImageGalleryMap relation
+ * @method     ChildImageQuery innerJoinWithImageGalleryMap() Adds a INNER JOIN clause and with to the query using the ImageGalleryMap relation
+ *
+ * @method     \Models\UserQuery|\Models\ArticleQuery|\Models\ImageGalleryMapQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildImage findOne(ConnectionInterface $con = null) Return the first ChildImage matching the query
  * @method     ChildImage findOneOrCreate(ConnectionInterface $con = null) Return the first ChildImage matching the query, or a new ChildImage object populated from the query conditions when no match is found
@@ -699,6 +709,96 @@ abstract class ImageQuery extends ModelCriteria
         return $this
             ->joinArticle($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Article', '\Models\ArticleQuery');
+    }
+
+    /**
+     * Filter the query by a related \Models\ImageGalleryMap object
+     *
+     * @param \Models\ImageGalleryMap|ObjectCollection $imageGalleryMap the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildImageQuery The current query, for fluid interface
+     */
+    public function filterByImageGalleryMap($imageGalleryMap, $comparison = null)
+    {
+        if ($imageGalleryMap instanceof \Models\ImageGalleryMap) {
+            return $this
+                ->addUsingAlias(ImageTableMap::COL_ID, $imageGalleryMap->getIdImage(), $comparison);
+        } elseif ($imageGalleryMap instanceof ObjectCollection) {
+            return $this
+                ->useImageGalleryMapQuery()
+                ->filterByPrimaryKeys($imageGalleryMap->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByImageGalleryMap() only accepts arguments of type \Models\ImageGalleryMap or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the ImageGalleryMap relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildImageQuery The current query, for fluid interface
+     */
+    public function joinImageGalleryMap($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('ImageGalleryMap');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'ImageGalleryMap');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the ImageGalleryMap relation ImageGalleryMap object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Models\ImageGalleryMapQuery A secondary query class using the current class as primary query
+     */
+    public function useImageGalleryMapQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinImageGalleryMap($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ImageGalleryMap', '\Models\ImageGalleryMapQuery');
+    }
+
+    /**
+     * Filter the query by a related Gallery object
+     * using the images_galleries_map table as cross reference
+     *
+     * @param Gallery $gallery the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildImageQuery The current query, for fluid interface
+     */
+    public function filterByGallery($gallery, $comparison = Criteria::EQUAL)
+    {
+        return $this
+            ->useImageGalleryMapQuery()
+            ->filterByGallery($gallery, $comparison)
+            ->endUse();
     }
 
     /**

@@ -11,6 +11,8 @@ use Models\BugReport as ChildBugReport;
 use Models\BugReportQuery as ChildBugReportQuery;
 use Models\Comment as ChildComment;
 use Models\CommentQuery as ChildCommentQuery;
+use Models\Gallery as ChildGallery;
+use Models\GalleryQuery as ChildGalleryQuery;
 use Models\Idea as ChildIdea;
 use Models\IdeaQuery as ChildIdeaQuery;
 use Models\Image as ChildImage;
@@ -25,6 +27,14 @@ use Models\User as ChildUser;
 use Models\UserQuery as ChildUserQuery;
 use Models\UserReport as ChildUserReport;
 use Models\UserReportQuery as ChildUserReportQuery;
+use Models\Map\ArticleTableMap;
+use Models\Map\BugReportTableMap;
+use Models\Map\CommentTableMap;
+use Models\Map\GalleryTableMap;
+use Models\Map\IdeaTableMap;
+use Models\Map\MembershipApplicationTableMap;
+use Models\Map\RatingTableMap;
+use Models\Map\UserReportTableMap;
 use Models\Map\UserTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
@@ -258,6 +268,12 @@ abstract class User implements ActiveRecordInterface
     protected $collMembershipApplicationsPartial;
 
     /**
+     * @var        ObjectCollection|ChildGallery[] Collection to store aggregation of ChildGallery objects.
+     */
+    protected $collGalleries;
+    protected $collGalleriesPartial;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
@@ -318,6 +334,12 @@ abstract class User implements ActiveRecordInterface
      * @var ObjectCollection|ChildMembershipApplication[]
      */
     protected $membershipApplicationsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildGallery[]
+     */
+    protected $galleriesScheduledForDeletion = null;
 
     /**
      * Initializes internal state of Models\Base\User object.
@@ -1275,6 +1297,8 @@ abstract class User implements ActiveRecordInterface
 
             $this->collMembershipApplications = null;
 
+            $this->collGalleries = null;
+
         } // if (deep)
     }
 
@@ -1564,6 +1588,24 @@ abstract class User implements ActiveRecordInterface
 
             if ($this->collMembershipApplications !== null) {
                 foreach ($this->collMembershipApplications as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->galleriesScheduledForDeletion !== null) {
+                if (!$this->galleriesScheduledForDeletion->isEmpty()) {
+                    foreach ($this->galleriesScheduledForDeletion as $gallery) {
+                        // need to save related object because we set the relation to null
+                        $gallery->save($con);
+                    }
+                    $this->galleriesScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collGalleries !== null) {
+                foreach ($this->collGalleries as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -2051,6 +2093,21 @@ abstract class User implements ActiveRecordInterface
 
                 $result[$key] = $this->collMembershipApplications->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
+            if (null !== $this->collGalleries) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'galleries';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'galleriess';
+                        break;
+                    default:
+                        $key = 'Galleries';
+                }
+
+                $result[$key] = $this->collGalleries->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
         }
 
         return $result;
@@ -2457,6 +2514,12 @@ abstract class User implements ActiveRecordInterface
                 }
             }
 
+            foreach ($this->getGalleries() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addGallery($relObj->copy($deepCopy));
+                }
+            }
+
         } // if ($deepCopy)
 
         if ($makeNew) {
@@ -2627,6 +2690,9 @@ abstract class User implements ActiveRecordInterface
         if ('MembershipApplication' == $relationName) {
             return $this->initMembershipApplications();
         }
+        if ('Gallery' == $relationName) {
+            return $this->initGalleries();
+        }
     }
 
     /**
@@ -2668,7 +2734,10 @@ abstract class User implements ActiveRecordInterface
         if (null !== $this->collArticles && !$overrideExisting) {
             return;
         }
-        $this->collArticles = new ObjectCollection();
+
+        $collectionClassName = ArticleTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collArticles = new $collectionClassName;
         $this->collArticles->setModel('\Models\Article');
     }
 
@@ -2940,7 +3009,10 @@ abstract class User implements ActiveRecordInterface
         if (null !== $this->collComments && !$overrideExisting) {
             return;
         }
-        $this->collComments = new ObjectCollection();
+
+        $collectionClassName = CommentTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collComments = new $collectionClassName;
         $this->collComments->setModel('\Models\Comment');
     }
 
@@ -3187,7 +3259,10 @@ abstract class User implements ActiveRecordInterface
         if (null !== $this->collRatings && !$overrideExisting) {
             return;
         }
-        $this->collRatings = new ObjectCollection();
+
+        $collectionClassName = RatingTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collRatings = new $collectionClassName;
         $this->collRatings->setModel('\Models\Rating');
     }
 
@@ -3434,7 +3509,10 @@ abstract class User implements ActiveRecordInterface
         if (null !== $this->collUserReportsRelatedByIdUser && !$overrideExisting) {
             return;
         }
-        $this->collUserReportsRelatedByIdUser = new ObjectCollection();
+
+        $collectionClassName = UserReportTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collUserReportsRelatedByIdUser = new $collectionClassName;
         $this->collUserReportsRelatedByIdUser->setModel('\Models\UserReport');
     }
 
@@ -3656,7 +3734,10 @@ abstract class User implements ActiveRecordInterface
         if (null !== $this->collUserReportsRelatedByIdUserReported && !$overrideExisting) {
             return;
         }
-        $this->collUserReportsRelatedByIdUserReported = new ObjectCollection();
+
+        $collectionClassName = UserReportTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collUserReportsRelatedByIdUserReported = new $collectionClassName;
         $this->collUserReportsRelatedByIdUserReported->setModel('\Models\UserReport');
     }
 
@@ -3878,7 +3959,10 @@ abstract class User implements ActiveRecordInterface
         if (null !== $this->collBugReports && !$overrideExisting) {
             return;
         }
-        $this->collBugReports = new ObjectCollection();
+
+        $collectionClassName = BugReportTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collBugReports = new $collectionClassName;
         $this->collBugReports->setModel('\Models\BugReport');
     }
 
@@ -4100,7 +4184,10 @@ abstract class User implements ActiveRecordInterface
         if (null !== $this->collIdeasRelatedByIdUser && !$overrideExisting) {
             return;
         }
-        $this->collIdeasRelatedByIdUser = new ObjectCollection();
+
+        $collectionClassName = IdeaTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collIdeasRelatedByIdUser = new $collectionClassName;
         $this->collIdeasRelatedByIdUser->setModel('\Models\Idea');
     }
 
@@ -4322,7 +4409,10 @@ abstract class User implements ActiveRecordInterface
         if (null !== $this->collIdeasRelatedByApprovedBy && !$overrideExisting) {
             return;
         }
-        $this->collIdeasRelatedByApprovedBy = new ObjectCollection();
+
+        $collectionClassName = IdeaTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collIdeasRelatedByApprovedBy = new $collectionClassName;
         $this->collIdeasRelatedByApprovedBy->setModel('\Models\Idea');
     }
 
@@ -4544,7 +4634,10 @@ abstract class User implements ActiveRecordInterface
         if (null !== $this->collMembershipApplications && !$overrideExisting) {
             return;
         }
-        $this->collMembershipApplications = new ObjectCollection();
+
+        $collectionClassName = MembershipApplicationTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collMembershipApplications = new $collectionClassName;
         $this->collMembershipApplications->setModel('\Models\MembershipApplication');
     }
 
@@ -4728,6 +4821,231 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
+     * Clears out the collGalleries collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addGalleries()
+     */
+    public function clearGalleries()
+    {
+        $this->collGalleries = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collGalleries collection loaded partially.
+     */
+    public function resetPartialGalleries($v = true)
+    {
+        $this->collGalleriesPartial = $v;
+    }
+
+    /**
+     * Initializes the collGalleries collection.
+     *
+     * By default this just sets the collGalleries collection to an empty array (like clearcollGalleries());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initGalleries($overrideExisting = true)
+    {
+        if (null !== $this->collGalleries && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = GalleryTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collGalleries = new $collectionClassName;
+        $this->collGalleries->setModel('\Models\Gallery');
+    }
+
+    /**
+     * Gets an array of ChildGallery objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildGallery[] List of ChildGallery objects
+     * @throws PropelException
+     */
+    public function getGalleries(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collGalleriesPartial && !$this->isNew();
+        if (null === $this->collGalleries || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collGalleries) {
+                // return empty collection
+                $this->initGalleries();
+            } else {
+                $collGalleries = ChildGalleryQuery::create(null, $criteria)
+                    ->filterByUser($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collGalleriesPartial && count($collGalleries)) {
+                        $this->initGalleries(false);
+
+                        foreach ($collGalleries as $obj) {
+                            if (false == $this->collGalleries->contains($obj)) {
+                                $this->collGalleries->append($obj);
+                            }
+                        }
+
+                        $this->collGalleriesPartial = true;
+                    }
+
+                    return $collGalleries;
+                }
+
+                if ($partial && $this->collGalleries) {
+                    foreach ($this->collGalleries as $obj) {
+                        if ($obj->isNew()) {
+                            $collGalleries[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collGalleries = $collGalleries;
+                $this->collGalleriesPartial = false;
+            }
+        }
+
+        return $this->collGalleries;
+    }
+
+    /**
+     * Sets a collection of ChildGallery objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $galleries A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setGalleries(Collection $galleries, ConnectionInterface $con = null)
+    {
+        /** @var ChildGallery[] $galleriesToDelete */
+        $galleriesToDelete = $this->getGalleries(new Criteria(), $con)->diff($galleries);
+
+
+        $this->galleriesScheduledForDeletion = $galleriesToDelete;
+
+        foreach ($galleriesToDelete as $galleryRemoved) {
+            $galleryRemoved->setUser(null);
+        }
+
+        $this->collGalleries = null;
+        foreach ($galleries as $gallery) {
+            $this->addGallery($gallery);
+        }
+
+        $this->collGalleries = $galleries;
+        $this->collGalleriesPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Gallery objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Gallery objects.
+     * @throws PropelException
+     */
+    public function countGalleries(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collGalleriesPartial && !$this->isNew();
+        if (null === $this->collGalleries || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collGalleries) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getGalleries());
+            }
+
+            $query = ChildGalleryQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUser($this)
+                ->count($con);
+        }
+
+        return count($this->collGalleries);
+    }
+
+    /**
+     * Method called to associate a ChildGallery object to this object
+     * through the ChildGallery foreign key attribute.
+     *
+     * @param  ChildGallery $l ChildGallery
+     * @return $this|\Models\User The current object (for fluent API support)
+     */
+    public function addGallery(ChildGallery $l)
+    {
+        if ($this->collGalleries === null) {
+            $this->initGalleries();
+            $this->collGalleriesPartial = true;
+        }
+
+        if (!$this->collGalleries->contains($l)) {
+            $this->doAddGallery($l);
+
+            if ($this->galleriesScheduledForDeletion and $this->galleriesScheduledForDeletion->contains($l)) {
+                $this->galleriesScheduledForDeletion->remove($this->galleriesScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildGallery $gallery The ChildGallery object to add.
+     */
+    protected function doAddGallery(ChildGallery $gallery)
+    {
+        $this->collGalleries[]= $gallery;
+        $gallery->setUser($this);
+    }
+
+    /**
+     * @param  ChildGallery $gallery The ChildGallery object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removeGallery(ChildGallery $gallery)
+    {
+        if ($this->getGalleries()->contains($gallery)) {
+            $pos = $this->collGalleries->search($gallery);
+            $this->collGalleries->remove($pos);
+            if (null === $this->galleriesScheduledForDeletion) {
+                $this->galleriesScheduledForDeletion = clone $this->collGalleries;
+                $this->galleriesScheduledForDeletion->clear();
+            }
+            $this->galleriesScheduledForDeletion[]= $gallery;
+            $gallery->setUser(null);
+        }
+
+        return $this;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -4819,6 +5137,11 @@ abstract class User implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collGalleries) {
+                foreach ($this->collGalleries as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
         $this->collArticles = null;
@@ -4830,6 +5153,7 @@ abstract class User implements ActiveRecordInterface
         $this->collIdeasRelatedByIdUser = null;
         $this->collIdeasRelatedByApprovedBy = null;
         $this->collMembershipApplications = null;
+        $this->collGalleries = null;
         $this->aImage = null;
         $this->aMember = null;
     }

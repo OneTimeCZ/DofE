@@ -32,7 +32,7 @@ class LandingPageController extends Controller{
             'active' => 'landing',
             'title' => 'Hlavní stránka',
             'recent' => ArticleQuery::recent(),
-            'js' => 'plugins/fotorama/fotorama',
+            'js' => array('plugins/fotorama/fotorama', 'scripts/landingpagemembers'),
             'css' => 'plugins/fotorama/fotorama',
             'users' => $users
         ]);

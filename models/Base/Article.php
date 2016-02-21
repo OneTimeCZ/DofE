@@ -16,6 +16,7 @@ use Models\ImageQuery as ChildImageQuery;
 use Models\User as ChildUser;
 use Models\UserQuery as ChildUserQuery;
 use Models\Map\ArticleTableMap;
+use Models\Map\CommentTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -1892,7 +1893,10 @@ abstract class Article implements ActiveRecordInterface
         if (null !== $this->collComments && !$overrideExisting) {
             return;
         }
-        $this->collComments = new ObjectCollection();
+
+        $collectionClassName = CommentTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collComments = new $collectionClassName;
         $this->collComments->setModel('\Models\Comment');
     }
 

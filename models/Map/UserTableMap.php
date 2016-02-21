@@ -301,6 +301,13 @@ class UserTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, 'MembershipApplications', false);
+        $this->addRelation('Gallery', '\\Models\\Gallery', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':id_user',
+    1 => ':id',
+  ),
+), null, null, 'Galleries', false);
     } // buildRelations()
 
     /**

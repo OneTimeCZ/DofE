@@ -20,6 +20,10 @@
 
 //---GALLERY---
     $router->addGet('Gallery.index', '/galerie');
+    $router->addGet('Gallery.single', '/galerie/{id}')
+        ->setTokens([
+            'id' => '[1-9]\d*',
+        ]);
 
 //---REGISTER---
     $router->addGet('Register.index', '/registrace');

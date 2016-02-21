@@ -5,7 +5,8 @@ mb_internal_encoding("UTF-8");
 require_once 'vendor/autoload.php';
 
 use Aura\Router\RouterFactory;
-use Helpers\LogHelper;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 use Propel\Runtime\Propel;
 
 include("generated-conf/config.php");
@@ -38,6 +39,15 @@ $router = $router_factory->newInstance();
 //Load routes from file
 require_once 'includes/routes.php';
 
+//Create new logger
+$handler = new StreamHandler('app.log', Logger::INFO);
+$handler->setFormatter(new \Monolog\Formatter\LineFormatter("[%datetime%] %level_name%: %message%\n"));
+$log = new Logger('defaultLogger');
+$log->pushHandler($handler);
+
+//Add logger to Propel
+Propel::getServiceContainer()->setLogger('defaultLogger', $log);
+
 //Get route
 $route = $router->match(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), $_SERVER);
 
@@ -63,11 +73,14 @@ else{
 	if ($failure->failedMethod()) {
 		header("HTTP/1.0 405 Method Not Allowed");
 		echo("405 Method Not Allowed");
+        $log->addInfo("405");
 	} elseif ($failure->failedAccept()) {
 		header("HTTP/1.0 406 Not Acceptable");
 		echo("406 Not Acceptable");
+        $log->addInfo("406");
 	} else {
 		header("HTTP/1.0 404 Not Found");
 		echo("404 Not found");
+        $log->addInfo("404");
 	}
 }

@@ -8,6 +8,7 @@ use Models\Article as ChildArticle;
 use Models\ArticleQuery as ChildArticleQuery;
 use Models\Category as ChildCategory;
 use Models\CategoryQuery as ChildCategoryQuery;
+use Models\Map\ArticleTableMap;
 use Models\Map\CategoryTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
@@ -1215,7 +1216,10 @@ abstract class Category implements ActiveRecordInterface
         if (null !== $this->collArticles && !$overrideExisting) {
             return;
         }
-        $this->collArticles = new ObjectCollection();
+
+        $collectionClassName = ArticleTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collArticles = new $collectionClassName;
         $this->collArticles->setModel('\Models\Article');
     }
 

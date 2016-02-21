@@ -1,0 +1,30 @@
+<div class="content">    
+    <div class="section">
+        <div class="page-heading">
+            <h1><?= $data["gallery"]->getName() ?></h1>
+        </div>
+    </div>
+    
+    <div class="section">
+        <div class="column single">
+            <div class="content-box">
+                <div class="section-content">
+                    <div class="image-slider fotorama"
+                        data-loop="true"
+                        data-allowfullscreen="true"
+                        data-width="100%"
+                        data-ratio="16/9"
+                        data-maxwidth="100%"
+                        data-nav="thumbs"
+                        data-fit="cover"
+                        >
+                        
+                        <?php foreach($data["images"] as $image): ?>
+                        <img src="includes/images/fullsize/<?= $image->getPath() ?>">
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

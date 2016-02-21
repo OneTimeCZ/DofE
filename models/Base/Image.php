@@ -7,11 +7,18 @@ use \Exception;
 use \PDO;
 use Models\Article as ChildArticle;
 use Models\ArticleQuery as ChildArticleQuery;
+use Models\Gallery as ChildGallery;
+use Models\GalleryQuery as ChildGalleryQuery;
 use Models\Image as ChildImage;
+use Models\ImageGalleryMap as ChildImageGalleryMap;
+use Models\ImageGalleryMapQuery as ChildImageGalleryMapQuery;
 use Models\ImageQuery as ChildImageQuery;
 use Models\User as ChildUser;
 use Models\UserQuery as ChildUserQuery;
+use Models\Map\ArticleTableMap;
+use Models\Map\ImageGalleryMapTableMap;
 use Models\Map\ImageTableMap;
+use Models\Map\UserTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -136,12 +143,34 @@ abstract class Image implements ActiveRecordInterface
     protected $collArticlesPartial;
 
     /**
+     * @var        ObjectCollection|ChildImageGalleryMap[] Collection to store aggregation of ChildImageGalleryMap objects.
+     */
+    protected $collImageGalleryMaps;
+    protected $collImageGalleryMapsPartial;
+
+    /**
+     * @var        ObjectCollection|ChildGallery[] Cross Collection to store aggregation of ChildGallery objects.
+     */
+    protected $collGalleries;
+
+    /**
+     * @var bool
+     */
+    protected $collGalleriesPartial;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
      * @var boolean
      */
     protected $alreadyInSave = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildGallery[]
+     */
+    protected $galleriesScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -154,6 +183,12 @@ abstract class Image implements ActiveRecordInterface
      * @var ObjectCollection|ChildArticle[]
      */
     protected $articlesScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildImageGalleryMap[]
+     */
+    protected $imageGalleryMapsScheduledForDeletion = null;
 
     /**
      * Initializes internal state of Models\Base\Image object.
@@ -778,6 +813,9 @@ abstract class Image implements ActiveRecordInterface
 
             $this->collArticles = null;
 
+            $this->collImageGalleryMaps = null;
+
+            $this->collGalleries = null;
         } // if (deep)
     }
 
@@ -900,6 +938,35 @@ abstract class Image implements ActiveRecordInterface
                 $this->resetModified();
             }
 
+            if ($this->galleriesScheduledForDeletion !== null) {
+                if (!$this->galleriesScheduledForDeletion->isEmpty()) {
+                    $pks = array();
+                    foreach ($this->galleriesScheduledForDeletion as $entry) {
+                        $entryPk = [];
+
+                        $entryPk[0] = $this->getId();
+                        $entryPk[1] = $entry->getId();
+                        $pks[] = $entryPk;
+                    }
+
+                    \Models\ImageGalleryMapQuery::create()
+                        ->filterByPrimaryKeys($pks)
+                        ->delete($con);
+
+                    $this->galleriesScheduledForDeletion = null;
+                }
+
+            }
+
+            if ($this->collGalleries) {
+                foreach ($this->collGalleries as $gallery) {
+                    if (!$gallery->isDeleted() && ($gallery->isNew() || $gallery->isModified())) {
+                        $gallery->save($con);
+                    }
+                }
+            }
+
+
             if ($this->usersScheduledForDeletion !== null) {
                 if (!$this->usersScheduledForDeletion->isEmpty()) {
                     foreach ($this->usersScheduledForDeletion as $user) {
@@ -930,6 +997,23 @@ abstract class Image implements ActiveRecordInterface
 
             if ($this->collArticles !== null) {
                 foreach ($this->collArticles as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->imageGalleryMapsScheduledForDeletion !== null) {
+                if (!$this->imageGalleryMapsScheduledForDeletion->isEmpty()) {
+                    \Models\ImageGalleryMapQuery::create()
+                        ->filterByPrimaryKeys($this->imageGalleryMapsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->imageGalleryMapsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collImageGalleryMaps !== null) {
+                foreach ($this->collImageGalleryMaps as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1189,6 +1273,21 @@ abstract class Image implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->collArticles->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collImageGalleryMaps) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'imageGalleryMaps';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'images_galleries_maps';
+                        break;
+                    default:
+                        $key = 'ImageGalleryMaps';
+                }
+
+                $result[$key] = $this->collImageGalleryMaps->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1474,6 +1573,12 @@ abstract class Image implements ActiveRecordInterface
                 }
             }
 
+            foreach ($this->getImageGalleryMaps() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addImageGalleryMap($relObj->copy($deepCopy));
+                }
+            }
+
         } // if ($deepCopy)
 
         if ($makeNew) {
@@ -1521,6 +1626,9 @@ abstract class Image implements ActiveRecordInterface
         if ('Article' == $relationName) {
             return $this->initArticles();
         }
+        if ('ImageGalleryMap' == $relationName) {
+            return $this->initImageGalleryMaps();
+        }
     }
 
     /**
@@ -1562,7 +1670,10 @@ abstract class Image implements ActiveRecordInterface
         if (null !== $this->collUsers && !$overrideExisting) {
             return;
         }
-        $this->collUsers = new ObjectCollection();
+
+        $collectionClassName = UserTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collUsers = new $collectionClassName;
         $this->collUsers->setModel('\Models\User');
     }
 
@@ -1809,7 +1920,10 @@ abstract class Image implements ActiveRecordInterface
         if (null !== $this->collArticles && !$overrideExisting) {
             return;
         }
-        $this->collArticles = new ObjectCollection();
+
+        $collectionClassName = ArticleTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collArticles = new $collectionClassName;
         $this->collArticles->setModel('\Models\Article');
     }
 
@@ -2043,6 +2157,502 @@ abstract class Image implements ActiveRecordInterface
     }
 
     /**
+     * Clears out the collImageGalleryMaps collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addImageGalleryMaps()
+     */
+    public function clearImageGalleryMaps()
+    {
+        $this->collImageGalleryMaps = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collImageGalleryMaps collection loaded partially.
+     */
+    public function resetPartialImageGalleryMaps($v = true)
+    {
+        $this->collImageGalleryMapsPartial = $v;
+    }
+
+    /**
+     * Initializes the collImageGalleryMaps collection.
+     *
+     * By default this just sets the collImageGalleryMaps collection to an empty array (like clearcollImageGalleryMaps());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initImageGalleryMaps($overrideExisting = true)
+    {
+        if (null !== $this->collImageGalleryMaps && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = ImageGalleryMapTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collImageGalleryMaps = new $collectionClassName;
+        $this->collImageGalleryMaps->setModel('\Models\ImageGalleryMap');
+    }
+
+    /**
+     * Gets an array of ChildImageGalleryMap objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildImage is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildImageGalleryMap[] List of ChildImageGalleryMap objects
+     * @throws PropelException
+     */
+    public function getImageGalleryMaps(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collImageGalleryMapsPartial && !$this->isNew();
+        if (null === $this->collImageGalleryMaps || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collImageGalleryMaps) {
+                // return empty collection
+                $this->initImageGalleryMaps();
+            } else {
+                $collImageGalleryMaps = ChildImageGalleryMapQuery::create(null, $criteria)
+                    ->filterByImage($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collImageGalleryMapsPartial && count($collImageGalleryMaps)) {
+                        $this->initImageGalleryMaps(false);
+
+                        foreach ($collImageGalleryMaps as $obj) {
+                            if (false == $this->collImageGalleryMaps->contains($obj)) {
+                                $this->collImageGalleryMaps->append($obj);
+                            }
+                        }
+
+                        $this->collImageGalleryMapsPartial = true;
+                    }
+
+                    return $collImageGalleryMaps;
+                }
+
+                if ($partial && $this->collImageGalleryMaps) {
+                    foreach ($this->collImageGalleryMaps as $obj) {
+                        if ($obj->isNew()) {
+                            $collImageGalleryMaps[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collImageGalleryMaps = $collImageGalleryMaps;
+                $this->collImageGalleryMapsPartial = false;
+            }
+        }
+
+        return $this->collImageGalleryMaps;
+    }
+
+    /**
+     * Sets a collection of ChildImageGalleryMap objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $imageGalleryMaps A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildImage The current object (for fluent API support)
+     */
+    public function setImageGalleryMaps(Collection $imageGalleryMaps, ConnectionInterface $con = null)
+    {
+        /** @var ChildImageGalleryMap[] $imageGalleryMapsToDelete */
+        $imageGalleryMapsToDelete = $this->getImageGalleryMaps(new Criteria(), $con)->diff($imageGalleryMaps);
+
+
+        //since at least one column in the foreign key is at the same time a PK
+        //we can not just set a PK to NULL in the lines below. We have to store
+        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
+        $this->imageGalleryMapsScheduledForDeletion = clone $imageGalleryMapsToDelete;
+
+        foreach ($imageGalleryMapsToDelete as $imageGalleryMapRemoved) {
+            $imageGalleryMapRemoved->setImage(null);
+        }
+
+        $this->collImageGalleryMaps = null;
+        foreach ($imageGalleryMaps as $imageGalleryMap) {
+            $this->addImageGalleryMap($imageGalleryMap);
+        }
+
+        $this->collImageGalleryMaps = $imageGalleryMaps;
+        $this->collImageGalleryMapsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related ImageGalleryMap objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related ImageGalleryMap objects.
+     * @throws PropelException
+     */
+    public function countImageGalleryMaps(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collImageGalleryMapsPartial && !$this->isNew();
+        if (null === $this->collImageGalleryMaps || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collImageGalleryMaps) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getImageGalleryMaps());
+            }
+
+            $query = ChildImageGalleryMapQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByImage($this)
+                ->count($con);
+        }
+
+        return count($this->collImageGalleryMaps);
+    }
+
+    /**
+     * Method called to associate a ChildImageGalleryMap object to this object
+     * through the ChildImageGalleryMap foreign key attribute.
+     *
+     * @param  ChildImageGalleryMap $l ChildImageGalleryMap
+     * @return $this|\Models\Image The current object (for fluent API support)
+     */
+    public function addImageGalleryMap(ChildImageGalleryMap $l)
+    {
+        if ($this->collImageGalleryMaps === null) {
+            $this->initImageGalleryMaps();
+            $this->collImageGalleryMapsPartial = true;
+        }
+
+        if (!$this->collImageGalleryMaps->contains($l)) {
+            $this->doAddImageGalleryMap($l);
+
+            if ($this->imageGalleryMapsScheduledForDeletion and $this->imageGalleryMapsScheduledForDeletion->contains($l)) {
+                $this->imageGalleryMapsScheduledForDeletion->remove($this->imageGalleryMapsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildImageGalleryMap $imageGalleryMap The ChildImageGalleryMap object to add.
+     */
+    protected function doAddImageGalleryMap(ChildImageGalleryMap $imageGalleryMap)
+    {
+        $this->collImageGalleryMaps[]= $imageGalleryMap;
+        $imageGalleryMap->setImage($this);
+    }
+
+    /**
+     * @param  ChildImageGalleryMap $imageGalleryMap The ChildImageGalleryMap object to remove.
+     * @return $this|ChildImage The current object (for fluent API support)
+     */
+    public function removeImageGalleryMap(ChildImageGalleryMap $imageGalleryMap)
+    {
+        if ($this->getImageGalleryMaps()->contains($imageGalleryMap)) {
+            $pos = $this->collImageGalleryMaps->search($imageGalleryMap);
+            $this->collImageGalleryMaps->remove($pos);
+            if (null === $this->imageGalleryMapsScheduledForDeletion) {
+                $this->imageGalleryMapsScheduledForDeletion = clone $this->collImageGalleryMaps;
+                $this->imageGalleryMapsScheduledForDeletion->clear();
+            }
+            $this->imageGalleryMapsScheduledForDeletion[]= clone $imageGalleryMap;
+            $imageGalleryMap->setImage(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Image is new, it will return
+     * an empty collection; or if this Image has previously
+     * been saved, it will retrieve related ImageGalleryMaps from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Image.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildImageGalleryMap[] List of ChildImageGalleryMap objects
+     */
+    public function getImageGalleryMapsJoinGallery(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildImageGalleryMapQuery::create(null, $criteria);
+        $query->joinWith('Gallery', $joinBehavior);
+
+        return $this->getImageGalleryMaps($query, $con);
+    }
+
+    /**
+     * Clears out the collGalleries collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addGalleries()
+     */
+    public function clearGalleries()
+    {
+        $this->collGalleries = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Initializes the collGalleries crossRef collection.
+     *
+     * By default this just sets the collGalleries collection to an empty collection (like clearGalleries());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @return void
+     */
+    public function initGalleries()
+    {
+        $collectionClassName = ImageGalleryMapTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collGalleries = new $collectionClassName;
+        $this->collGalleriesPartial = true;
+        $this->collGalleries->setModel('\Models\Gallery');
+    }
+
+    /**
+     * Checks if the collGalleries collection is loaded.
+     *
+     * @return bool
+     */
+    public function isGalleriesLoaded()
+    {
+        return null !== $this->collGalleries;
+    }
+
+    /**
+     * Gets a collection of ChildGallery objects related by a many-to-many relationship
+     * to the current object by way of the images_galleries_map cross-reference table.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildImage is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria Optional query object to filter the query
+     * @param      ConnectionInterface $con Optional connection object
+     *
+     * @return ObjectCollection|ChildGallery[] List of ChildGallery objects
+     */
+    public function getGalleries(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collGalleriesPartial && !$this->isNew();
+        if (null === $this->collGalleries || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collGalleries) {
+                    $this->initGalleries();
+                }
+            } else {
+
+                $query = ChildGalleryQuery::create(null, $criteria)
+                    ->filterByImage($this);
+                $collGalleries = $query->find($con);
+                if (null !== $criteria) {
+                    return $collGalleries;
+                }
+
+                if ($partial && $this->collGalleries) {
+                    //make sure that already added objects gets added to the list of the database.
+                    foreach ($this->collGalleries as $obj) {
+                        if (!$collGalleries->contains($obj)) {
+                            $collGalleries[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collGalleries = $collGalleries;
+                $this->collGalleriesPartial = false;
+            }
+        }
+
+        return $this->collGalleries;
+    }
+
+    /**
+     * Sets a collection of Gallery objects related by a many-to-many relationship
+     * to the current object by way of the images_galleries_map cross-reference table.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param  Collection $galleries A Propel collection.
+     * @param  ConnectionInterface $con Optional connection object
+     * @return $this|ChildImage The current object (for fluent API support)
+     */
+    public function setGalleries(Collection $galleries, ConnectionInterface $con = null)
+    {
+        $this->clearGalleries();
+        $currentGalleries = $this->getGalleries();
+
+        $galleriesScheduledForDeletion = $currentGalleries->diff($galleries);
+
+        foreach ($galleriesScheduledForDeletion as $toDelete) {
+            $this->removeGallery($toDelete);
+        }
+
+        foreach ($galleries as $gallery) {
+            if (!$currentGalleries->contains($gallery)) {
+                $this->doAddGallery($gallery);
+            }
+        }
+
+        $this->collGalleriesPartial = false;
+        $this->collGalleries = $galleries;
+
+        return $this;
+    }
+
+    /**
+     * Gets the number of Gallery objects related by a many-to-many relationship
+     * to the current object by way of the images_galleries_map cross-reference table.
+     *
+     * @param      Criteria $criteria Optional query object to filter the query
+     * @param      boolean $distinct Set to true to force count distinct
+     * @param      ConnectionInterface $con Optional connection object
+     *
+     * @return int the number of related Gallery objects
+     */
+    public function countGalleries(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collGalleriesPartial && !$this->isNew();
+        if (null === $this->collGalleries || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collGalleries) {
+                return 0;
+            } else {
+
+                if ($partial && !$criteria) {
+                    return count($this->getGalleries());
+                }
+
+                $query = ChildGalleryQuery::create(null, $criteria);
+                if ($distinct) {
+                    $query->distinct();
+                }
+
+                return $query
+                    ->filterByImage($this)
+                    ->count($con);
+            }
+        } else {
+            return count($this->collGalleries);
+        }
+    }
+
+    /**
+     * Associate a ChildGallery to this object
+     * through the images_galleries_map cross reference table.
+     *
+     * @param ChildGallery $gallery
+     * @return ChildImage The current object (for fluent API support)
+     */
+    public function addGallery(ChildGallery $gallery)
+    {
+        if ($this->collGalleries === null) {
+            $this->initGalleries();
+        }
+
+        if (!$this->getGalleries()->contains($gallery)) {
+            // only add it if the **same** object is not already associated
+            $this->collGalleries->push($gallery);
+            $this->doAddGallery($gallery);
+        }
+
+        return $this;
+    }
+
+    /**
+     *
+     * @param ChildGallery $gallery
+     */
+    protected function doAddGallery(ChildGallery $gallery)
+    {
+        $imageGalleryMap = new ChildImageGalleryMap();
+
+        $imageGalleryMap->setGallery($gallery);
+
+        $imageGalleryMap->setImage($this);
+
+        $this->addImageGalleryMap($imageGalleryMap);
+
+        // set the back reference to this object directly as using provided method either results
+        // in endless loop or in multiple relations
+        if (!$gallery->isImagesLoaded()) {
+            $gallery->initImages();
+            $gallery->getImages()->push($this);
+        } elseif (!$gallery->getImages()->contains($this)) {
+            $gallery->getImages()->push($this);
+        }
+
+    }
+
+    /**
+     * Remove gallery of this object
+     * through the images_galleries_map cross reference table.
+     *
+     * @param ChildGallery $gallery
+     * @return ChildImage The current object (for fluent API support)
+     */
+    public function removeGallery(ChildGallery $gallery)
+    {
+        if ($this->getGalleries()->contains($gallery)) { $imageGalleryMap = new ChildImageGalleryMap();
+
+            $imageGalleryMap->setGallery($gallery);
+            if ($gallery->isImagesLoaded()) {
+                //remove the back reference if available
+                $gallery->getImages()->removeObject($this);
+            }
+
+            $imageGalleryMap->setImage($this);
+            $this->removeImageGalleryMap(clone $imageGalleryMap);
+            $imageGalleryMap->clear();
+
+            $this->collGalleries->remove($this->collGalleries->search($gallery));
+
+            if (null === $this->galleriesScheduledForDeletion) {
+                $this->galleriesScheduledForDeletion = clone $this->collGalleries;
+                $this->galleriesScheduledForDeletion->clear();
+            }
+
+            $this->galleriesScheduledForDeletion->push($gallery);
+        }
+
+
+        return $this;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -2085,10 +2695,22 @@ abstract class Image implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collImageGalleryMaps) {
+                foreach ($this->collImageGalleryMaps as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collGalleries) {
+                foreach ($this->collGalleries as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
         $this->collUsers = null;
         $this->collArticles = null;
+        $this->collImageGalleryMaps = null;
+        $this->collGalleries = null;
     }
 
     /**

@@ -3,9 +3,11 @@
         "propel/propel": "~2.0@dev",
         "aura/router": "2.3.0",
         "monolog/monolog": "^1.17",
-        "autoload": {
-            "files": ["generated-conf/config.php"],
-            "classmap": ["models/"]
-        }
+        "phpmailer/phpmailer": "~5.2"        
+    },
+    
+    "autoload": {
+        "files": ["generated-conf/config.php"],
+        "classmap": ["models/"]
     }
 }

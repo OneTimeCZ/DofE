@@ -15,6 +15,9 @@
         <?php endforeach; ?>
 		<link rel="shortcut icon" type="image/png" href="includes/images/favicon.png"/>
 		<link rel="stylesheet" type="text/css" href="includes/css/bootstrap.min.css" />
+        <?php if(isset($data["css"]))foreach($data["css"] as $css): ?>
+            <link rel="stylesheet" type="text/css" href="includes/<?= $css ?>.css" />
+        <?php endforeach; ?>
         <link rel="stylesheet" type="text/css" href="includes/css/font-awesome.min.css" />
 		<link rel="stylesheet" type="text/css" href="includes/css/style.css" />
 	</head>

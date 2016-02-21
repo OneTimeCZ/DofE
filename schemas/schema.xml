@@ -266,4 +266,31 @@
         
         <behavior name="timestampable" />
     </table>
+    
+    <!-- Galleries -->
+    <table name="galleries" phpName="Gallery">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="id_user" type="integer"/>
+        <column name="name" type="varchar" size="50" required="true"/>
+        
+        <foreign-key foreignTable="users">
+            <reference local="id_user" foreign="id"/>
+        </foreign-key>
+        
+        <behavior name="timestampable" />
+    </table>
+    
+    <!-- Image / gallery map -->
+    <table name="images_galleries_map" phpName="ImageGalleryMap" isCrossRef="true">
+        <column name="id_image" type="integer" required="true" primaryKey="true"/>
+        <column name="id_gallery" type="integer" required="true" primaryKey="true"/>
+        
+        <foreign-key foreignTable="images">
+            <reference local="id_image" foreign="id"/>
+        </foreign-key>
+        
+        <foreign-key foreignTable="galleries">
+            <reference local="id_gallery" foreign="id"/>
+        </foreign-key>
+    </table>
 </database>

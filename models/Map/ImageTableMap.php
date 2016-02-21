@@ -190,6 +190,14 @@ class ImageTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, 'Articles', false);
+        $this->addRelation('ImageGalleryMap', '\\Models\\ImageGalleryMap', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':id_image',
+    1 => ':id',
+  ),
+), null, null, 'ImageGalleryMaps', false);
+        $this->addRelation('Gallery', '\\Models\\Gallery', RelationMap::MANY_TO_MANY, array(), null, null, 'Galleries');
     } // buildRelations()
 
     /**

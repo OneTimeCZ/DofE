@@ -14,6 +14,7 @@ use Models\RatingQuery as ChildRatingQuery;
 use Models\User as ChildUser;
 use Models\UserQuery as ChildUserQuery;
 use Models\Map\CommentTableMap;
+use Models\Map\RatingTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -1564,7 +1565,10 @@ abstract class Comment implements ActiveRecordInterface
         if (null !== $this->collRatings && !$overrideExisting) {
             return;
         }
-        $this->collRatings = new ObjectCollection();
+
+        $collectionClassName = RatingTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collRatings = new $collectionClassName;
         $this->collRatings->setModel('\Models\Rating');
     }
 
