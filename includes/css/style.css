@@ -371,6 +371,15 @@ body {
               text-align: center;
               color: white;
               font-size: 1.2em; }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header.small {
+                height: 30px;
+                line-height: 30px; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header.small div.nav-part a {
+                  text-decoration: none;
+                  color: white; }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header.single {
+                border-bottom-left-radius: 5px;
+                border-bottom-right-radius: 5px; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-header.log-dofe a {
                 text-decoration: none;
                 color: white; }
@@ -1005,7 +1014,6 @@ footer {
         margin: 0;
         margin-top: 10px;
         margin-bottom: 5px;
-        text-align: center;
         color: white; }
       footer div.container-fluid div.content div.section.footer-list ul.footer-list {
         color: gray;

@@ -28,14 +28,14 @@
                             <li class="item col-sm-6 col-lg-4">
                                 <a href="/nastaveni/zazadat-o-clenstvi"><i class="fa fa-users"></i> Zažádat o členství v programu</a>
                             </li>
-                            <?php else: ?>
+                            <?php elseif($data["activities"] == 0): ?>
                             <li class="item col-sm-6 col-lg-4">
                                 <a href="/nastaveni/vybrat-aktivity"><i class="fa fa-plus"></i> Vybrat kategorie programu</a>
                             </li>
                             <?php endif; ?>
                         </ul>
                     </div>
-                    <?php if($_SESSION["user"]->getIdMember() != NULL && $data["activities"] % 3 == 0): ?>
+                    <?php if($_SESSION["user"]->getIdMember() != NULL && $data["activities"] > 0): ?>
                     <div class="dofe">
                         <h2 class="settings-heading">DOFE</h2>
                         <ul class="settings">

@@ -662,6 +662,23 @@ body {
                                 color: white;
                                 font-size: 1.2em;
                                 
+                                &.small {
+                                    height: 30px;
+                                    line-height: 30px;
+                                    
+                                    div.nav-part {
+                                        a {
+                                            text-decoration: none;
+                                            color: white;
+                                        }
+                                    }
+                                }
+                                
+                                &.single {
+                                    border-bottom-left-radius: 5px;
+                                    border-bottom-right-radius: 5px;
+                                }
+                                
                                 &.log-dofe {
                                     a {
                                         text-decoration: none;
@@ -739,6 +756,20 @@ body {
                                 border-bottom-right-radius: 5px;
                                 border-bottom-left-radius: 5px;
                                 overflow: auto;
+                                
+                                &.info {
+                                    div.parents {
+                                        
+                                    }
+                                    
+                                    div.students {
+                                        
+                                    }
+                                    
+                                    div.team {
+                                        
+                                    }
+                                }
                                 
                                 &.log-dofe {
                                     padding: 15px;
@@ -1686,7 +1717,6 @@ footer {
                     margin: 0;
                     margin-top: 10px;
                     margin-bottom: 5px;
-                    text-align: center;
                     color: white;
                 }
                 

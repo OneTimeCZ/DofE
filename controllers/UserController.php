@@ -372,7 +372,22 @@ class UserController extends Controller{
         if($_SESSION["user"]->getPassword() != sha1($_POST["old_password"])) {
             $this->addPopup('danger', 'Špatně zadané původní heslo.');
             redirectTo('/nastaveni/zmenit-udaje');
-        } 
+        }
+        
+        if(preg_match('/[^a-zA-Z0-9]/', $_POST['regPassword'])){
+            $this->addPopup('danger', 'Vaše heslo obsahuje nepovolené znaky nebo mezeru.');
+            redirectTo("/nastaveni/zmenit-udaje");
+        }
+        
+        if(strlen(utf8_decode($_POST["regPassword"])) < 8){
+            $this->addPopup('danger', 'Vaše heslo je příliš krátké.');
+            redirectTo("/nastaveni/zmenit-udaje");
+        }
+        
+        if(strlen(utf8_decode($_POST["regPassword"])) > 32){
+            $this->addPopup('danger', 'Vaše heslo je příliš dlouhé.');
+            redirectTo("/nastaveni/zmenit-udaje");
+        }
             
         if(sha1($_POST["new_password1"]) == $_SESSION["user"]->getPassword()) {
             $this->addPopup('danger', 'Toto heslo je již přiřazeno k vašemu účtu.');

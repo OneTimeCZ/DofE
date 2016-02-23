@@ -6,13 +6,17 @@ $(function () {
     function doneTyping() {
         $.ajax({
             type: 'POST',
-            data: {searchdata: $("#searchbar").val()},
-            url: '/vyhledavani'
-        }).done(function (response) {
-            alert(response);
+            data: {
+                searchdata: $("#searchbar").val()
+            },
+            url: '/vyhledavani',
+            success: function (response) {
+                //this is an user object pff
+                alert(JSON.parse(response));
+            }
         });
     }
-
+    
     //start countdown onKeyUp
     $('#searchbar').keyup(function () {
         clearTimeout(typingTimer);

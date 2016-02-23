@@ -21,6 +21,7 @@ class SearchController extends Controller{
         $total_count = 7;
         $text = $_POST["searchdata"];
         
+        /*
         $articles = ArticleQuery::create()
             ->orderByCreatedAt('desc')
             ->where('Article.Title like ?', '%'.$text.'%')
@@ -28,15 +29,16 @@ class SearchController extends Controller{
             ->where('Article.Keywords like ?', '%'.$text.'%')
             ->limit(4)
             ->find();
+        */
         
         $users = UserQuery::create()
             ->orderByPermissions('desc')
             ->where('User.Username like ?', '%'.$text.'%')
-            ->limit(2)
+            //limit
             ->find();
 
-        if($users->isEmpty())
-        
-        echo json_encode($data);
+        if(!$users->isEmpty()){
+            echo json_encode($users);
+        }
     }
 }

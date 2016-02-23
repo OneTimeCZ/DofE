@@ -47,8 +47,8 @@
                     <div class="color-stripe expedition"></div>
                     ÚČASTNÍCI
                 </div>
-                <?php $i = 0; foreach($data["users"] as $user): ?>
-                <div class="section-content participants  <?= $hidden = $i == 0 ? '' : 'hidden' ?>">
+                <?php $i = 0; $c = count($data["users"]); foreach($data["users"] as $user): ?>
+                <div class="section-content participants <?= $hidden = $i == 0 ? '' : 'hidden' ?>">
                     <div class="person">
                         <div class="col-xs-6 col-md-12">
                             <a href="/profil/<?= $user->getUrl() ?>">
@@ -68,8 +68,8 @@
                         </div>
                         
                         <div class="navigation">
-                            <button class="previous">&laquo; Předchozí</button>
-                            <button class="next">Následující &raquo;</button>
+                            <?php if($i!=0): ?><button class="previous">&laquo; Předchozí</button><?php endif; ?>
+                            <?php if($i!=$c-1): ?><button class="next">Následující &raquo;</button><?php endif; ?>
                         </div>
                     </div>
                 </div>
