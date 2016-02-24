@@ -25,13 +25,35 @@
         <div class="column single">
             <div class="section-content info">
                 <div class="parents">
-                
+                    <div class="heading">
+                        <h3 id="pro-rodice">Pro rodiče</h3>
+                    </div>
+                    <div class="content">
+                        <?php foreach($data["parents_faq"] as $faq): ?>
+                        <div class="faq-item">
+                            <h5 class="question"><?= $faq[0] ?></h5>
+                            <p class="answer"><?= $faq[1] ?></p>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
                 <div class="students">
                 
                 </div>
                 <div class="team">
-                
+                    <div class="heading">
+                        <h3 id="nas-tym">Účastníci programu</h3>
+                    </div>
+                    <div class="content">
+                    <?php foreach($data["participants"] as $p): ?>
+                        <div class="participant col-xs-6 col-md-4">
+                            <a href="/profil/<?= $p->getUrl() ?>">
+                                <img class="img img-responsive img-circle" src="includes/images/200x200/<?= $p->getImage()->getPath() ?>" alt="Profilový obrázek" title="<?= $p->getMember()->getName() ?> <?= $p->getMember()->getSurname() ?>">
+                            </a>
+                            <p class="text-center"><?= $p->getMember()->getName() ?> <?= $p->getMember()->getSurname() ?></p>
+                        </div>
+                    <?php endforeach; ?>
+                    </div>
                 </div>
             </div>
         </div>
