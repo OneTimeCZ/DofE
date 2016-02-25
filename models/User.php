@@ -16,5 +16,9 @@ use Models\Base\User as BaseUser;
  */
 class User extends BaseUser
 {
-    
+    public function signInUpdate() {
+        $this->setSigninCount($this->getSigninCount()+1);
+        $this->setLastSigninAt(date("U"));
+        $this->save();
+    }
 }

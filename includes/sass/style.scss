@@ -790,7 +790,8 @@ body {
                                         }
                                     }
                                     
-                                    div.parents {
+                                    div.parents,
+                                    div.students {
                                         div.content {
                                             padding-bottom: 0;
                                             padding-left: 30px;
@@ -801,21 +802,23 @@ body {
                                                 
                                                 h5.question {
                                                     margin-top: 0;
-                                                    font-size: 1.1em;
+                                                    font-size: 1.3em;
                                                     font-weight: bold;
                                                     margin-bottom: 5px;
                                                 }
 
                                                 p.answer {
                                                     color: gray;
+                                                    
+                                                    span.answer-heading {
+                                                        font-size: 1em;
+                                                        color: $darkgray;
+                                                        font-weight: bold;
+                                                    }
                                                 }
                                             }
                                         }
                                         
-                                        margin-bottom: 20px;
-                                    }
-                                    
-                                    div.students {
                                         margin-bottom: 20px;
                                     }
                                     

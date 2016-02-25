@@ -456,23 +456,31 @@ body {
                   background: white;
                   border-bottom-right-radius: 5px;
                   border-bottom-left-radius: 5px; }
-                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.info div.parents {
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.info div.parents,
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.info div.students {
                   margin-bottom: 20px; }
-                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.info div.parents div.content {
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.info div.parents div.content,
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.info div.students div.content {
                     padding-bottom: 0;
                     padding-left: 30px;
                     padding-right: 30px; }
-                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.info div.parents div.content div.faq-item {
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.info div.parents div.content div.faq-item,
+                    body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.info div.students div.content div.faq-item {
                       margin-bottom: 15px; }
-                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.info div.parents div.content div.faq-item h5.question {
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.info div.parents div.content div.faq-item h5.question,
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.info div.students div.content div.faq-item h5.question {
                         margin-top: 0;
-                        font-size: 1.1em;
+                        font-size: 1.3em;
                         font-weight: bold;
                         margin-bottom: 5px; }
-                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.info div.parents div.content div.faq-item p.answer {
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.info div.parents div.content div.faq-item p.answer,
+                      body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.info div.students div.content div.faq-item p.answer {
                         color: gray; }
-                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.info div.students {
-                  margin-bottom: 20px; }
+                        body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.info div.parents div.content div.faq-item p.answer span.answer-heading,
+                        body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.info div.students div.content div.faq-item p.answer span.answer-heading {
+                          font-size: 1em;
+                          color: #232323;
+                          font-weight: bold; }
                 body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.info div.team div.content {
                   padding-top: 25px; }
                   body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.info div.team div.content div.participant {

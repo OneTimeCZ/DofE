@@ -29,8 +29,6 @@ use Models\Idea;
 use Models\IdeaQuery;
 use \DateTime;
 
-require_once '/helpers/helper.php';
-
 class UserController extends Controller{
 
     public function login(){
@@ -45,9 +43,7 @@ class UserController extends Controller{
             $this->addPopup('danger', 'Zadali jste nesprávné přihlašovací údaje. Zkuste to prosím znovu.');
         } else {
             $_SESSION['user'] = $user;
-            $user->setSigninCount($user->getSigninCount()+1);
-            $user->setLastSigninAt(date("U"));
-            $user->save();
+            $user->signInUpdate();
             $this->addPopup('success', 'Byli jste úspěšně přihlášeni!');
             
             if($user->getEmailConfirmedAt() == NULL) {
@@ -257,10 +253,8 @@ class UserController extends Controller{
         }
         
         $date = new DateTime($_POST["date"]);
-        $year = $date->format("Y");
-        $week = $date->format("W");
         
-        redirectTo('/nahlasit-aktivitu/' . $year . '/' . $week);
+        redirectTo('/nahlasit-aktivitu/' . $date->format("Y") . '/' . $date->format("W"));
     }
     
     public function logDofeActivityForm($year = '', $week = ''){
