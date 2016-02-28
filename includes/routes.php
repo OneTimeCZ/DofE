@@ -48,8 +48,17 @@
     $router->addGet('Admin.commentList', '/administrace/clanek/{name}/komentare');
     //delete a comment
     $router->addGet('Admin.commentDelete', '/administrace/clanek/{name}/komentar/{comment}/odstranit');
-    //photo list
-    $router->addGet('Admin.imageList', '/administrace/fotografie');
+    //gallery list
+    $router->addGet('Admin.galleryList', '/administrace/galerie');
+    //single gallery - photo list
+    $router->addGet('Admin.galleryPage', '/administrace/galerie/{id}')
+        ->setTokens([
+            'id' => '[1-9]\d*',
+        ]);
+    //add a new gallery page
+    $router->addGet('Admin.newGalleryPage', '/administrace/galerie/pridat');
+    //add a new gallery
+    $router->addPost('Admin.saveGallery', '/administrace/galerie/ulozit');
     //add a new photo page
     $router->addGet('Admin.imageAdd', '/administrace/fotografie/nahrat');
     //save a new photo
@@ -60,6 +69,13 @@
     $router->addGet('Admin.ideaApprove', '/administrace/navrh/{id}/prijmout')
         ->setTokens([
             'id' => '[1-9]\d*',
+        ]);
+    //user list
+    $router->addGet('Admin.userList', '/administrace/uzivatele');
+    //set users permissions
+    $router->addGet('Admin.setPermissions', '/administrace/prava/{username}/{permissions}')
+        ->setTokens([
+            'permissions' => '0|1'
         ]);
     //news pages
     $router->addGet('Admin.newUsersPage', '/administrace/co-je-noveho/uzivatele');

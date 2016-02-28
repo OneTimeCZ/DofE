@@ -666,4 +666,98 @@ class AdminController extends Controller{
         $this->addPopup("success", "Žádost o členství byla úspěšně zamítnuta.");
         redirectTo("/administrace/zadosti-o-clenstvi");
     }
+    
+    public function galleryList() {
+    
+    }
+    
+    public function galleryPage($id) {
+    
+    }
+    
+    public function newGalleryPage() {
+    
+    }
+    
+    public function saveGallery() {
+    
+    }
+    
+    public function userList() {
+        if(!$this->isAdmin()){
+            $this->addPopup('danger', 'Pro změnu práv uživatelů nemáte dostatečná práva.');
+            redirectTo('/administrace');
+        }
+        
+        $all = UserQuery::create()
+            ->filterByPermissions(3, Criteria::NOT_EQUAL)
+            ->find();
+        
+        foreach($all as $a){
+            if($a->getPermissions() == 2){
+                $editors[] = $a;
+            } else {
+                $users[] = $a;
+            }
+        }
+        
+        if(!isset($editors)){
+            $this->addPopup('danger', 'V databázi se momentálně nenachází žádný redaktor.');
+        }
+        
+        if(!isset($users)){
+            $this->addPopup('danger', 'V databázi se momentálně nenachází žádný uživatel.');
+        }
+        
+        $this->view('Admin/userList', 'admin_template', [
+            'active' => 'users',
+            'title' => 'Seznam uživatelů',
+            'editors' => $editors,
+            'users' => $users
+        ]);
+    }
+    
+    public function setPermissions($username, $permissions) {
+        //permissions are 'propustit 0', 'povysit 1'
+        if(!$this->isAdmin()){
+            $this->addPopup('danger', 'Pro změnu práv uživatelů nemáte dostatečná práva.');
+            redirectTo('/administrace');
+        }
+        
+        $user = UserQuery::create()
+            ->filterByUsername($username)
+            ->findOne();
+        
+        if(!isset($user)){
+            $this->addPopup('danger', 'Uživatel se zadaným uživatelským jménem neexistuje.');
+            redirectTo('/administrace/uzivatele');
+        }
+        
+        if($permissions == 1) {
+            if($user->getPermissions() == 2 || $user->getPermissions() == 3) {
+                $this->addPopup('danger', 'Uživatel se zadaným uživatelským jménem již nemůže být dále povýšen.');
+                redirectTo('/administrace/uzivatele');
+            } else {
+                $user->setPermissions(2);
+                $user->save();
+                $this->addPopup('success', 'Uživatel ' . $user->getUsername() . ' byl úspěšné povýšen na redaktora.');
+                redirectTo('/administrace/uzivatele');
+            }
+        } else {
+            if($user->getPermissions() == 2 || $user->getPermissions() == 3) {
+                if($user->getIdMember() != NULL) {
+                    $user->setPermissions(1);
+                } else {
+                    $user->setPermissions(2);
+                }
+                $user->save();
+                
+                $this->addPopup('success', 'Uživatel ' . $user->getUsername() . ' byl zbaven práv redaktora.');
+                redirectTo('/administrace/uzivatele');
+            } else {
+                $this->addPopup('danger', 'Uživatel se zadaným uživatelským jménem nemůže být zbaven práv redaktora.');
+                redirectTo('/administrace/uzivatele');
+            }
+        }
+    }
 }

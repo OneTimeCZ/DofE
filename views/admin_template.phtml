@@ -56,8 +56,14 @@
                                 <li <?= $data['active'] == 'addPhoto' ? 'class = active' : '' ?>>
                                     <a href="/administrace/fotografie/nahrat">PŘIDAT FOTOGRAFIE</a>
                                 </li>
-                                <li <?= $data['active'] == 'deletePhoto' ? 'class = active' : '' ?>>
-                                    <a href="/administrace/fotografie">ODSTRANIT FOTOGRAFIE</a>
+                                <li <?= $data['active'] == 'addGallery' ? 'class = active' : '' ?>>
+                                    <a href="/administrace/galerie/pridat">PŘIDAT GALERII</a>
+                                </li>
+                                <li <?= $data['active'] == 'galleryList' ? 'class = active' : '' ?>>
+                                    <a href="/administrace/galerie">SEZNAM GALERIÍ</a>
+                                </li>
+                                <li <?= $data['active'] == 'users' ? 'class = active' : '' ?>>
+                                    <a href="/administrace/uzivatele">ZMĚNIT PRÁVA</a>
                                 </li>
                                 <li>
                                     <a href="/odhlasit">ODHLÁSIT SE</a>

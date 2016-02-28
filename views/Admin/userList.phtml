@@ -1,0 +1,61 @@
+<div class="page-heading">
+    <h1>Seznam uživatelů</h1>
+</div>
+
+<?php if(isset($data["editors"])): ?>
+<div class="section">
+    <div class="column single">
+        <div class="content-box">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th class="col-xs-10 text-center">Uživatelské jméno (redaktor)</th>
+                        <th class="col-xs-2 text-center">Propustit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($data["editors"] as $editor): ?>
+                    <tr>
+                        <td class="col-xs-10 text-center"><?= $editor->getUsername() ?></td>
+                        <td class="col-xs-2 text-center">
+                            <a href="/administrace/prava/<?= $editor->getUsername() ?>/0">
+                                <span class="fa fa-remove"></span>
+                            </a>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
+<?php if(isset($data["users"])): ?>
+<div class="section">
+    <div class="column single">
+        <div class="content-box">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th class="col-xs-10 text-center">Uživatelské jméno (uživatel)</th>
+                        <th class="col-xs-2 text-center">Povýšit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($data["users"] as $user): ?>
+                    <tr>
+                        <td class="col-xs-10 text-center"><?= $user->getUsername() ?></td>
+                        <td class="col-xs-2 text-center">
+                            <a href="/administrace/prava/<?= $user->getUsername() ?>/1">
+                                <span class="fa fa-user-plus"></span>
+                            </a>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
