@@ -11,17 +11,17 @@
 		<script src="includes/scripts/jquery-1.11.3.js"></script>
 		<script src="includes/scripts/bootstrap.min.js"></script>
         <script src="includes/scripts/searchbar.js"></script>
+        <?php if(isset($data["css"])): ?>
+            <?php $styles = is_array($data["css"]) ? $data["css"] : array($data["css"]); foreach($styles as $css): ?>
+            <link rel="stylesheet" type="text/css" href="includes/<?= $css ?>.css" />
+            <?php endforeach; ?>
+        <?php endif; ?>
         <?php if(isset($data["js"])): ?>
             <?php $scripts = is_array($data["js"]) ? $data["js"] : array($data["js"]); foreach($scripts as $js): ?>
             <script src="includes/<?= $js ?>.js"></script>
             <?php endforeach; ?>
         <?php endif; ?>
 		<link rel="shortcut icon" type="image/png" href="includes/images/favicon.png"/>
-        <?php if(isset($data["css"])): ?>
-            <?php $styles = is_array($data["css"]) ? $data["css"] : array($data["css"]); foreach($styles as $css): ?>
-            <link rel="stylesheet" type="text/css" href="includes/<?= $css ?>.css" />
-            <?php endforeach; ?>
-        <?php endif; ?>
 		<link rel="stylesheet" type="text/css" href="includes/css/bootstrap.min.css" />
         <link rel="stylesheet" type="text/css" href="includes/css/font-awesome.min.css" />
 		<link rel="stylesheet" type="text/css" href="includes/css/style.css" />

@@ -140,8 +140,10 @@ class UserController extends Controller{
             redirectTo("/");
         }
         
-        $_SESSION["user"]->setEmailConfirmToken(token(50));
-        $_SESSION["user"]->save();
+        if($_SESSION["user"]->getEmailConfirmToken() == NULL) {
+            $_SESSION["user"]->setEmailConfirmToken(token(50));
+            $_SESSION["user"]->save();
+        }
         
         //resend confirmation email with email_confirm_token
         
@@ -173,31 +175,11 @@ class UserController extends Controller{
 			redirectTo("/registrace");
         }
         
-        if(preg_match('/[^a-zA-Z0-9]/', $_POST['regPassword'])){
-            $this->addPopup('danger', 'Vaše heslo obsahuje nepovolené znaky nebo mezeru.');
+        if(!User::checkRegistrationValidity()){
             redirectTo("/registrace");
         }
         
-        if(strlen(utf8_decode($_POST["regPassword"])) < 8){
-            $this->addPopup('danger', 'Vaše heslo je příliš krátké.');
-            redirectTo("/registrace");
-        }
-        
-        if(strlen(utf8_decode($_POST["regPassword"])) > 32){
-            $this->addPopup('danger', 'Vaše heslo je příliš dlouhé.');
-            redirectTo("/registrace");
-        }
-        
-        if(preg_match('/[^a-zA-Z0-9]/', $_POST["regUsername"])){
-            $this->addPopup('danger', 'Vaše uživatelské jméno obsahuje nepovolené znaky nebo mezeru.');
-            redirectTo("/registrace");
-        }
-        
-        $existing = UserQuery::create()
-            ->filterByUsername($_POST["regUsername"])
-            ->_or()
-            ->filterByEmail($_POST["regEmail"])
-            ->findOne();
+        $existing = User::checkExistingUsernameEmail();
         
         if($existing != NULL) {
             if($existing->getUsername() == $_POST["regUsername"]){
@@ -258,6 +240,11 @@ class UserController extends Controller{
     }
     
     public function logDofeActivityForm($year = '', $week = ''){
+        if(!isset($_SESSION["user"])){
+            $this->addPopup('danger', 'Pro nahlášení aktivit musíte být přihlášeni.');
+            redirectTo('/');
+        }
+        
         if($_SESSION["user"]->getIdMember() == NULL){
             $this->addPopup('danger', 'Pro nahlášení aktivit musíte být členem DofE týmu.');
             redirectTo('/');
@@ -323,14 +310,8 @@ class UserController extends Controller{
             redirectTo('/#');
         }
         
-        if($_SESSION["user"]->getUsername() == $_POST["username"]) {
-            $this->addPopup('danger', 'Toto jméno je již přiřazeno k vašemu účtu.');
-            redirectTo('/nastaveni/zmenit-udaje');
-        }
-        
-        if(preg_match('/@/', $_POST["username"])){
-            $this->addPopup('danger', 'Vaše uživatelské jméno obsahuje nepovolené znaky.');
-            redirectTo('/nastaveni/zmenit-udaje');
+        if(!User::checkUsernameChangeValidity()){
+            redirectTo("/nastaveni/zmenit-udaje");
         }
             
         $existing = UserQuery::create()
@@ -358,34 +339,8 @@ class UserController extends Controller{
             redirectTo('/#');
         }
             
-        if($_POST["new_password1"] != $_POST["new_password2"]) {
-            $this->addPopup('danger', 'Nová hesla nejsou stejná.');
-            redirectTo('/nastaveni/zmenit-udaje');
-        }
-        
-        if($_SESSION["user"]->getPassword() != sha1($_POST["old_password"])) {
-            $this->addPopup('danger', 'Špatně zadané původní heslo.');
-            redirectTo('/nastaveni/zmenit-udaje');
-        }
-        
-        if(preg_match('/[^a-zA-Z0-9]/', $_POST['regPassword'])){
-            $this->addPopup('danger', 'Vaše heslo obsahuje nepovolené znaky nebo mezeru.');
+        if(!User::checkPasswordChangeValidity()){
             redirectTo("/nastaveni/zmenit-udaje");
-        }
-        
-        if(strlen(utf8_decode($_POST["regPassword"])) < 8){
-            $this->addPopup('danger', 'Vaše heslo je příliš krátké.');
-            redirectTo("/nastaveni/zmenit-udaje");
-        }
-        
-        if(strlen(utf8_decode($_POST["regPassword"])) > 32){
-            $this->addPopup('danger', 'Vaše heslo je příliš dlouhé.');
-            redirectTo("/nastaveni/zmenit-udaje");
-        }
-            
-        if(sha1($_POST["new_password1"]) == $_SESSION["user"]->getPassword()) {
-            $this->addPopup('danger', 'Toto heslo je již přiřazeno k vašemu účtu.');
-            redirectTo('/nastaveni/zmenit-udaje');
         }
             
         $user = UserQuery::create()
@@ -591,27 +546,7 @@ class UserController extends Controller{
             redirectTo("/");
         }
         
-        if($_POST['password'] != $_POST['password_again']){
-			$popups[] = array('type' => 'danger', 'content' => 'Hesla se neshodují.');
-        }
-        
-        if(preg_match('/[^a-zA-Z0-9]/', $_POST['password'])){
-            $popups[] = array('type' => 'danger', 'content' => 'Vaše heslo obsahuje nepovolené znaky nebo mezeru.');
-        }
-        
-        if(strlen(utf8_decode($_POST["password"])) < 8){
-            $popups[] = array('type' => 'danger', 'content' => 'Vaše heslo je příliš krátké.');
-        }
-        
-        if(strlen(utf8_decode($_POST["password"])) > 32){
-            $popups[] = array('type' => 'danger', 'content' => 'Vaše heslo je příliš dlouhé.');
-        }
-        
-        if(isset($popups)){
-            foreach ($popups as $pop){
-                $this->addPopup($pop["type"], $pop["content"]);
-            }
-            
+        if(!checkPasswordResetValidity()){
             redirectTo("/");
         }
         
@@ -652,43 +587,7 @@ class UserController extends Controller{
             redirectTo("/");
         }
         
-        if(strlen(utf8_decode($_POST["description"])) >= 1000){
-            $popups[] = array(
-                'type' => 'danger',
-                'content' => 'Popis chyby je příliš dlouhý. Popis by měl obsahovat maximálně 1000 znaků.'
-            );
-        }
-        
-        if(strlen(utf8_decode($_POST["location"])) >= 200){
-            $popups[] = array(
-                'type' => 'danger',
-                'content' => 'Lokalizace chyby je příliš dlouhá. Lokalizace by měla obsahovat maximálně 200 znaků.'
-            );
-        }
-        
-        if(isset($_POST["device"])){
-            if(strlen(utf8_decode($_POST["device"])) >= 200){
-                $popups[] = array(
-                    'type' => 'danger',
-                    'content' => 'Popis zařízení je příliš dlouhý. Popis zařízení by měl obsahovat maximálně 200 znaků.'
-                );
-            }
-        }
-        
-        if(isset($_POST["browser"])){
-            if(strlen(utf8_decode($_POST["browser"])) >= 100){
-                $popups[] = array(
-                    'type' => 'danger',
-                    'content' => 'Popis prohlížeče je příliš dlouhý. Popis prohlížeče by měl obsahovat maximálně 100 znaků.'
-                );
-            }
-        }
-        
-        if(isset($popups)){
-            foreach($popups as $pop){
-                $this->addPopup($pop["type"], $pop["content"]);
-            }
-            
+        if(!User::checkBugReportValidity()){
             redirectTo("/nastaveni/nahlasit-chybu");
         }
         

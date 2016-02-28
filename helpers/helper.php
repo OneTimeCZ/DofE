@@ -35,3 +35,16 @@ function displayPopups(){
         }
     }
 }
+
+//Checks if any popups have been added
+function existingPopupsCheck() {
+    if(isset($popups)){
+        foreach($popups as $p){
+            $this->addPopup($p["type"], $p["content"]);
+        }
+            
+        return false;
+    }
+        
+    return true;
+}

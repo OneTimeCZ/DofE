@@ -1,9 +1,5 @@
 $(function () {
-    //setup, interval in [ms]
-    var typingTimer, doneTypingInterval = 1500;
-
-    //user has finished typing
-    function doneTyping() {
+    $("div.search button").click(function () {
         $.ajax({
             type: 'POST',
             data: {
@@ -15,13 +11,5 @@ $(function () {
                 alert(JSON.parse(response));
             }
         });
-    }
-    
-    //start countdown onKeyUp
-    $('#searchbar').keyup(function () {
-        clearTimeout(typingTimer);
-        if ($('#searchbar').val) {
-            typingTimer = setTimeout(doneTyping, doneTypingInterval);
-        }
     });
 });
