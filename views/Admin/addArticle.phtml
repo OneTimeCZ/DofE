@@ -5,7 +5,7 @@
 <div class="section">
     <div class="column single">
         <div class="content-box">
-            <form role="form" action="/administrace/clanky/ulozit" method="post">
+            <form role="form" enctype="multipart/form-data" id="new_article" action="/administrace/clanky/ulozit" method="post">
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label for="title">Nadpis článku</label>
@@ -37,13 +37,14 @@
                         <input class="btn btn-lg btn-default pull-left" type="submit" name="save" value="Přidat" id="add">
                     </div>
                 </div>
-                    <!--
-                    title - text
-                    category - radio
-                    keywords - text
-                    content - textarea - tinyMCE
-                    image - radio or add new
-                    -->
+                
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <div id="croppbox"></div>
+                        <label for="croppbox-input">Fotografie</label>
+                        <input class="btn btn-default" name="img" type="file" id="croppbox-input">
+                    </div>
+                </div>
             </form>
         </div>
     </div>

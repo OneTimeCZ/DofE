@@ -23,6 +23,8 @@ use Models\Member;
 use Models\MemberQuery;
 use Models\MembershipApplication;
 use Models\MembershipApplicationQuery;
+use Models\Gallery;
+use Models\GalleryQuery;
 use Propel\Runtime\ActiveQuery\Criteria;
 use \DateTime;
 
@@ -133,7 +135,8 @@ class AdminController extends Controller{
         $this->view('Admin/addArticle', 'admin_template', [
             'active' => 'addArticle',
             'title' => 'Přidat nový článek',
-            'js' => array('plugins/tinymce/tinymce.min', 'scripts/tinymceinit'),
+            'js' => array('plugins/tinymce/tinymce.min', 'scripts/tinymceinit', 'plugins/croppie/croppie', 'scripts/croppie-article'),
+            'css' => array('plugins/croppie/croppie'),
             'categories' => $categories
         ]);
     }
@@ -173,7 +176,47 @@ class AdminController extends Controller{
         if($_POST["save"]=="Přidat") {
             $article = new Article;
             $article->setIdUser($_POST["author"]);
-            $article->setIdImage(1);
+            
+            if(isset($_POST["image-article"])){
+                $data = explode(',', $_POST["image-article"]);
+                if(count($data) == 2 && $data[0] == "data:image/png;base64" && base64_decode($data[1])){
+                    $dir = "includes/images/fullsize/";
+                    $img = imagecreatefromstring(base64_decode($data[1]));
+                    do {
+                        $name = token(20).".png";
+                        $path = $dir.$name;
+                    }
+                    while(file_exists($path));
+
+                    $i = new Image();
+                    $i->setPath($name)
+                        ->setThumbnailPath($name)
+                        ->setType("fullsize")
+                        ->save();
+                    imagepng($img, $path);
+
+                    $dir = "includes/images/960x540/";
+                    $path = $dir.$name;
+                    imagepng(resizeImg($img, 960, 540), $path);
+
+                    $dir = "includes/images/50x50/";
+                    $path = $dir.$name;
+                    imagepng(resizeImg($img, 50, 50), $path);
+                }
+
+                else {
+                    $this->addPopup('danger', 'Něco se pokazilo při nahrávání obrázku. Zkuste to prosím znovu.');
+                    redirectTo('/administrace/clanky/pridat');
+                }
+            } else {
+                $this->addPopup('danger', 'Něco se pokazilo při nahrávání obrázku. Zkuste to prosím znovu.');
+                redirectTo('/administrace/clanky/pridat');
+            }
+            
+            $im = ImageQuery::create()
+                ->filterByPath($name)
+                ->findOne();
+            $article->setIdImage($im->getId());
             $article->setIdCategory($_POST["category"]);
             $article->setTitle($_POST["title"]);
             $article->setKeywords(str_replace(", ", ",", $_POST["keywords"]));
@@ -202,101 +245,19 @@ class AdminController extends Controller{
         }
     }
     
-    public function imageList(){
-        
-    }
-    
     public function imageSave(){
-        $fullsize_directory = "includes/images/fullsize/";
-        $thumbnail_directory = "includes/images/thumbnails/";
         
-        $file_name = token(20);
-        $file_size = $_FILES['image']['size'];
-        $file_temporary_name = $_FILES['image']['tmp_name'];
-        $file_type = $_FILES['image']['type'];
-        $file_extension = explode('.', $_FILES['image']['name']);
-        $file_extension = strtolower($file_extension[count($file_extension) - 1]);
-        $extensions = array("jpeg","jpg","png");
-      
-        if(getimagesize($file_temporary_name) === false) {
-            $popups[] = array(
-                'type' => 'danger',
-                'content' => 'Tento soubor je prázdný. Prosíme nahrajte fotografii.'
-            );
-        }
-        
-        if(!in_array($file_extension, $extensions)){
-            $popups[] = array(
-                'type' => 'danger',
-                'content' => 'Nepovolená přípona souboru. Prosíme nahrajte fotografii ve formátu JPEG nebo PNG.'
-            );
-        }
-        
-        if($file_size > 10485760){
-            $popups[] = array(
-                'type' => 'danger',
-                'content' => 'Fotografie je přiliš rozměrná. Prosíme nahrajte fotografii o velikosti maximálně 10 MB.'
-            );
-        }
-        
-        if(strlen(utf8_decode($_POST["description"])) >= 500){
-            $popups[] = array(
-                'type' => 'danger',
-                'content' => 'Popisek fotografie je příliš dlouhý. Popisek by měl obsahovat maximálně 500 znaků.'
-            );
-        }
-        
-        if(strlen(utf8_decode($_POST["title"])) >= 50){
-            $popups[] = array(
-                'type' => 'danger',
-                'content' => 'Název fotografie je příliš dlouhý. Název by měl obsahovat maximálně 50 znaků.'
-            );
-        }
-        
-        if(isset($popups)){
-            foreach($popups as $pop){
-                $this->addPopup($pop["type"], $pop["content"]);
-            }
-            
-            redirectTo("/administrace/fotografie/nahrat");
-        }
-        
-        while(file_exists($fullsize_directory . $file_name) || file_exists($thumbnail_directory . $file_name)){
-            $file_name = token(20);
-        }
-        
-        $file_name .= "." . $file_extension;
-        
-        if(!move_uploaded_file($file_temporary_name, $fullsize_directory . $file_name)){
-            $this->addPopup('danger', 'Při přesunu fotografie do složky fullsize nastal neočekávaný problém.');
-            redirectTo("/administrace/fotografie/nahrat");
-        }
-        
-        //copy image as a thumbnail, resize it afterwards
-        
-        $image = new Image;
-        $image->setTitle($_POST["title"]);
-        $image->setDescription($_POST["description"]);
-        $image->setType("fullsize");
-        $image->setPath($file_name);
-        $image->setThumbnailPath($file_name);
-        $image->save();
-        
-        $this->addPopup('success', 'Vaše fotografie byla úspěšně nahrána.');
-        redirectTo("/administrace/fotografie/nahrat");
+        //name -> token(20)
+        //fullsize dir = fullsize
+        //create a thumbnail from the fullsize image
+        //thumbnail dir = thumbnails
     }
     
     public function imageAdd(){
         $this->view('Admin/uploadPhoto', 'admin_template', [
             'active' => 'uploadPhoto',
-            'title' => 'Nahrát fotografii',
-            'js' => array('plugins/jcrop/js/jquery.Jcrop.min', 'scripts/jcrop_admin'),
-            'css' => array('plugins/jcrop/css/jquery.Jcrop.min')
+            'title' => 'Nahrát fotografii'
         ]);
-    }
-    
-    public function imageDelete($name){
-        
     }
     
     public function commentList($name){
@@ -332,6 +293,31 @@ class AdminController extends Controller{
         
         $this->addPopup('success', 'Komentář byl úspěšně odstraněn!');
         redirectTo("/administrace/clanek/".$article_id."/komentare");
+    }
+    
+    public function ideaRefuse($id){
+        if(!($this->isAdmin() || $this->isEditor())){
+            $this->addPopup('danger', 'Pro zamítávání návrhů nemáte dostatečná práva.');
+            redirectTo("/");
+        }
+        
+        $idea = IdeaQuery::create()
+            ->findPk($id);
+        
+        if(!isset($idea)){
+            $this->addPopup('danger', 'Návrh s tímto identifikačním číslem se v databázi nenachází.');
+            redirectTo("/administrace");
+        }
+        
+        if($idea->getIdUser() == $_SESSION["user"]->getId()){
+            $this->addPopup('danger', 'Tento návrh jste podali vy, nemůžete ho proto zároveň zamítnout.');
+            redirectTo("/administrace");
+        }
+        
+        $idea->delete();
+        
+        $this->addPopup('success', 'Návrh číslo ' . $id . ' byl úspěšně zamítnut a smazán.');
+        redirectTo("/administrace");
     }
     
     public function ideaApprove($id){
@@ -505,6 +491,27 @@ class AdminController extends Controller{
         redirectTo("/administrace");
     }
     
+    public function deleteBug($id){
+        $bug = BugReportQuery::create()
+            ->findPk($id);
+        
+        if($bug == NULL){
+            $this->addPopup('danger', 'Hlášení o chybě s tímto identifikačním číslem se v databázi nenachází.');
+            redirectTo('/administrace');
+        }
+        
+        if(!$this->isAdmin()){
+            $this->addPopup('danger', 'Pro odstranění chyby na stránce nemáte dostatečná práva.');
+            redirectTo('/administrace');
+        }
+        
+        $bug->setFixedAt(time());
+        $bug->save();
+        
+        $this->addPopup('success', 'Chyba #' . $id . ' byla odstraněna.');
+        redirectTo("/administrace");
+    }
+    
     public function userReportsPage(){
         $user_reports = UserReportQuery::create()
             ->joinUserAuthor('UserAuthor')
@@ -667,8 +674,33 @@ class AdminController extends Controller{
         redirectTo("/administrace/zadosti-o-clenstvi");
     }
     
-    public function galleryList() {
+    public function galleryList() {        
+        if($this->isEditor()) {
+            $galleries = GalleryQuery::create()
+                ->filterByIdUser($_SESSION["user"]->getId())
+                ->find();
+        } elseif($this->isAdmin()) {
+            $galleries = GalleryQuery::create()
+                ->find();
+        }
+        
+        if($galleries->isEmpty()) {
+            $this->addPopup('danger', 'V databázi se momentálně nenachází žádná galerie.');
+        }
+        
+        $this->view('Admin/galleryList', 'admin_template', [
+            'active' => 'galleryList',
+            'title' => 'Seznam galerií',
+            'galleries' => $galleries
+        ]);
+    }
     
+    public function imageList($id){
+        
+    }
+    
+    public function imageDelete($name){
+        
     }
     
     public function galleryPage($id) {
@@ -679,8 +711,8 @@ class AdminController extends Controller{
     
     }
     
-    public function saveGallery() {
-    
+    public function saveGallery($id) {
+        
     }
     
     public function userList() {

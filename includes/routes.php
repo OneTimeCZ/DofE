@@ -58,15 +58,32 @@
     //add a new gallery page
     $router->addGet('Admin.newGalleryPage', '/administrace/galerie/pridat');
     //add a new gallery
-    $router->addPost('Admin.saveGallery', '/administrace/galerie/ulozit');
+    $router->addPost('Admin.saveGallery', '/administrace/galerie/{id}/ulozit')
+        ->setTokens([
+            'id' => '[1-9]\d*',
+        ]);
     //add a new photo page
-    $router->addGet('Admin.imageAdd', '/administrace/fotografie/nahrat');
-    //save a new photo
-    $router->addPost('Admin.imageSave', '/administrace/fotografie/ulozit');
+    $router->addGet('Admin.imageAdd', '/administrace/galerie/{id}/nahrat')
+        ->setTokens([
+            'id' => '[1-9]\d*',
+        ]);
+    //save new photos
+    $router->addPost('Admin.imageSave', '/administrace/galerie/{id}/nahrani')
+        ->setTokens([
+            'id' => '[1-9]\d*',
+        ]);
     //delete a photo
-    $router->addGet('Admin.imageDelete', '/administrace/fotografie/{name}/odstranit');
+    $router->addGet('Admin.imageDelete', '/administrace/galerie/{id}/odstranit')
+        ->setTokens([
+            'id' => '[1-9]\d*'
+        ]);
     //accept a suggestion
     $router->addGet('Admin.ideaApprove', '/administrace/navrh/{id}/prijmout')
+        ->setTokens([
+            'id' => '[1-9]\d*',
+        ]);
+    //refuse a suggestion
+    $router->addGet('Admin.ideaRefuse', '/administrace/navrh/{id}/zamitnout')
         ->setTokens([
             'id' => '[1-9]\d*',
         ]);
@@ -87,6 +104,10 @@
     $router->addGet('Admin.unsolvedBugsPage', '/administrace/chyby/nevyresene');
     $router->addGet('Admin.markBugSolved', '/administrace/chyba/{id}/vyreseno')
         ->setTokens([
+            'id' => '[1-9]\d*'
+        ]);
+    //delete a bug report
+    $router->addGet('Admin.deleteBug', '/administrace/chyba/{id}/smazat')->setTokens([
             'id' => '[1-9]\d*'
         ]);
     $router->addGet('Admin.singleBugPage', '/administrace/chyba/{id}')

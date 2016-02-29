@@ -99,8 +99,9 @@
                         </form>
                     </div>
                     
-                    <div class="col-xs-6">
+                    <div class="col-xs-6 avatar-wrapper">
                         <img class="img img-responsive img-thumbnail avatar" src="/includes/images/200x200/<?= $_SESSION["user"]->getImage()->getPath() ?>" alt="momentální avatar" title="Profilový obrázek uživatele <?= $_SESSION["user"]->getUsername() ?>">
+                        <div id="croppbox"></div>
                     </div>
                 </div>
             </div>

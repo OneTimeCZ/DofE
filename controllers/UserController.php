@@ -220,12 +220,10 @@ class UserController extends Controller{
         $this->view('Profile/changePersonal', 'base_template', [
             'active' => 'profile',
             'title' => 'Nastavení',
-            'recent' => ArticleQuery::recent()
+            'recent' => ArticleQuery::recent(),
+            'css' => array('plugins/croppie/croppie'),
+            'js' => array('plugins/croppie/croppie', 'scripts/croppie-avatar')
         ]);
-    }
-    
-    public function changeAvatarForm(){
-    
     }
     
     public function logDofeActivityFormDate(){
@@ -379,7 +377,31 @@ class UserController extends Controller{
     }
     
     public function changeAvatar(){
+        if(isset($_POST["newAvatar"]) && $this->isLogged()){
+			$data = explode(',', $_POST["newAvatar"]);
+			if(count($data) == 2 && $data[0] == "data:image/png;base64" && base64_decode($data[1])){
+				$dir = "includes/images/200x200/";
+				$img = imagecreatefromstring(base64_decode($data[1]));
+                do {
+                    $name = token(20).".png";
+				    $path = $dir.$name;
+                }
+                while(file_exists($path));
+				$_SESSION["user"]->getImage()->setPath($name)->setThumbnailPath($name)->setType("200x200")->setDescription("Profilový obrázek uživatele " . $_SESSION["user"]->getUsername())->save();
+				imagepng($img, $path);
+		
+				$dir = "includes/images/50x50/";
+				$path = $dir.$name;
+				imagepng(resizeImg($img, 50, 50), $path);
+                
+                $this->addPopup('success', 'Váš avatar byl úspěšně změněn.');
+                redirectTo('/nastaveni');
+			}
+            
+			else setHTTPStatusCode("400");
+		}
         
+		else setHTTPStatusCode("400");
     }
     
     public function applyForMembershipPage(){

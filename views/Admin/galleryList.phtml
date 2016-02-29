@@ -1,0 +1,26 @@
+<div class="page-heading">
+    <h1>Seznam galerií</h1>
+</div>
+
+<?php if(isset($data["galleries"])): ?>
+<div class="section">
+    <div class="column single">
+        <div class="content-box">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($data["galleries"] as $gallery): ?>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<?php endif; ?>

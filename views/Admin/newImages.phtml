@@ -21,9 +21,11 @@
                         <td class="text-center col-xs-3"><?= $image->getTitle() ?></td>
                         <td class="col-xs-5"><?= $image->getDescription() ?></td>
                         <td class="col-xs-2">
-                            <a href="/includes/images/fullsize/<?= $image->getPath() ?>">THUMBNAIL DO BUDOUCNA S ODKAZEM NA FOTKU</a>
+                            <a href="/includes/images/<?= $image->getType() ?>/<?= $image->getPath() ?>">
+                                <img src="/includes/images/50x50/<?= $image->getThumbnailPath() ?>" class="img img-responsive"/>
+                            </a>
                         </td>
-                        <td class="text-center col-xs-2">Datum</td>
+                        <td class="text-center col-xs-2"><?= $image->getCreatedAt()->format('d.m.Y H:i:s') ?></td>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>

@@ -50,6 +50,7 @@
                 <?php if($data["bug"]->getFixedAt() == NULL): ?>
                 <div class="form-group">
                     <a class="btn btn-default" href="/administrace/chyba/<?= $data["bug"]->getId() ?>/vyreseno">Označit za vyřešené</a>
+                    <a class="btn btn-default" href="/administrace/chyba/<?= $data["bug"]->getId() ?>/smazat">Odstranit</a>
                 </div>
                 <?php endif; ?>
             </div>

@@ -48,3 +48,13 @@ function existingPopupsCheck() {
         
     return true;
 }
+
+//Returns a resized img
+function resizeImg($img, $w, $h) {
+    $width = imagesx($img);
+    $height = imagesy($img);
+	$imgNew = imagecreatetruecolor($w, $h);
+	imagecopyresampled($imgNew, $img, 0, 0, 0, 0, $w, $h, $width, $height);
+	
+    return $imgNew;
+}

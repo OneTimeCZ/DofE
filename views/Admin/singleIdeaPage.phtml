@@ -37,6 +37,7 @@
                 <?php if($data["idea"]->getApprovedAt() == NULL): ?>
                 <div class="form-group">
                     <a href="/administrace/navrh/<?= $data["idea"]->getId() ?>/prijmout" class="btn btn-default">Přijmout návrh</a>
+                    <a href="/administrace/navrh/<?= $data["idea"]->getId() ?>/zamitnout" class="btn btn-default">Zamítnout návrh</a>
                 </div>
                 <?php endif; ?>
             </div>
