@@ -182,7 +182,27 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery rightJoinWithGallery() Adds a RIGHT JOIN clause and with to the query using the Gallery relation
  * @method     ChildUserQuery innerJoinWithGallery() Adds a INNER JOIN clause and with to the query using the Gallery relation
  *
- * @method     \Models\ImageQuery|\Models\MemberQuery|\Models\ArticleQuery|\Models\CommentQuery|\Models\RatingQuery|\Models\UserReportQuery|\Models\BugReportQuery|\Models\IdeaQuery|\Models\MembershipApplicationQuery|\Models\GalleryQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     ChildUserQuery leftJoinBanRelatedByIdUser($relationAlias = null) Adds a LEFT JOIN clause to the query using the BanRelatedByIdUser relation
+ * @method     ChildUserQuery rightJoinBanRelatedByIdUser($relationAlias = null) Adds a RIGHT JOIN clause to the query using the BanRelatedByIdUser relation
+ * @method     ChildUserQuery innerJoinBanRelatedByIdUser($relationAlias = null) Adds a INNER JOIN clause to the query using the BanRelatedByIdUser relation
+ *
+ * @method     ChildUserQuery joinWithBanRelatedByIdUser($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the BanRelatedByIdUser relation
+ *
+ * @method     ChildUserQuery leftJoinWithBanRelatedByIdUser() Adds a LEFT JOIN clause and with to the query using the BanRelatedByIdUser relation
+ * @method     ChildUserQuery rightJoinWithBanRelatedByIdUser() Adds a RIGHT JOIN clause and with to the query using the BanRelatedByIdUser relation
+ * @method     ChildUserQuery innerJoinWithBanRelatedByIdUser() Adds a INNER JOIN clause and with to the query using the BanRelatedByIdUser relation
+ *
+ * @method     ChildUserQuery leftJoinBanRelatedByBannedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the BanRelatedByBannedBy relation
+ * @method     ChildUserQuery rightJoinBanRelatedByBannedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the BanRelatedByBannedBy relation
+ * @method     ChildUserQuery innerJoinBanRelatedByBannedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the BanRelatedByBannedBy relation
+ *
+ * @method     ChildUserQuery joinWithBanRelatedByBannedBy($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the BanRelatedByBannedBy relation
+ *
+ * @method     ChildUserQuery leftJoinWithBanRelatedByBannedBy() Adds a LEFT JOIN clause and with to the query using the BanRelatedByBannedBy relation
+ * @method     ChildUserQuery rightJoinWithBanRelatedByBannedBy() Adds a RIGHT JOIN clause and with to the query using the BanRelatedByBannedBy relation
+ * @method     ChildUserQuery innerJoinWithBanRelatedByBannedBy() Adds a INNER JOIN clause and with to the query using the BanRelatedByBannedBy relation
+ *
+ * @method     \Models\ImageQuery|\Models\MemberQuery|\Models\ArticleQuery|\Models\CommentQuery|\Models\RatingQuery|\Models\UserReportQuery|\Models\BugReportQuery|\Models\IdeaQuery|\Models\MembershipApplicationQuery|\Models\GalleryQuery|\Models\BanQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildUser findOne(ConnectionInterface $con = null) Return the first ChildUser matching the query
  * @method     ChildUser findOneOrCreate(ConnectionInterface $con = null) Return the first ChildUser matching the query, or a new ChildUser object populated from the query conditions when no match is found
@@ -1903,6 +1923,152 @@ abstract class UserQuery extends ModelCriteria
         return $this
             ->joinGallery($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Gallery', '\Models\GalleryQuery');
+    }
+
+    /**
+     * Filter the query by a related \Models\Ban object
+     *
+     * @param \Models\Ban|ObjectCollection $ban the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByBanRelatedByIdUser($ban, $comparison = null)
+    {
+        if ($ban instanceof \Models\Ban) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $ban->getIdUser(), $comparison);
+        } elseif ($ban instanceof ObjectCollection) {
+            return $this
+                ->useBanRelatedByIdUserQuery()
+                ->filterByPrimaryKeys($ban->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByBanRelatedByIdUser() only accepts arguments of type \Models\Ban or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the BanRelatedByIdUser relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinBanRelatedByIdUser($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('BanRelatedByIdUser');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'BanRelatedByIdUser');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the BanRelatedByIdUser relation Ban object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Models\BanQuery A secondary query class using the current class as primary query
+     */
+    public function useBanRelatedByIdUserQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinBanRelatedByIdUser($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'BanRelatedByIdUser', '\Models\BanQuery');
+    }
+
+    /**
+     * Filter the query by a related \Models\Ban object
+     *
+     * @param \Models\Ban|ObjectCollection $ban the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByBanRelatedByBannedBy($ban, $comparison = null)
+    {
+        if ($ban instanceof \Models\Ban) {
+            return $this
+                ->addUsingAlias(UserTableMap::COL_ID, $ban->getBannedBy(), $comparison);
+        } elseif ($ban instanceof ObjectCollection) {
+            return $this
+                ->useBanRelatedByBannedByQuery()
+                ->filterByPrimaryKeys($ban->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByBanRelatedByBannedBy() only accepts arguments of type \Models\Ban or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the BanRelatedByBannedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function joinBanRelatedByBannedBy($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('BanRelatedByBannedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'BanRelatedByBannedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the BanRelatedByBannedBy relation Ban object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \Models\BanQuery A secondary query class using the current class as primary query
+     */
+    public function useBanRelatedByBannedByQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinBanRelatedByBannedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'BanRelatedByBannedBy', '\Models\BanQuery');
     }
 
     /**

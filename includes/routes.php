@@ -107,7 +107,8 @@
             'id' => '[1-9]\d*'
         ]);
     //delete a bug report
-    $router->addGet('Admin.deleteBug', '/administrace/chyba/{id}/smazat')->setTokens([
+    $router->addGet('Admin.deleteBug', '/administrace/chyba/{id}/smazat')
+        ->setTokens([
             'id' => '[1-9]\d*'
         ]);
     $router->addGet('Admin.singleBugPage', '/administrace/chyba/{id}')
@@ -117,6 +118,16 @@
     //user reports page
     $router->addGet('Admin.userReportsPage', '/administrace/nahlaseni-uzivatele');
     $router->addGet('Admin.singleUserReportPage', '/administrace/nahlaseni-uzivatele/{id}')
+        ->setTokens([
+            'id' => '[1-9]\d*'
+        ]);
+    //restrict user's access
+    $router->addPost('Admin.banUser', '/administrace/nahlaseni-uzivatele/{id}/zabanovat')
+        ->setTokens([
+            'id' => '[1-9]\d*'
+        ]);
+    //delete an user report
+    $router->addGet('Admin.deleteUserReport', '/administrace/nahlaseni-uzivatele/{id}/odstranit')
         ->setTokens([
             'id' => '[1-9]\d*'
         ]);

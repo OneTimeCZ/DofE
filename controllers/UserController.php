@@ -27,6 +27,8 @@ use Models\UserReport;
 use Models\UserReportQuery;
 use Models\Idea;
 use Models\IdeaQuery;
+use Models\Ban;
+use Models\BanQuery;
 use \DateTime;
 
 class UserController extends Controller{
@@ -42,6 +44,17 @@ class UserController extends Controller{
             $_SESSION['user'] = NULL;
             $this->addPopup('danger', 'Zadali jste nesprávné přihlašovací údaje. Zkuste to prosím znovu.');
         } else {
+            $bans = BanQuery::create()
+                ->filterByIdUser($user->getId())
+                ->find();
+            
+            foreach($bans as $b){
+                if($b->getEndingDate()->format("U") > time()) {
+                    $this->addPopup('danger', 'Váš účet byl zablokován uživatelem ' . $b->getUserBy()->getUsername() . ' z důvodu: "' . $b->getReason() . '". Zákaz skončí ' . $b->getEndingDate()->format("d.m.Y") . ' ve ' . $b->getEndingDate()->format("H:i:s") . '.');
+                    redirectTo('/');
+                }
+            }
+            
             $_SESSION['user'] = $user;
             $user->signInUpdate();
             $this->addPopup('success', 'Byli jste úspěšně přihlášeni!');
@@ -678,7 +691,7 @@ class UserController extends Controller{
         $user = UserQuery::create()
             ->findPk($_POST["user"]);
         
-        $this->addPopup('success', 'Uživatel ' . $user->getName() . ' ' . $user->getSurname() . ' (<a class=alert-link href=/profil/' . $user->getUrl() . '>' . $user->getUsername() . '</a>) byl úspěšně nahlášen. Děkujeme!');
+        $this->addPopup('success', 'Uživatel ' . $user->getUsername() . ' byl úspěšně nahlášen. Děkujeme!');
         redirectTo("/nastaveni");
     }
     

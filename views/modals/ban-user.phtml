@@ -1,0 +1,35 @@
+<div id="ban-user-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Zákaz přístupu</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-signin" method="post" action="/administrace/nahlaseni-uzivatele/<?= $data["user_report"]->getUserReported()->getId() ?>/zabanovat">
+                    <div class="form-group">
+                        <label for="reason">Důvod</label>
+                        <textarea class="form-control" rows="5" name="reason" id="reason" class="no-resize"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Délka zákazu</label>
+                        <select name="length" class="form-control">
+                            <option value="300">5 minut</option>
+                            <option value="3600" selected="selected">1 hodina</option>
+                            <option value="18000">5 hodin</option>
+                            <option value="86400">1 den</option>
+                            <option value="604800">1 týden</option>
+                            <option value="99999999">Permanentní</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" name="ban" class="btn btn-default"/>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Zavřít</button>
+            </div>
+        </div>
+    </div>
+</div>

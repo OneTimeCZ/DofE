@@ -37,7 +37,7 @@ $(document).ready(function(){
 	$("form#new_article").submit(function(event){
 		if(!done){
 			event.preventDefault();
-			cropp.croppie("result", {type : "canvas"}).then(function(resp){
+			cropp.croppie("result", {type : "canvas", 'size' : "original"}).then(function(resp){
 				$('<input>').attr({'type' : 'hidden', 'name' : 'image-article', 'value' : resp}).appendTo('form#new_article');
 	    		done = true;
 	    		$("form#new_article").submit();

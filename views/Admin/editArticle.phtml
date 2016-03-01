@@ -24,9 +24,6 @@
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <input class="btn btn-lg btn-default pull-right" type="submit" name="save" value="Upravit" id="add">
-                    </div>
                 </div>
                 
                 <div class="col-lg-6">
@@ -36,14 +33,18 @@
                             <?= $data["article"]->getContent() ?>
                         </textarea>
                     </div>
+                    <div class="form-group">
+                        <input class="btn btn-lg btn-default pull-left" type="submit" name="save" value="Upravit" id="add">
+                    </div>
                 </div>
-                    <!--
-                    title - text
-                    category - radio
-                    keywords - text
-                    content - textarea - tinyMCE
-                    image - radio or add new
-                    -->
+                
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <div id="croppbox"></div>
+                        <label for="croppbox-input">Fotografie (nová)</label>
+                        <input class="btn btn-default" name="img" type="file" id="croppbox-input">
+                    </div>
+                </div>
             </form>
         </div>
     </div>

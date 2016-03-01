@@ -7,6 +7,8 @@ use \Exception;
 use \PDO;
 use Models\Article as ChildArticle;
 use Models\ArticleQuery as ChildArticleQuery;
+use Models\Ban as ChildBan;
+use Models\BanQuery as ChildBanQuery;
 use Models\BugReport as ChildBugReport;
 use Models\BugReportQuery as ChildBugReportQuery;
 use Models\Comment as ChildComment;
@@ -28,6 +30,7 @@ use Models\UserQuery as ChildUserQuery;
 use Models\UserReport as ChildUserReport;
 use Models\UserReportQuery as ChildUserReportQuery;
 use Models\Map\ArticleTableMap;
+use Models\Map\BanTableMap;
 use Models\Map\BugReportTableMap;
 use Models\Map\CommentTableMap;
 use Models\Map\GalleryTableMap;
@@ -274,6 +277,18 @@ abstract class User implements ActiveRecordInterface
     protected $collGalleriesPartial;
 
     /**
+     * @var        ObjectCollection|ChildBan[] Collection to store aggregation of ChildBan objects.
+     */
+    protected $collBansRelatedByIdUser;
+    protected $collBansRelatedByIdUserPartial;
+
+    /**
+     * @var        ObjectCollection|ChildBan[] Collection to store aggregation of ChildBan objects.
+     */
+    protected $collBansRelatedByBannedBy;
+    protected $collBansRelatedByBannedByPartial;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
@@ -340,6 +355,18 @@ abstract class User implements ActiveRecordInterface
      * @var ObjectCollection|ChildGallery[]
      */
     protected $galleriesScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildBan[]
+     */
+    protected $bansRelatedByIdUserScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildBan[]
+     */
+    protected $bansRelatedByBannedByScheduledForDeletion = null;
 
     /**
      * Initializes internal state of Models\Base\User object.
@@ -1299,6 +1326,10 @@ abstract class User implements ActiveRecordInterface
 
             $this->collGalleries = null;
 
+            $this->collBansRelatedByIdUser = null;
+
+            $this->collBansRelatedByBannedBy = null;
+
         } // if (deep)
     }
 
@@ -1606,6 +1637,40 @@ abstract class User implements ActiveRecordInterface
 
             if ($this->collGalleries !== null) {
                 foreach ($this->collGalleries as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->bansRelatedByIdUserScheduledForDeletion !== null) {
+                if (!$this->bansRelatedByIdUserScheduledForDeletion->isEmpty()) {
+                    \Models\BanQuery::create()
+                        ->filterByPrimaryKeys($this->bansRelatedByIdUserScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->bansRelatedByIdUserScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collBansRelatedByIdUser !== null) {
+                foreach ($this->collBansRelatedByIdUser as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->bansRelatedByBannedByScheduledForDeletion !== null) {
+                if (!$this->bansRelatedByBannedByScheduledForDeletion->isEmpty()) {
+                    \Models\BanQuery::create()
+                        ->filterByPrimaryKeys($this->bansRelatedByBannedByScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->bansRelatedByBannedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collBansRelatedByBannedBy !== null) {
+                foreach ($this->collBansRelatedByBannedBy as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -2108,6 +2173,36 @@ abstract class User implements ActiveRecordInterface
 
                 $result[$key] = $this->collGalleries->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
+            if (null !== $this->collBansRelatedByIdUser) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'bans';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'banss';
+                        break;
+                    default:
+                        $key = 'Bans';
+                }
+
+                $result[$key] = $this->collBansRelatedByIdUser->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collBansRelatedByBannedBy) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'bans';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'banss';
+                        break;
+                    default:
+                        $key = 'Bans';
+                }
+
+                $result[$key] = $this->collBansRelatedByBannedBy->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
         }
 
         return $result;
@@ -2520,6 +2615,18 @@ abstract class User implements ActiveRecordInterface
                 }
             }
 
+            foreach ($this->getBansRelatedByIdUser() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addBanRelatedByIdUser($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getBansRelatedByBannedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addBanRelatedByBannedBy($relObj->copy($deepCopy));
+                }
+            }
+
         } // if ($deepCopy)
 
         if ($makeNew) {
@@ -2692,6 +2799,12 @@ abstract class User implements ActiveRecordInterface
         }
         if ('Gallery' == $relationName) {
             return $this->initGalleries();
+        }
+        if ('BanRelatedByIdUser' == $relationName) {
+            return $this->initBansRelatedByIdUser();
+        }
+        if ('BanRelatedByBannedBy' == $relationName) {
+            return $this->initBansRelatedByBannedBy();
         }
     }
 
@@ -5046,6 +5159,456 @@ abstract class User implements ActiveRecordInterface
     }
 
     /**
+     * Clears out the collBansRelatedByIdUser collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addBansRelatedByIdUser()
+     */
+    public function clearBansRelatedByIdUser()
+    {
+        $this->collBansRelatedByIdUser = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collBansRelatedByIdUser collection loaded partially.
+     */
+    public function resetPartialBansRelatedByIdUser($v = true)
+    {
+        $this->collBansRelatedByIdUserPartial = $v;
+    }
+
+    /**
+     * Initializes the collBansRelatedByIdUser collection.
+     *
+     * By default this just sets the collBansRelatedByIdUser collection to an empty array (like clearcollBansRelatedByIdUser());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initBansRelatedByIdUser($overrideExisting = true)
+    {
+        if (null !== $this->collBansRelatedByIdUser && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = BanTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collBansRelatedByIdUser = new $collectionClassName;
+        $this->collBansRelatedByIdUser->setModel('\Models\Ban');
+    }
+
+    /**
+     * Gets an array of ChildBan objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildBan[] List of ChildBan objects
+     * @throws PropelException
+     */
+    public function getBansRelatedByIdUser(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collBansRelatedByIdUserPartial && !$this->isNew();
+        if (null === $this->collBansRelatedByIdUser || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collBansRelatedByIdUser) {
+                // return empty collection
+                $this->initBansRelatedByIdUser();
+            } else {
+                $collBansRelatedByIdUser = ChildBanQuery::create(null, $criteria)
+                    ->filterByUserWho($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collBansRelatedByIdUserPartial && count($collBansRelatedByIdUser)) {
+                        $this->initBansRelatedByIdUser(false);
+
+                        foreach ($collBansRelatedByIdUser as $obj) {
+                            if (false == $this->collBansRelatedByIdUser->contains($obj)) {
+                                $this->collBansRelatedByIdUser->append($obj);
+                            }
+                        }
+
+                        $this->collBansRelatedByIdUserPartial = true;
+                    }
+
+                    return $collBansRelatedByIdUser;
+                }
+
+                if ($partial && $this->collBansRelatedByIdUser) {
+                    foreach ($this->collBansRelatedByIdUser as $obj) {
+                        if ($obj->isNew()) {
+                            $collBansRelatedByIdUser[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collBansRelatedByIdUser = $collBansRelatedByIdUser;
+                $this->collBansRelatedByIdUserPartial = false;
+            }
+        }
+
+        return $this->collBansRelatedByIdUser;
+    }
+
+    /**
+     * Sets a collection of ChildBan objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $bansRelatedByIdUser A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setBansRelatedByIdUser(Collection $bansRelatedByIdUser, ConnectionInterface $con = null)
+    {
+        /** @var ChildBan[] $bansRelatedByIdUserToDelete */
+        $bansRelatedByIdUserToDelete = $this->getBansRelatedByIdUser(new Criteria(), $con)->diff($bansRelatedByIdUser);
+
+
+        $this->bansRelatedByIdUserScheduledForDeletion = $bansRelatedByIdUserToDelete;
+
+        foreach ($bansRelatedByIdUserToDelete as $banRelatedByIdUserRemoved) {
+            $banRelatedByIdUserRemoved->setUserWho(null);
+        }
+
+        $this->collBansRelatedByIdUser = null;
+        foreach ($bansRelatedByIdUser as $banRelatedByIdUser) {
+            $this->addBanRelatedByIdUser($banRelatedByIdUser);
+        }
+
+        $this->collBansRelatedByIdUser = $bansRelatedByIdUser;
+        $this->collBansRelatedByIdUserPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Ban objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Ban objects.
+     * @throws PropelException
+     */
+    public function countBansRelatedByIdUser(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collBansRelatedByIdUserPartial && !$this->isNew();
+        if (null === $this->collBansRelatedByIdUser || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collBansRelatedByIdUser) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getBansRelatedByIdUser());
+            }
+
+            $query = ChildBanQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserWho($this)
+                ->count($con);
+        }
+
+        return count($this->collBansRelatedByIdUser);
+    }
+
+    /**
+     * Method called to associate a ChildBan object to this object
+     * through the ChildBan foreign key attribute.
+     *
+     * @param  ChildBan $l ChildBan
+     * @return $this|\Models\User The current object (for fluent API support)
+     */
+    public function addBanRelatedByIdUser(ChildBan $l)
+    {
+        if ($this->collBansRelatedByIdUser === null) {
+            $this->initBansRelatedByIdUser();
+            $this->collBansRelatedByIdUserPartial = true;
+        }
+
+        if (!$this->collBansRelatedByIdUser->contains($l)) {
+            $this->doAddBanRelatedByIdUser($l);
+
+            if ($this->bansRelatedByIdUserScheduledForDeletion and $this->bansRelatedByIdUserScheduledForDeletion->contains($l)) {
+                $this->bansRelatedByIdUserScheduledForDeletion->remove($this->bansRelatedByIdUserScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildBan $banRelatedByIdUser The ChildBan object to add.
+     */
+    protected function doAddBanRelatedByIdUser(ChildBan $banRelatedByIdUser)
+    {
+        $this->collBansRelatedByIdUser[]= $banRelatedByIdUser;
+        $banRelatedByIdUser->setUserWho($this);
+    }
+
+    /**
+     * @param  ChildBan $banRelatedByIdUser The ChildBan object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removeBanRelatedByIdUser(ChildBan $banRelatedByIdUser)
+    {
+        if ($this->getBansRelatedByIdUser()->contains($banRelatedByIdUser)) {
+            $pos = $this->collBansRelatedByIdUser->search($banRelatedByIdUser);
+            $this->collBansRelatedByIdUser->remove($pos);
+            if (null === $this->bansRelatedByIdUserScheduledForDeletion) {
+                $this->bansRelatedByIdUserScheduledForDeletion = clone $this->collBansRelatedByIdUser;
+                $this->bansRelatedByIdUserScheduledForDeletion->clear();
+            }
+            $this->bansRelatedByIdUserScheduledForDeletion[]= clone $banRelatedByIdUser;
+            $banRelatedByIdUser->setUserWho(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collBansRelatedByBannedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addBansRelatedByBannedBy()
+     */
+    public function clearBansRelatedByBannedBy()
+    {
+        $this->collBansRelatedByBannedBy = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collBansRelatedByBannedBy collection loaded partially.
+     */
+    public function resetPartialBansRelatedByBannedBy($v = true)
+    {
+        $this->collBansRelatedByBannedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collBansRelatedByBannedBy collection.
+     *
+     * By default this just sets the collBansRelatedByBannedBy collection to an empty array (like clearcollBansRelatedByBannedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initBansRelatedByBannedBy($overrideExisting = true)
+    {
+        if (null !== $this->collBansRelatedByBannedBy && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = BanTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collBansRelatedByBannedBy = new $collectionClassName;
+        $this->collBansRelatedByBannedBy->setModel('\Models\Ban');
+    }
+
+    /**
+     * Gets an array of ChildBan objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildUser is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildBan[] List of ChildBan objects
+     * @throws PropelException
+     */
+    public function getBansRelatedByBannedBy(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collBansRelatedByBannedByPartial && !$this->isNew();
+        if (null === $this->collBansRelatedByBannedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collBansRelatedByBannedBy) {
+                // return empty collection
+                $this->initBansRelatedByBannedBy();
+            } else {
+                $collBansRelatedByBannedBy = ChildBanQuery::create(null, $criteria)
+                    ->filterByUserBy($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collBansRelatedByBannedByPartial && count($collBansRelatedByBannedBy)) {
+                        $this->initBansRelatedByBannedBy(false);
+
+                        foreach ($collBansRelatedByBannedBy as $obj) {
+                            if (false == $this->collBansRelatedByBannedBy->contains($obj)) {
+                                $this->collBansRelatedByBannedBy->append($obj);
+                            }
+                        }
+
+                        $this->collBansRelatedByBannedByPartial = true;
+                    }
+
+                    return $collBansRelatedByBannedBy;
+                }
+
+                if ($partial && $this->collBansRelatedByBannedBy) {
+                    foreach ($this->collBansRelatedByBannedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collBansRelatedByBannedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collBansRelatedByBannedBy = $collBansRelatedByBannedBy;
+                $this->collBansRelatedByBannedByPartial = false;
+            }
+        }
+
+        return $this->collBansRelatedByBannedBy;
+    }
+
+    /**
+     * Sets a collection of ChildBan objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $bansRelatedByBannedBy A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function setBansRelatedByBannedBy(Collection $bansRelatedByBannedBy, ConnectionInterface $con = null)
+    {
+        /** @var ChildBan[] $bansRelatedByBannedByToDelete */
+        $bansRelatedByBannedByToDelete = $this->getBansRelatedByBannedBy(new Criteria(), $con)->diff($bansRelatedByBannedBy);
+
+
+        $this->bansRelatedByBannedByScheduledForDeletion = $bansRelatedByBannedByToDelete;
+
+        foreach ($bansRelatedByBannedByToDelete as $banRelatedByBannedByRemoved) {
+            $banRelatedByBannedByRemoved->setUserBy(null);
+        }
+
+        $this->collBansRelatedByBannedBy = null;
+        foreach ($bansRelatedByBannedBy as $banRelatedByBannedBy) {
+            $this->addBanRelatedByBannedBy($banRelatedByBannedBy);
+        }
+
+        $this->collBansRelatedByBannedBy = $bansRelatedByBannedBy;
+        $this->collBansRelatedByBannedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Ban objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related Ban objects.
+     * @throws PropelException
+     */
+    public function countBansRelatedByBannedBy(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collBansRelatedByBannedByPartial && !$this->isNew();
+        if (null === $this->collBansRelatedByBannedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collBansRelatedByBannedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getBansRelatedByBannedBy());
+            }
+
+            $query = ChildBanQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserBy($this)
+                ->count($con);
+        }
+
+        return count($this->collBansRelatedByBannedBy);
+    }
+
+    /**
+     * Method called to associate a ChildBan object to this object
+     * through the ChildBan foreign key attribute.
+     *
+     * @param  ChildBan $l ChildBan
+     * @return $this|\Models\User The current object (for fluent API support)
+     */
+    public function addBanRelatedByBannedBy(ChildBan $l)
+    {
+        if ($this->collBansRelatedByBannedBy === null) {
+            $this->initBansRelatedByBannedBy();
+            $this->collBansRelatedByBannedByPartial = true;
+        }
+
+        if (!$this->collBansRelatedByBannedBy->contains($l)) {
+            $this->doAddBanRelatedByBannedBy($l);
+
+            if ($this->bansRelatedByBannedByScheduledForDeletion and $this->bansRelatedByBannedByScheduledForDeletion->contains($l)) {
+                $this->bansRelatedByBannedByScheduledForDeletion->remove($this->bansRelatedByBannedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildBan $banRelatedByBannedBy The ChildBan object to add.
+     */
+    protected function doAddBanRelatedByBannedBy(ChildBan $banRelatedByBannedBy)
+    {
+        $this->collBansRelatedByBannedBy[]= $banRelatedByBannedBy;
+        $banRelatedByBannedBy->setUserBy($this);
+    }
+
+    /**
+     * @param  ChildBan $banRelatedByBannedBy The ChildBan object to remove.
+     * @return $this|ChildUser The current object (for fluent API support)
+     */
+    public function removeBanRelatedByBannedBy(ChildBan $banRelatedByBannedBy)
+    {
+        if ($this->getBansRelatedByBannedBy()->contains($banRelatedByBannedBy)) {
+            $pos = $this->collBansRelatedByBannedBy->search($banRelatedByBannedBy);
+            $this->collBansRelatedByBannedBy->remove($pos);
+            if (null === $this->bansRelatedByBannedByScheduledForDeletion) {
+                $this->bansRelatedByBannedByScheduledForDeletion = clone $this->collBansRelatedByBannedBy;
+                $this->bansRelatedByBannedByScheduledForDeletion->clear();
+            }
+            $this->bansRelatedByBannedByScheduledForDeletion[]= clone $banRelatedByBannedBy;
+            $banRelatedByBannedBy->setUserBy(null);
+        }
+
+        return $this;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -5142,6 +5705,16 @@ abstract class User implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collBansRelatedByIdUser) {
+                foreach ($this->collBansRelatedByIdUser as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collBansRelatedByBannedBy) {
+                foreach ($this->collBansRelatedByBannedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
         $this->collArticles = null;
@@ -5154,6 +5727,8 @@ abstract class User implements ActiveRecordInterface
         $this->collIdeasRelatedByApprovedBy = null;
         $this->collMembershipApplications = null;
         $this->collGalleries = null;
+        $this->collBansRelatedByIdUser = null;
+        $this->collBansRelatedByBannedBy = null;
         $this->aImage = null;
         $this->aMember = null;
     }

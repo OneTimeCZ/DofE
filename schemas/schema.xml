@@ -293,4 +293,23 @@
             <reference local="id_gallery" foreign="id"/>
         </foreign-key>
     </table>
+    
+    <!-- User access restrictions -->
+    <table name="bans" phpName="Ban">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="id_user" type="integer" required="true"/>
+        <column name="banned_by" type="integer" required="true"/>
+        <column name="reason" type="varchar" size="250"/>
+        <column name="ending_date" type="timestamp" required="true"/>
+        
+        <foreign-key foreignTable="users" phpName="UserWho">
+            <reference local="id_user" foreign="id"/>
+        </foreign-key>
+        
+        <foreign-key foreignTable="users" phpName="UserBy">
+            <reference local="banned_by" foreign="id"/>
+        </foreign-key>
+        
+        <behavior name="timestampable" />
+    </table>
 </database>

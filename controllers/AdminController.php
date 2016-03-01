@@ -25,6 +25,8 @@ use Models\MembershipApplication;
 use Models\MembershipApplicationQuery;
 use Models\Gallery;
 use Models\GalleryQuery;
+use Models\Ban;
+use Models\BanQuery;
 use Propel\Runtime\ActiveQuery\Criteria;
 use \DateTime;
 
@@ -148,6 +150,11 @@ class AdminController extends Controller{
         $article = ArticleQuery::create()
             ->findPk($id);
         
+        if($article == NULL) {
+            $this->addPopup('danger', 'Článek se specifikovaným identifikačním číslem se v databázi nenachází.');
+            redirectTo('/administrace/clanky');
+        }
+        
         if(!$this->isAdmin()){
             if($article->getIdUser() != $_SESSION["user"]->getId()){
                 $this->addPopup('danger', 'Pro úpravu cizích článků nemáte dostatečná práva.');
@@ -159,7 +166,7 @@ class AdminController extends Controller{
             ->find();
         
         $this->view('Admin/editArticle', 'admin_template', [
-            'active' => 'addArticle',
+            'active' => 'list',
             'title' => 'Upravit článek',
             'js' => array('plugins/tinymce/tinymce.min', 'scripts/tinymceinit'),
             'categories' => $categories,
@@ -237,6 +244,45 @@ class AdminController extends Controller{
             $article->setTitle($_POST["title"]);
             $article->setKeywords(str_replace(", ", ",", $_POST["keywords"]));
             $article->setContent($_POST["content"]);
+            
+            if(isset($_POST["image-article"])){
+                $data = explode(',', $_POST["image-article"]);
+                if(count($data) == 2 && $data[0] == "data:image/png;base64" && base64_decode($data[1])){
+                    $dir = "includes/images/fullsize/";
+                    $img = imagecreatefromstring(base64_decode($data[1]));
+                    do {
+                        $name = token(20).".png";
+                        $path = $dir.$name;
+                    }
+                    while(file_exists($path));
+
+                    $i = new Image();
+                    $i->setPath($name)
+                        ->setThumbnailPath($name)
+                        ->setType("fullsize")
+                        ->save();
+                    imagepng($img, $path);
+
+                    $dir = "includes/images/960x540/";
+                    $path = $dir.$name;
+                    imagepng(resizeImg($img, 960, 540), $path);
+
+                    $dir = "includes/images/50x50/";
+                    $path = $dir.$name;
+                    imagepng(resizeImg($img, 50, 50), $path);
+                    
+                    $im = ImageQuery::create()
+                        ->filterByPath($name)
+                        ->findOne();
+
+                    $article->setIdImage($im->getId());
+                }
+
+                else {
+                    $this->addPopup('danger', 'Něco se pokazilo při nahrávání obrázku. Zkuste to prosím znovu.');
+                    redirectTo('/administrace/clanek/' . $id . '/upravit');
+                }
+            }
             
             $article->save();
             
@@ -544,7 +590,7 @@ class AdminController extends Controller{
         
         if($user_report == NULL){
             $this->addPopup('danger', 'Nahlášení uživatele s tímto identifikačním číslem se v databázi nenachází.');
-            redirecTo("/administrace");
+            redirectTo("/administrace/nahlaseni-uzivatele");
         }
         
         $this->view('Admin/singleUserReportPage', 'admin_template', [
@@ -552,6 +598,61 @@ class AdminController extends Controller{
             'title' => 'Nahlášení uživatele',
             'user_report' => $user_report
         ]);
+    }
+    
+    public function deleteUserReport($id){
+        if(!$this->isAdmin()){
+            $this->addPopup('danger', 'Pro odstranění nahlášení nemáte dostatečná práva.');
+            redirectTo('/administrace/nahlaseni-uzivatele');
+        }
+        
+        $report = UserReportQuery::create()
+            ->findPk($id);
+        
+        if($report == NULL) {
+            $this->addPopup('danger', 'Nahlášení uživatele se zadaným identifikačním číslem se v databázi nenachází.');
+            redirectTo('/administrace/nahlaseni-uzivatele');
+        }
+        
+        $report->delete();
+        
+        $this->addPopup('success', 'Nahlášení uživatele bylo úspěšně odstraněno.');
+        redirectTo('/administrace/nahlaseni-uzivatele');
+    }
+    
+    public function banUser($id){
+        if(!$this->isAdmin()){
+            $this->addPopup('danger', 'Pro zakázání přístupu nemáte dostatečná práva.');
+            redirectTo('/administrace/nahlaseni-uzivatele');
+        }
+        
+        $user = UserQuery::create()
+            ->findPk($id);
+        
+        if($user == NULL) {
+            $this->addPopup('danger', 'Uživatel se zadaným identifikačním číslem se v databázi nenachází.');
+            redirectTo('/administrace/nahlaseni-uzivatele');
+        }
+        
+        $ban = new Ban;
+        $ban->setReason($_POST["reason"]);
+        $ban->setIdUser($id);
+        $end_date = new DateTime();
+        $end_date->setTimestamp($end_date->format('U') + $_POST["length"]);
+        $ban->setEndingDate($end_date->format('U'));
+        $ban->setBannedBy($_SESSION["user"]->getId());
+        $ban->save();
+        
+        $reports = UserReportQuery::create()
+            ->filterByIdUserReported($id)
+            ->find();
+        
+        foreach($reports as $r) {
+            $r->delete();
+        }
+        
+        $this->addPopup('success', 'Uživateli ' . $user->getUsername() . ' byl úspěšně zakázán přístup.');
+        redirectTo('/administrace/nahlaseni-uzivatele');
     }
     
     public function ideaSuggestionsPage(){

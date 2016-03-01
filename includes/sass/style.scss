@@ -534,7 +534,7 @@ body {
                             overflow: hidden;
                             
                             div.page-heading {
-                                height: 64px;
+                                line-height: 64px;
                                 background: white;
                                 margin-bottom: 30px;
                                 border-radius: 5px;
@@ -544,6 +544,17 @@ body {
                                     line-height: 64px;
                                     margin: 0;
                                     padding-left: 20px;
+                                }
+                                
+                                @media (max-width: $break - 1px) {
+                                    & {
+                                        line-height: 40px;
+                                    
+                                        h1 {
+                                            line-height: 40px;
+                                            font-size: 1.5em;
+                                        }
+                                    }
                                 }
                                 
                                 &.register {

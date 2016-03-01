@@ -19,7 +19,12 @@
                             <select name="user" id="user" title="Zvolte jméno uživatele" class="form-control">
                                 <option value="0" data-hidden="true"></option>
                             <?php foreach($data["users"] as $user): ?>    
-                                <option value="<?= $user->getId() ?>"><?= $user->getName() ?> <?= $user->getSurname() ?> (<?= $user->getUsername() ?>)</option>
+                                <option value="<?= $user->getId() ?>">
+                                <?php
+                                    if($user->getIdMember() == NULL) echo $user->getUsername();
+                                    else echo $user->getMember()->getName() . ' ' . $user->getMember()->getSurname() . ' (' . $user->getUsername() . ")"
+                                ?>
+                                </option>
                             <?php endforeach; ?>
                             </select>
                         </div>

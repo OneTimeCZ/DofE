@@ -308,6 +308,20 @@ class UserTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, 'Galleries', false);
+        $this->addRelation('BanRelatedByIdUser', '\\Models\\Ban', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':id_user',
+    1 => ':id',
+  ),
+), null, null, 'BansRelatedByIdUser', false);
+        $this->addRelation('BanRelatedByBannedBy', '\\Models\\Ban', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':banned_by',
+    1 => ':id',
+  ),
+), null, null, 'BansRelatedByBannedBy', false);
     } // buildRelations()
 
     /**

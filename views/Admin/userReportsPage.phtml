@@ -11,8 +11,9 @@
                     <tr>
                         <th class="col-xs-2 text-center">Nahlásil (kdo)</th>
                         <th class="col-xs-2 text-center">Nahlásil (koho)</th>
-                        <th class="col-xs-6">Důvod</th>
+                        <th class="col-xs-5">Důvod</th>
                         <th class="col-xs-2 text-center">Datum</th>
+                        <th class="col-xs-1 text-center">Odkaz</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,8 +33,9 @@
                             <?= $report->getUserReported()->getUsername() ?>
                             <?php endif; ?>
                         </td>
-                        <td class="col-xs-6"><?= $report->getReason() ?></td>
+                        <td class="col-xs-5"><?= $report->getReason() ?></td>
                         <td class="col-xs-2 text-center"><?= $report->getCreatedAt()->format('d.m.Y H:i:s') ?></td>
+                        <td class="col-xs-1 text-center"><a href="/administrace/nahlaseni-uzivatele/<?= $report->getId() ?>">Odkaz</a></td>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>

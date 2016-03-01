@@ -299,7 +299,7 @@ body {
             border-radius: 5px;
             overflow: hidden; }
             body div.page-container div.container-fluid div.main-content div.main div.content div.section div.page-heading {
-              height: 64px;
+              line-height: 64px;
               background: white;
               margin-bottom: 30px;
               border-radius: 5px;
@@ -308,6 +308,12 @@ body {
                 line-height: 64px;
                 margin: 0;
                 padding-left: 20px; }
+              @media (max-width: 767px) {
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.page-heading {
+                  line-height: 40px; }
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.page-heading h1 {
+                    line-height: 40px;
+                    font-size: 1.5em; } }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.page-heading.register h1 {
                 padding-left: 0;
                 margin-left: 8.33333%; }
