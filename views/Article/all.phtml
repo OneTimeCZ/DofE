@@ -20,7 +20,7 @@
                         <p>
                             Autor:
                             <a href="/profil/<?= $article->getUser()->getUrl() ?>" rel="author" title="Profil uživatele <?= $article->getUser()->getUsername() ?>"><?= $article->getUser()->getUsername() ?></a>
-                            | <?= $article->getCreatedAt()->format("d.m.Y H:i:s") ?> |
+                            | <?= $article->getCreatedAt()->format("d.m.Y") ?> |
                             <a href="/clanky/<?= $article->getCategory()->getUrl() ?>"><?= $article->getCategory()->getName() ?></a>
                         </p>
                     </div>

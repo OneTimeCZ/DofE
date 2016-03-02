@@ -79,6 +79,16 @@ body {
         body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box {
           padding: 10px;
           overflow: auto; }
+          body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box.gallery-list div.item {
+            padding-left: 10px;
+            padding-right: 10px; }
+            body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box.gallery-list div.item div.inner {
+              padding: 10px;
+              background: white;
+              border-radius: 5px; }
+              body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box.gallery-list div.item div.inner h4 {
+                height: 38px;
+                margin-bottom: 0; }
           body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box form.center div.form-group {
             width: 40%;
             margin-left: 30%; }
@@ -841,6 +851,15 @@ body {
                       color: gray; }
                       body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.post div.meta p a:hover, body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.post div.meta p a:focus {
                         color: #2c3e50; }
+                @media (min-width: 992px) {
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.post div.description p.description {
+                    height: 140px; } }
+                @media (min-width: 1200px) {
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.post div.description p.description {
+                    height: 120px; } }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.post a.read_more {
+                  display: block;
+                  margin: auto; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.article {
                 border-radius: 5px; }
                 body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.article div.meta {

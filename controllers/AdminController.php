@@ -25,6 +25,8 @@ use Models\MembershipApplication;
 use Models\MembershipApplicationQuery;
 use Models\Gallery;
 use Models\GalleryQuery;
+use Models\ImageGalleryMap;
+use Models\ImageGalleryMapQuery;
 use Models\Ban;
 use Models\BanQuery;
 use Propel\Runtime\ActiveQuery\Criteria;
@@ -777,11 +779,15 @@ class AdminController extends Controller{
     
     public function galleryList() {        
         if($this->isEditor()) {
-            $galleries = GalleryQuery::create()
+            $galleries = ImageGalleryMapQuery::create()
                 ->filterByIdUser($_SESSION["user"]->getId())
+                ->joinWith('Image')
+                ->joinWith('Gallery')
                 ->find();
         } elseif($this->isAdmin()) {
-            $galleries = GalleryQuery::create()
+            $galleries = ImageGalleryMapQuery::create()
+                ->joinWith('Image')
+                ->joinWith('Gallery')
                 ->find();
         }
         

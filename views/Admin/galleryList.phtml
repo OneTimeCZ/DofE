@@ -5,21 +5,26 @@
 <?php if(isset($data["galleries"])): ?>
 <div class="section">
     <div class="column single">
-        <div class="content-box">
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach($data["galleries"] as $gallery): ?>
-                    <tr>
-                        <td></td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+        <div class="content-box gallery-list">
+            <?php foreach($data["galleries"] as $gal): ?>
+            <div class="col-xs-6 col-sm-4 col-md-3 item">
+                <div class="inner">
+                    <?php $img = $gal->getGallery()->getImages(); ?>
+                    <a href="/administrace/galerie/<?= $gal->getGallery()->getId() ?>">
+                        <img src="/includes/images/fullsize/<?= $img[0]->getPath() ?>" alt="" title="" class="img img-responsive img-thumbnail">
+                    </a>
+                    <h4 class="text-center"><?= $gal->getGallery()->getName() ?></h4>
+                </div>
+            </div>
+            <?php endforeach; ?>
+            <div class="col-xs-6 col-sm-4 col-md-3 item">
+                <div class="inner">
+                    <a href="/administrace/galerie/pridat">
+                        <img src="/includes/images/add.png" alt="" title="" class="img img-responsive">
+                    </a>
+                    <h4 class="text-center">Přidat novou galerii</h4>
+                </div>
+            </div>
         </div>
     </div>
 </div>

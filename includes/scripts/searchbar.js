@@ -7,8 +7,8 @@ $(function () {
             },
             url: '/vyhledavani',
             success: function (response) {
-                //this is an user object pff
-                alert(JSON.parse(response));
+                var data = JSON.parse(response);
+                alert(data);
             }
         });
     });

@@ -153,6 +153,24 @@ body {
                                     padding: 10px;
                                     overflow: auto;
                                     
+                                    &.gallery-list {
+                                        div.item {
+                                            padding-left: 10px;
+                                            padding-right: 10px;
+                                            
+                                            div.inner {
+                                                padding: 10px;
+                                                background: white;
+                                                border-radius: 5px;
+                                                
+                                                h4 {
+                                                    height: 38px;
+                                                    margin-bottom: 0;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    
                                     form.center {
                                         div.form-group {
                                             width: 40%;
@@ -1394,6 +1412,27 @@ body {
                                                 }
                                             }
                                         }
+                                    }
+                                    
+                                    div.description {
+                                        p.description {
+                                            @media (min-width: 992px) {
+                                                & {    
+                                                    height: 140px;
+                                                }
+                                            }
+                                            
+                                            @media (min-width: 1200px) {
+                                                & {
+                                                    height: 120px;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    
+                                    a.read_more {
+                                        display: block;
+                                        margin: auto;
                                     }
                                 }
                                 

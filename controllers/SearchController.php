@@ -35,8 +35,9 @@ class SearchController extends Controller{
             ->orderByPermissions('desc')
             ->where('User.Username like ?', '%'.$text.'%')
             //limit
+            ->select('Username', 'Url')
             ->find();
-
+        
         if(!$users->isEmpty()){
             echo json_encode($users);
         }
