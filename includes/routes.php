@@ -201,4 +201,4 @@
     $router->addPost('User.ideaSuggestion', '/nastaveni/navrh-zlepseni');
 
 //---SEARCH---
-    $router->addPost('Search.searchBar', '/vyhledavani');
+    $router->addPost('Search.index', '/vyhledavani');

@@ -7,8 +7,14 @@ $(function () {
             },
             url: '/vyhledavani',
             success: function (response) {
+                //objects
                 var data = JSON.parse(response);
-                alert(data);
+                
+                /*
+                $.each(data, function (i, d) {
+                    console.log(d.Username);
+                });
+                */
             }
         });
     });

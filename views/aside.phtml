@@ -5,12 +5,16 @@
         </div>
         <div class="section-content">   
             <div class="input-group search col-md-12">
-                <input type="text" id="searchbar" class="search-query form-control" placeholder="Vyhledávání" />
-                <span class="input-group-btn">
-                    <button class="btn btn-default" type="button">
-                        <span class=" glyphicon glyphicon-search"></span>
-                    </button>
-                </span>
+                <form role="form" method="post" action="/vyhledavani">
+                    <div class="input-group">
+                        <input type="text" id="searchbar" name="search" class="search-query form-control" placeholder="Vyhledávání" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="submit">
+                                <span class=" glyphicon glyphicon-search"></span>
+                            </button>
+                        </span>
+                    </div>
+                </form>
             </div>
         </div>     
     </div>

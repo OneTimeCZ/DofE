@@ -227,17 +227,19 @@ body {
                       display: block !important;
                       visibility: visible !important;
                       text-align: center; }
-              body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content div.search input.search-query {
+              body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content div.search div.input-group input.search-query {
                 padding-left: 15px;
                 border-top-right-radius: 0;
                 border-top-left-radius: 0;
                 border: 0; }
-              body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content div.search span.input-group-btn button {
+              body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content div.search div.input-group span.input-group-btn button {
                 border: 0;
                 border-top-right-radius: 0;
                 height: 34px;
                 padding: 6px 13px 6px 12px; }
-                body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content div.search span.input-group-btn button span.glyphicon-search {
+                body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content div.search div.input-group span.input-group-btn button:hover, body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content div.search div.input-group span.input-group-btn button:focus {
+                  background: white; }
+                body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content div.search div.input-group span.input-group-btn button span.glyphicon-search {
                   height: 20px;
                   line-height: 20px; }
               body div.page-container div.container-fluid div.main-content aside div.content div.section div.section-content ul.article-recent {
@@ -444,6 +446,25 @@ body {
               border-bottom-right-radius: 5px;
               border-bottom-left-radius: 5px;
               overflow: auto; }
+              body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.search-results div.item {
+                padding: 5px; }
+                @media (max-width: 767px) {
+                  body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.search-results div.item div.inner img {
+                    width: 50%;
+                    margin-left: 25%; } }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.search-results div.item div.inner img.avatar {
+                  width: 80%;
+                  margin: 10%;
+                  margin-bottom: 2%; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.search-results div.item div.inner p {
+                  text-align: center;
+                  margin: 5px;
+                  margin-bottom: 0; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.search-results div.item div.inner p.meta {
+                  height: 20px; }
+                body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.search-results div.item div.inner p.title {
+                  height: 40px;
+                  font-weight: bold; }
               body div.page-container div.container-fluid div.main-content div.main div.content div.section div.section-content.info {
                 padding: 0;
                 background: #e9eaed; }

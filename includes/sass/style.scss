@@ -426,23 +426,29 @@ body {
                                 }
                                                                 
                                 div.search {
-                                    input.search-query {
-                                        padding-left: 15px;
-                                        border-top-right-radius: 0;
-                                        border-top-left-radius: 0;
-                                        border: 0;
-                                    }
-                                    
-                                    span.input-group-btn {
-                                        button {
-                                            border: 0;
+                                    div.input-group {
+                                        input.search-query {
+                                            padding-left: 15px;
                                             border-top-right-radius: 0;
-                                            height: 34px;
-                                            padding: 6px 13px 6px 12px;
+                                            border-top-left-radius: 0;
+                                            border: 0;
+                                        }
 
-                                            span.glyphicon-search {
-                                                height: 20px;
-                                                line-height: 20px;
+                                        span.input-group-btn {
+                                            button {
+                                                border: 0;
+                                                border-top-right-radius: 0;
+                                                height: 34px;
+                                                padding: 6px 13px 6px 12px;
+                                                
+                                                &:hover, &:focus {
+                                                    background: white;
+                                                }
+
+                                                span.glyphicon-search {
+                                                    height: 20px;
+                                                    line-height: 20px;
+                                                }
                                             }
                                         }
                                     }
@@ -785,6 +791,44 @@ body {
                                 border-bottom-right-radius: 5px;
                                 border-bottom-left-radius: 5px;
                                 overflow: auto;
+                                
+                                &.search-results {
+                                    div.item {
+                                        padding: 5px;
+                                        
+                                        div.inner {
+                                            img {
+                                                @media (max-width: $break - 1px) {
+                                                    & {
+                                                        width: 50%;
+                                                        margin-left: 25%;
+                                                    }
+                                                }
+                                                
+                                                &.avatar {
+                                                    width: 80%;
+                                                    margin: 10%;
+                                                    margin-bottom: 2%;
+                                                }
+                                            }
+                                            
+                                            p {
+                                                text-align: center;
+                                                margin: 5px;
+                                                margin-bottom: 0;
+                                            }
+                                            
+                                            p.meta {
+                                                height: 20px;
+                                            }
+                                            
+                                            p.title {
+                                                height: 40px;
+                                                font-weight: bold;
+                                            }
+                                        }
+                                    }
+                                }
                                 
                                 &.info {
                                     padding: 0;

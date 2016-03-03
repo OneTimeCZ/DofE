@@ -10,36 +10,44 @@ use Models\ImageQuery;
 use Models\User;
 use Models\UserQuery;
 
-class SearchController extends Controller{
-    public function searchBar(){
-        //first checks articles
-            //in title
-            //in keywords
-        //then users
-        
-        //max number of results
-        $total_count = 7;
-        $text = $_POST["searchdata"];
-        
-        /*
-        $articles = ArticleQuery::create()
-            ->orderByCreatedAt('desc')
-            ->where('Article.Title like ?', '%'.$text.'%')
-            ->_or()
-            ->where('Article.Keywords like ?', '%'.$text.'%')
-            ->limit(4)
-            ->find();
-        */
+class SearchController extends Controller{    
+    public function index() {
+        if(isset($_POST["search"])){
+            $s = $_POST["search"];
+        }
         
         $users = UserQuery::create()
+            ->where('User.Username like ?', '%'.$s.'%')
             ->orderByPermissions('desc')
-            ->where('User.Username like ?', '%'.$text.'%')
-            //limit
-            ->select('Username', 'Url')
+            ->join('Image')
+            ->withColumn('Image.Path', 'AvatarPath')
+            ->select('Username', 'AvatarPath')
             ->find();
         
-        if(!$users->isEmpty()){
-            echo json_encode($users);
+        $articles = ArticleQuery::create()
+            ->where('Article.Title like ?', '%'.$s.'%')
+            ->_or()
+            ->where('Article.Keywords like ?', '%'.$s.'%')
+            ->orderByCreatedAt('desc')
+            ->join('User')
+            ->withColumn('User.Username', 'Author')
+            ->join('Category')
+            ->withColumn('Category.Name', 'CatgName')
+            ->join('Image')
+            ->withColumn('Image.Path', 'ImgPath')
+            ->select(array('Author', 'CatgName', 'ImgPath', 'Id', 'Title'))
+            ->find();
+        
+        if($articles->isEmpty() && $users->isEmpty()){
+            $this->addPopup('danger', 'Nebyl nalezen žádný článek ani uživatel.');
         }
+        
+        $this->view('Search/index', 'base_template', [
+            'active' => 'search',
+            'title' => 'Vyhledávání',
+            'recent' => ArticleQuery::recent(),
+            'articles' => $articles,
+            'users' => $users
+        ]);
     }
 }

@@ -1,0 +1,51 @@
+<div class="content">    
+    <div class="section">
+        <div class="page-heading">
+            <h1>Vyhledávání</h1>
+        </div>
+    </div>
+    
+    <?php if(!$data["articles"]->isEmpty()): ?>
+    <div class="section">
+        <div class="column single">
+            <div class="section-header small">
+                Články
+            </div>
+            <div class="section-content search-results">
+                <?php foreach($data["articles"] as $art): ?>
+                <div class="col-xs-12 col-sm-6 col-md-4 item">
+                    <div class="inner">
+                        <a href="/clanek/<?= $art["Id"] ?>">
+                            <img src="/includes/images/960x540/<?= $art["ImgPath"] ?>" class="img img-responsive img-thumbnail" alt="" title=""/>
+                        </a>
+                        <p class="meta"><?= $art["Author"] ?> | <?= $art["CatgName"] ?></p>
+                        <p class="title"><?= $art["Title"] ?></p>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+    
+    <?php if(!$data["users"]->isEmpty()): ?>
+    <div class="section">
+        <div class="column single">
+            <div class="section-header small">
+                Uživatelé
+            </div>
+            <div class="section-content search-results">
+                <?php foreach($data["users"] as $user) ?>
+                <div class="col-xs-12 col-sm-6 col-md-4 item">
+                    <div class="inner">
+                        <a href="/profil/<?= $user["Username"] ?>">
+                            <img class="avatar img img-responsive img-circle" src="/includes/images/200x200/<?= $user["AvatarPath"] ?>" alt="" title=""/>
+                        </a>
+                        <p class="title"><?= $user["Username"] ?></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+</div>
