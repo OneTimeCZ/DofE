@@ -1,0 +1,30 @@
+<div class="page-heading">
+    <h1>Galerie #<?= $data["id"] ?> - <?php foreach($data["images"] as $g) $gal = $g->getGallery()->getName(); ?><?= $gal ?></h1>
+</div>
+
+<?php if(isset($data["images"])): ?>
+<div class="section">
+    <div class="column single">
+        <div class="content-box gallery-list options">
+            <div class="inner">
+                <a>Odstranit fotografie <span class="fa fa-remove"></span></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section">
+    <div class="column single">
+        <div class="content-box gallery-list">
+            <?php foreach($data["images"] as $img): ?>
+            <div class="col-xs-6 col-sm-4 col-md-3 item">
+                <div class="inner">
+                    <?php $i = $img->getImage() ?>
+                    <img src="/includes/images/960x540/<?= $i->getPath() ?>" alt="" title="" class="img img-responsive">
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
+<?php endif; ?>

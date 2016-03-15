@@ -157,6 +157,7 @@ body {
                                         div.item {
                                             padding-left: 10px;
                                             padding-right: 10px;
+                                            margin-bottom: 20px;
                                             
                                             div.inner {
                                                 padding: 10px;
@@ -166,6 +167,31 @@ body {
                                                 h4 {
                                                     height: 38px;
                                                     margin-bottom: 0;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    
+                                    &.options {
+                                        padding-left: 20px;
+                                        padding-right: 20px;
+                                        
+                                        div.inner {
+                                            background: white;
+                                            padding: 5px;
+                                            border-radius: 5px;
+                                            
+                                            a {
+                                                margin: auto;
+                                                color: gray;
+                                                font-weight: bold;
+                                                font-size: 1.2em;
+                                                text-align: center;
+                                                cursor: pointer;
+                                                display: block;
+                                                
+                                                span {
+                                                    color: red;
                                                 }
                                             }
                                         }
@@ -1907,17 +1933,28 @@ footer {
                     margin-top: 10px;
                     margin-bottom: 5px;
                     color: white;
+                    
+                    @media (max-width: $break - 1px) {
+                        & {
+                            font-size: 1.4em;
+                        }
+                    }
                 }
                 
                 ul.footer-list {
-                    color: gray;
                     list-style-type: none;
                     margin-bottom: 0;
                     padding-left: 0;
                     
                     li {                        
                         a {
-                        
+                            color: gray;
+                            
+                            @media (max-width: $break - 1px) {
+                                & {
+                                    font-size: 1.2em;
+                                }
+                            }
                         }
                     }
                 }
@@ -1961,6 +1998,10 @@ div.progress-bar {
 
 .no-resize {
     resize: none;
+}
+
+.croppbox-gallery-input {
+    width: 100%;
 }
 
 .image-cropper-container {

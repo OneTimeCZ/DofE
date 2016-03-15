@@ -3,6 +3,7 @@
 namespace Models;
 
 use Models\Base\User as BaseUser;
+use Controllers\Controller as Controller;
 
 /**
  * Skeleton subclass for representing a row from the 'users' table.
@@ -41,7 +42,7 @@ class User extends BaseUser
         
         if(isset($popups)){
             foreach($popups as $p){
-                $this->addPopup($p["type"], $p["content"]);
+                Controller::addPopup($p["type"], $p["content"]);
             }
             
             return false;
@@ -87,7 +88,7 @@ class User extends BaseUser
         
         if(isset($popups)){
             foreach($popups as $p){
-                $this->addPopup($p["type"], $p["content"]);
+                Controller::addPopup($p["type"], $p["content"]);
             }
             
             return false;
@@ -107,7 +108,7 @@ class User extends BaseUser
         
         if(isset($popups)){
             foreach($popups as $p){
-                $this->addPopup($p["type"], $p["content"]);
+                Controller::addPopup($p["type"], $p["content"]);
             }
 
             return false;
@@ -151,7 +152,7 @@ class User extends BaseUser
         
         if(isset($popups)){
             foreach($popups as $p){
-                $this->addPopup($p["type"], $p["content"]);
+                Controller::addPopup($p["type"], $p["content"]);
             }
 
             return false;
@@ -179,7 +180,7 @@ class User extends BaseUser
         
         if(isset($popups)){
             foreach($popups as $p){
-                $this->addPopup($p["type"], $p["content"]);
+                Controller::addPopup($p["type"], $p["content"]);
             }
 
             return false;

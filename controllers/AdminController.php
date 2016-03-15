@@ -779,15 +779,11 @@ class AdminController extends Controller{
     
     public function galleryList() {        
         if($this->isEditor()) {
-            $galleries = ImageGalleryMapQuery::create()
+            $galleries = GalleryQuery::create()
                 ->filterByIdUser($_SESSION["user"]->getId())
-                ->joinWith('Image')
-                ->joinWith('Gallery')
                 ->find();
         } elseif($this->isAdmin()) {
-            $galleries = ImageGalleryMapQuery::create()
-                ->joinWith('Image')
-                ->joinWith('Gallery')
+            $galleries = GalleryQuery::create()
                 ->find();
         }
         
@@ -811,11 +807,31 @@ class AdminController extends Controller{
     }
     
     public function galleryPage($id) {
-    
+        $images = ImageGalleryMapQuery::create()
+            ->filterByIdGallery($id)
+            ->joinWith('Image')
+            ->joinWith('Gallery')
+            ->find();
+        
+        if($images->isEmpty()){
+            $this->addPopup('danger', 'Galerie se zadaným identifikačním číslem se v databázi nenachází.');
+            redirectTo('/administrace/galerie');
+        }
+        
+        $this->view('Admin/galleryPage', 'admin_template', [
+            'active' => 'galleryPage',
+            'title' => 'Galerie',
+            'images' => $images,
+            'id' => $id
+        ]);
     }
     
     public function newGalleryPage() {
-    
+        $this->view('Admin/addGallery', 'admin_template', [
+            'active' => 'addGallery',
+            'title' => 'Přidat galerii',
+            'js' => array('scripts/croppie-gallery')
+        ]);
     }
     
     public function saveGallery($id) {
@@ -857,7 +873,6 @@ class AdminController extends Controller{
     }
     
     public function setPermissions($username, $permissions) {
-        //permissions are 'propustit 0', 'povysit 1'
         if(!$this->isAdmin()){
             $this->addPopup('danger', 'Pro změnu práv uživatelů nemáte dostatečná práva.');
             redirectTo('/administrace');

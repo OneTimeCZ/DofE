@@ -158,7 +158,7 @@ class UserController extends Controller{
             $_SESSION["user"]->save();
         }
         
-        //resend confirmation email with email_confirm_token
+        resendEmailConfirmationToken($_SESSION["user"]->getUsername(), $_SESSION["user"]->getEmailConfirmToken(), $_SESSION["user"]->getEmail());
         
         $this->addPopup('success', 'Potvrzovací email byl odeslán.');
         redirectTo("/");
@@ -204,7 +204,6 @@ class UserController extends Controller{
             redirectTo("/registrace");
         } else {
             $token = token(50);
-            //EMAIL THE USER WITH CODE FOR EMAIL CONFIRMATION $token
             
             $user = new User();
             $user->setIdImage(6);
@@ -216,6 +215,8 @@ class UserController extends Controller{
             $user->setPasswordResetToken(NULL);
             $user->setPermissions(0);
             $user->setSigninCount(0);
+            
+            sendEmailConfirmationToken($user->getUsername(), $user->getEmailConfirmToken(), $user->getEmail());
 
             $user->save();
 
@@ -510,11 +511,10 @@ class UserController extends Controller{
             }
         }
         
-        $user->setPasswordResetToken(token(50));
+        if($user->getPasswordResetToken() == NULL) $user->setPasswordResetToken(token(50));
         $user->save();
         
-        //send email to the user with link to reset password
-        // adresa.cz/obnovit-heslo/$user->getUsername()/$user->getPasswordResetToken()
+        sendForgottenPasswordEmail($user->getUsername(), $user->getPasswordResetToken(), $user->getEmail());
         
         $this->addPopup('success', 'Na vaši emailovou adresu byly odeslány instrukce pro obnovu hesla.');
         redirectTo('/');
@@ -581,8 +581,8 @@ class UserController extends Controller{
             redirectTo("/");
         }
         
-        if(!checkPasswordResetValidity()){
-            redirectTo("/");
+        if(!User::checkPasswordResetValidity()){
+            redirectTo("/obnovit-heslo/".$username."/".$token);
         }
         
         $user->setPassword(sha1($_POST["password"]));

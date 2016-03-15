@@ -31,6 +31,7 @@ spl_autoload_register(function ($class) {
 session_start();
 
 require_once 'helpers/helper.php';
+require_once 'helpers/mail.php';
 
 //Instantiate AuraRouter as $router
 $router_factory = new RouterFactory;

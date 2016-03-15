@@ -81,7 +81,8 @@ body {
           overflow: auto; }
           body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box.gallery-list div.item {
             padding-left: 10px;
-            padding-right: 10px; }
+            padding-right: 10px;
+            margin-bottom: 20px; }
             body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box.gallery-list div.item div.inner {
               padding: 10px;
               background: white;
@@ -89,6 +90,23 @@ body {
               body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box.gallery-list div.item div.inner h4 {
                 height: 38px;
                 margin-bottom: 0; }
+          body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box.options {
+            padding-left: 20px;
+            padding-right: 20px; }
+            body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box.options div.inner {
+              background: white;
+              padding: 5px;
+              border-radius: 5px; }
+              body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box.options div.inner a {
+                margin: auto;
+                color: gray;
+                font-weight: bold;
+                font-size: 1.2em;
+                text-align: center;
+                cursor: pointer;
+                display: block; }
+                body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box.options div.inner a span {
+                  color: red; }
           body div.page-container div.content div.container-fluid div.admin_main div.content div.section div.column div.content-box form.center div.form-group {
             width: 40%;
             margin-left: 30%; }
@@ -1135,11 +1153,18 @@ footer {
         margin-top: 10px;
         margin-bottom: 5px;
         color: white; }
+        @media (max-width: 767px) {
+          footer div.container-fluid div.content div.section.footer-list h4 {
+            font-size: 1.4em; } }
       footer div.container-fluid div.content div.section.footer-list ul.footer-list {
-        color: gray;
         list-style-type: none;
         margin-bottom: 0;
         padding-left: 0; }
+        footer div.container-fluid div.content div.section.footer-list ul.footer-list li a {
+          color: gray; }
+          @media (max-width: 767px) {
+            footer div.container-fluid div.content div.section.footer-list ul.footer-list li a {
+              font-size: 1.2em; } }
 
 div.main-alert {
   margin: 15px; }
@@ -1165,6 +1190,9 @@ div.progress-bar.skill {
 
 .no-resize {
   resize: none; }
+
+.croppbox-gallery-input {
+  width: 100%; }
 
 .image-cropper-container {
   display: none;
