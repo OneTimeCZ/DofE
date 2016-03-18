@@ -12,9 +12,13 @@
                 <div class="section-content">
                     <div class="gallery-list">
                         <?php foreach($data["galleries"] as $gallery): ?>
+                        <?php $images = $gallery->getImages(); ?>
                         <div class="gallery-item col-sm-6 col-lg-4">
                             <div class="inner">
-                                <a class="gallery-link" href="/galerie/<?= $gallery->getId() ?>"><?= $gallery->getName() ?></a>
+                                <a class="gallery-link" href="/galerie/<?= $gallery->getId() ?>">
+                                    <img src="/includes/images/960x540/<?= $images[0]->getPath() ?>" class="img img-responsive">
+                                </a>
+                                <h4 class="text-center"><?= $gallery->getName() ?></h4>
                             </div>
                         </div>
                         <?php endforeach; ?>

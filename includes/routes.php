@@ -58,7 +58,12 @@
     //add a new gallery page
     $router->addGet('Admin.newGalleryPage', '/administrace/galerie/pridat');
     //add a new gallery
-    $router->addPost('Admin.saveGallery', '/administrace/galerie/{id}/ulozit')
+    $router->addPost('Admin.saveGallery', '/administrace/galerie/{id}/vytvorit')
+        ->setTokens([
+            'id' => '[1-9]\d*',
+        ]);
+    //save an edited gallery
+    $router->addPost('Admin.saveEditedGallery', '/administrace/galerie/{id}/ulozit')
         ->setTokens([
             'id' => '[1-9]\d*',
         ]);
@@ -73,9 +78,9 @@
             'id' => '[1-9]\d*',
         ]);
     //delete a photo
-    $router->addGet('Admin.imageDelete', '/administrace/galerie/{id}/odstranit')
+    $router->addPost('Admin.imageDelete', '/administrace/galerie/{id}/odstranit-fotografie')
         ->setTokens([
-            'id' => '[1-9]\d*'
+            'id' => '[1-9]\d*',
         ]);
     //accept a suggestion
     $router->addGet('Admin.ideaApprove', '/administrace/navrh/{id}/prijmout')

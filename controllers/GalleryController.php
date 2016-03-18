@@ -14,10 +14,6 @@ class GalleryController extends Controller{
     public function index(){
         $galleries = GalleryQuery::create()
             ->joinWith('User')
-            //shows only galleries that contain images
-            ->useImageGalleryMapQuery()
-                ->joinWith('Image')
-            ->endUse()
             ->find();
         
         $this->view('Gallery/index', 'base_template', [

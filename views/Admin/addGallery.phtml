@@ -8,8 +8,8 @@
             <form role="form" enctype="multipart/form-data" id="new_article" action="/administrace/galerie/ulozit" method="post">
                 <div class="col-lg-6 col-lg-offset-3">
                     <div class="form-group">
-                        <label for="title">Nadpis článku</label>
-                        <input class="form-control" type="text" name="title" placeholder="Zadejte nadpis článku" id="title" required>
+                        <label for="title">Název galerie</label>
+                        <input class="form-control" type="text" name="title" placeholder="Zadejte název galerie" id="title" required>
                         <input type="hidden" name="author" value="<?= $_SESSION["user"]->getId() ?>">
                     </div>
                 </div>

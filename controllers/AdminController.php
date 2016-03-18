@@ -802,8 +802,24 @@ class AdminController extends Controller{
         
     }
     
-    public function imageDelete($name){
+    public function imageDelete($id){
+        if(!isset($_POST["users"])){
+            $this->addPopup("danger", "Nevybrali jste žádnou fotografii na odstranění.");
+            redirectTo("/administrace/galerie/".$id);
+        }
         
+        $images = $_POST["users"];
+        $maps = ImageGalleryMapQuery::create()
+            ->filterByIdGallery($id)
+            ->find();
+        foreach($maps as $m){
+            if(in_array($m->getIdImage(), $images)){
+                $m->delete();
+            }
+        }
+        
+        $this->addPopup("success", "Fotografie byly úspěšně odstraněny z galerie.");
+        redirectTo("/administrace/galerie/".$id);
     }
     
     public function galleryPage($id) {
@@ -822,7 +838,8 @@ class AdminController extends Controller{
             'active' => 'galleryPage',
             'title' => 'Galerie',
             'images' => $images,
-            'id' => $id
+            'id' => $id,
+            'js' => array('scripts/admin-gallery')
         ]);
     }
     
