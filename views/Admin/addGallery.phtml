@@ -5,7 +5,7 @@
 <div class="section">
     <div class="column single">
         <div class="content-box">
-            <form role="form" enctype="multipart/form-data" id="new_article" action="/administrace/galerie/ulozit" method="post">
+            <form role="form" enctype="multipart/form-data" id="new_gallery" action="/administrace/galerie/vytvorit" method="post">
                 <div class="col-lg-6 col-lg-offset-3">
                     <div class="form-group">
                         <label for="title">Název galerie</label>
@@ -25,6 +25,12 @@
                 <div class="col-lg-6 col-lg-offset-3">
                     <div class="form-group">
                         <input class="form-control" type="submit" name="save" value="Vytvořit" id="add">
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 col-lg-offset-3">
+                    <div id="image-holder">
+                    
                     </div>
                 </div>
             </form>

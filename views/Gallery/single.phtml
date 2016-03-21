@@ -16,11 +16,11 @@
                         data-ratio="16/9"
                         data-maxwidth="100%"
                         data-nav="thumbs"
-                        data-fit="cover"
+                        data-fit="contain"
                         >
                         
                         <?php foreach($data["images"] as $image): ?>
-                        <img src="includes/images/fullsize/<?= $image->getPath() ?>">
+                        <img src="includes/images/960x540/<?= $image->getPath() ?>">
                         <?php endforeach; ?>
                     </div>
                 </div>

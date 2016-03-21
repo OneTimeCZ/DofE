@@ -851,8 +851,62 @@ class AdminController extends Controller{
         ]);
     }
     
-    public function saveGallery($id) {
+    public function saveGallery() {
+        $dir = "includes/images/fullsize/";
+        foreach($_POST["image"] as $post){
+            $d = explode(',', $post);
+            $img = imagecreatefromstring(base64_decode($d[1]));
+            do {
+                $name = token(20).".png";
+                $path = $dir.$name;
+            }
+            while(file_exists($path));
+            
+            $i = new Image();
+            $i->setPath($name)
+                ->setThumbnailPath($name)
+                ->setType("fullsize")
+                ->save();
+            imagepng(resizeImg($img, 1280, 720), $path);
+            
+            $dir = "includes/images/960x540/";
+            $path = $dir.$name;
+            imagepng(resizeImg($img, 960, 540), $path);
+            
+            $dir = "includes/images/50x50/";
+            $path = $dir.$name;
+            imagepng(resizeImg($img, 50, 50), $path);
+            
+            $names[] = $name;
+        }
         
+        $gal = new Gallery;
+        $gal->setIdUser($_POST["author"]);
+        $token = token(50);
+        $gal->setName($token);
+        $gal->save();
+        
+        $imgs = ImageQuery::create()
+            ->filterByPath($names)
+            ->find();
+        
+        $gal = GalleryQuery::create()
+            ->filterByName($token)
+            ->findOne();
+        
+        $gal->setName($_POST["title"]);
+        $gal->save();
+        
+        foreach($imgs as $i) {
+            $map = new ImageGalleryMap;
+            $map->setIdImage($i->getId());
+            $map->setIdGallery($gal->getId());
+            $map->save();
+        }
+    }
+    
+    public function saveEditedGallery($id) {
+    
     }
     
     public function userList() {

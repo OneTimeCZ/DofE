@@ -58,10 +58,7 @@
     //add a new gallery page
     $router->addGet('Admin.newGalleryPage', '/administrace/galerie/pridat');
     //add a new gallery
-    $router->addPost('Admin.saveGallery', '/administrace/galerie/{id}/vytvorit')
-        ->setTokens([
-            'id' => '[1-9]\d*',
-        ]);
+    $router->addPost('Admin.saveGallery', '/administrace/galerie/vytvorit');
     //save an edited gallery
     $router->addPost('Admin.saveEditedGallery', '/administrace/galerie/{id}/ulozit')
         ->setTokens([

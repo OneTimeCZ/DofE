@@ -1205,4 +1205,7 @@ div.progress-bar.skill {
 .to-delete {
   background: rgba(200, 0, 0, 0.5) !important; }
 
+.preview {
+  margin-bottom: 15px; }
+
 /*# sourceMappingURL=style.css.map */
