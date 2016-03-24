@@ -1,29 +1,30 @@
 <div class="page-heading">
-    <h1>Nahrát fotografii</h1>
+    <h1>Přidat fotografie do galerie</h1>
 </div>
 
 <div class="section">
     <div class="column single">
         <div class="content-box">
-            <form role="form" class="center" enctype="multipart/form-data" action="/administrace/fotografie/ulozit" method="post">
-                <div class="form-group">
-                    <label for="title">Název</label>
-                    <input type="text" class="form-control" id="title" name="title" placeholder="Zadejte název fotografie" />
-                </div>
-                <div class="form-group">
-                    <label for="dsc">Popisek</label>
-                    <input type="text" class="form-control" id="dsc" name="description" placeholder="Zadejte popisek fotografie" />
-                </div>
-                <div class="form-group">
-                    <label class="btn btn-default" for="file">Zvolit soubor</label>
-                    <input class="btn btn-lg btn-default" type="file" id="file" name="image" required />
-                </div>
-                <div class="image-cropper-container">
-                    <img src="#" id="admin-cropper">
+            <form role="form" enctype="multipart/form-data" id="edit_gallery" action="/administrace/galerie/<?= $data["id"] ?>/ulozit" method="post">                
+                <div class="col-lg-6 col-lg-offset-3">
+                    <div class="form-group">
+                        <label for="croppbox-input">Fotografie</label>
+                        <input class="croppbox-gallery-input btn btn-default" name="img[]" multiple="multiple" type="file" id="croppbox-input">
+                        <input type="hidden" name="author" value="<?= $_SESSION["user"]->getId() ?>">
+                        <div id="croppbox"></div>
+                    </div>
                 </div>
                 
-                <div class="form-group">
-                    <input class="btn btn-lg btn-default" type="submit" name="upload" value="Nahrát" id="upl">
+                <div class="col-lg-6 col-lg-offset-3">
+                    <div class="form-group">
+                        <input class="form-control" type="submit" name="save" value="Přidat" id="add">
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 col-lg-offset-3">
+                    <div id="image-holder">
+                    
+                    </div>
                 </div>
             </form>
         </div>

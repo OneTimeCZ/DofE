@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $("img").click(function () {
+    $("img.clickable").click(function () {
         $(this).parents("div.inner").toggleClass("to-delete");
         if($(this).parents("div.inner").hasClass("to-delete")){
             $("form.image-delete").append("<input type='hidden' name='users[]' value="+$(this).attr("data-id")+">");

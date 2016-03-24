@@ -6,8 +6,11 @@
 <div class="section">
     <div class="column single">
         <div class="content-box gallery-list options">
-            <div class="inner">
+            <div class="inner col-xs-6">
                 <a id="delete">Odstranit fotografie <span class="fa fa-remove"></span></a>
+            </div>
+            <div class="inner col-xs-6">
+                <a href="/administrace/galerie/<?= $data["id"] ?>/odstranit" id="delete_gallery">Odstranit galerii <span class="fa fa-remove"></span></a>
             </div>
         </div>
     </div>
@@ -20,10 +23,17 @@
             <div class="col-xs-6 col-sm-4 col-md-3 item">
                 <div class="inner">
                     <?php $i = $img->getImage() ?>
-                    <img data-id="<?= $i->getId() ?>" src="/includes/images/960x540/<?= $i->getPath() ?>" alt="" title="" class="img img-responsive">
+                    <img data-id="<?= $i->getId() ?>" src="/includes/images/960x540/<?= $i->getPath() ?>" alt="" title="" class="img clickable img-responsive">
                 </div>
             </div>
             <?php endforeach; ?>
+            <div class="col-xs-6 col-sm-4 col-md-3 item">
+                <div class="inner">
+                    <a href="/administrace/galerie/<?= $data["id"] ?>/nahrat">
+                        <img src="/includes/images/add.png" alt="" title="" class="img img-responsive">
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </div>

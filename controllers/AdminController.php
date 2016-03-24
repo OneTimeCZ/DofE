@@ -293,18 +293,12 @@ class AdminController extends Controller{
         }
     }
     
-    public function imageSave(){
-        
-        //name -> token(20)
-        //fullsize dir = fullsize
-        //create a thumbnail from the fullsize image
-        //thumbnail dir = thumbnails
-    }
-    
-    public function imageAdd(){
+    public function imageAdd($id){
         $this->view('Admin/uploadPhoto', 'admin_template', [
             'active' => 'uploadPhoto',
-            'title' => 'Nahrát fotografii'
+            'title' => 'Nahrát fotografii',
+            'id' => $id,
+            'js' => array('scripts/admin-photos-upload')
         ]);
     }
     
@@ -864,6 +858,7 @@ class AdminController extends Controller{
             
             $i = new Image();
             $i->setPath($name)
+                ->setDescription("Fotografie z galerie ".$_POST["title"])
                 ->setThumbnailPath($name)
                 ->setType("fullsize")
                 ->save();
@@ -903,10 +898,86 @@ class AdminController extends Controller{
             $map->setIdGallery($gal->getId());
             $map->save();
         }
+        
+        $this->addPopup('success', 'Galerie byla úspěšně vytvořena.');
+        redirectTo('/administrace/galerie');
     }
     
     public function saveEditedGallery($id) {
+        $gal = GalleryQuery::create()
+            ->findPk($id);
+        $dir = "includes/images/fullsize/";
+        foreach($_POST["image"] as $post){
+            $d = explode(',', $post);
+            $img = imagecreatefromstring(base64_decode($d[1]));
+            do {
+                $name = token(20).".png";
+                $path = $dir.$name;
+            }
+            while(file_exists($path));
+            
+            $i = new Image();
+            $i->setPath($name)
+                ->setDescription("Fotografie z galerie ".$gal->getName())
+                ->setThumbnailPath($name)
+                ->setType("fullsize")
+                ->save();
+            imagepng(resizeImg($img, 1280, 720), $path);
+            
+            $dir = "includes/images/960x540/";
+            $path = $dir.$name;
+            imagepng(resizeImg($img, 960, 540), $path);
+            
+            $dir = "includes/images/50x50/";
+            $path = $dir.$name;
+            imagepng(resizeImg($img, 50, 50), $path);
+            
+            $names[] = $name;
+        }
+        
+        $imgs = ImageQuery::create()
+            ->filterByPath($names)
+            ->find();
+        
+        foreach($imgs as $i) {
+            $map = new ImageGalleryMap;
+            $map->setIdImage($i->getId());
+            $map->setIdGallery($id);
+            $map->save();
+        }
+        
+        $this->addPopup('success', 'Fotografie byly úspěšné přidány do galerie.');
+        redirectTo('/administrace/galerie');
+    }
     
+    public function deleteGallery($id) {
+        $gal = GalleryQuery::create()
+            ->findPk($id);
+        
+        if($this->isEditor() && $gal->getIdUser() != $_SESSION["user"]->getId()) {
+            $this->addPopup("danger", "Na odstranění této galerie nemáte dostatečná práva.");
+            redirectTo('/administrace/galerie');
+        }
+        
+        $images = $gal->getImages();
+        
+        foreach($images as $i){
+            $imgs[] = $i->getId();
+        }
+        
+        $maps = ImageGalleryMapQuery::create()
+            ->filterByIdGallery($id)
+            ->filterByIdImage($imgs)
+            ->find();
+        
+        foreach($maps as $m) {
+            $m->delete();
+        }
+        
+        $gal->delete();
+        
+        $this->addPopup('success', 'Galerie '.$gal->getName().' byla úspěšně odstraněna!');
+        redirectTo('/administrace/galerie');
     }
     
     public function userList() {
