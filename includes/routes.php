@@ -172,6 +172,11 @@
     $router->addGet('User.saveDofeActivities', '/nastaveni/ulozit-aktivity');
     $router->addGet('User.forgottenPasswordPage', '/zapomenute-heslo');
     $router->addPost('User.forgottenPassword', '/zapomenute-heslo-email');
+    $router->addGet('User.emailTokenChange', '/zmenit-email/{username}/{token}/{email}')
+        ->setTokens([
+            'username' => '\w+',
+            'token' => '\w{50}',
+        ]);
     $router->addGet('User.resetPasswordPage', '/obnovit-heslo/{username}/{token}')
         ->setTokens([
             'username' => '\w+',

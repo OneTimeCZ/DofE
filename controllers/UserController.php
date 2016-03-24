@@ -207,10 +207,10 @@ class UserController extends Controller{
             
             $user = new User();
             $user->setIdImage(6);
-            $user->setUsername($_POST['regUsername']);
-            $user->setPassword(sha1($_POST['regPassword']));
-            $user->setEmail($_POST['regEmail']);
-            $user->setUrl($_POST['regUsername']);
+            $user->setUsername(strip_tags($_POST['regUsername']));
+            $user->setPassword(strip_tags(sha1($_POST['regPassword'])));
+            $user->setEmail(strip_tags($_POST['regEmail']));
+            $user->setUrl(strip_tags($_POST['regUsername']));
             $user->setEmailConfirmToken($token);
             $user->setPasswordResetToken(NULL);
             $user->setPermissions(0);
@@ -338,7 +338,7 @@ class UserController extends Controller{
         $user = UserQuery::create()
             ->findPk($_SESSION["user"]->getId());
                 
-        $user->setUsername($_POST["username"]);
+        $user->setUsername(strip_tags($_POST["username"]));
         $user->save();
                 
         $this->addPopup('success', 'Uživatelské jméno bylo úspěšně změněno.');
@@ -358,7 +358,7 @@ class UserController extends Controller{
         $user = UserQuery::create()
             ->findPk($_SESSION["user"]->getId());
             
-        $user->setPassword(sha1($_POST["new_password1"]));
+        $user->setPassword(sha1(strip_tags($_POST["new_password1"])));
         $user->save();
             
         $this->addPopup('success', 'Heslo bylo úspěšně změněno.');
@@ -384,8 +384,11 @@ class UserController extends Controller{
             $this->addPopup('danger', 'Tento email je již přiřazen k jinému účtu.');
             redirectTo('/nastaveni/zmenit-udaje');
         }
+        
+        $_SESSION["user"]->setEmailChangeToken(token(50));
+        $_SESSION["user"]->save();
             
-        //mail to existing
+        sendEmailChangeEmail($_SESSION["user"]->getUsername(), $_SESSION["user"]->getEmailChangeToken(), $_SESSION["user"]->getEmail(), $_POST["e-mail"]);
         $this->addPopup('info', 'Na váš email byla odeslána žádost o změnu.');
         redirectTo('/nastaveni/zmenit-udaje');
     }
@@ -458,8 +461,8 @@ class UserController extends Controller{
         }
         
         $app = new MembershipApplication;
-        $app->setName($_POST["name"]);
-        $app->setSurname($_POST["surname"]);
+        $app->setName(strip_tags($_POST["name"]));
+        $app->setSurname(strip_tags($_POST["surname"]));
         $app->setIdUser($_SESSION["user"]->getId());
         $app->setState("pending");
         $app->save();
@@ -585,7 +588,7 @@ class UserController extends Controller{
             redirectTo("/obnovit-heslo/".$username."/".$token);
         }
         
-        $user->setPassword(sha1($_POST["password"]));
+        $user->setPassword(sha1(strip_tags($_POST["password"])));
         $user->setPasswordResetToken(NULL);
         $user->save();
         
@@ -628,9 +631,9 @@ class UserController extends Controller{
         
         $bug = new BugReport;
         $bug->setIdUser($_SESSION["user"]->getId());
-        $bug->setLocation($_POST["location"]);
-        $bug->setDescription($_POST["description"]);
-        $bug->setSeverity($_POST["severity"]);
+        $bug->setLocation(strip_tags($_POST["location"]));
+        $bug->setDescription(strip_tags($_POST["description"]));
+        $bug->setSeverity(strip_tags($_POST["severity"]));
         if(isset($_POST["device"])) $bug->setDevice($_POST["device"]);
         if(isset($_POST["browser"])) $bug->setBrowser($_POST["browser"]);
         $bug->save();
@@ -684,8 +687,8 @@ class UserController extends Controller{
         
         $report = new UserReport;
         $report->setIdUser($_SESSION["user"]->getId());
-        $report->setIdUserReported($_POST["user"]);
-        $report->setReason($_POST["reason"]);
+        $report->setIdUserReported(strip_tags($_POST["user"]));
+        $report->setReason(strip_tags($_POST["reason"]));
         $report->save();
         
         $user = UserQuery::create()
@@ -726,11 +729,30 @@ class UserController extends Controller{
         
         $idea = new Idea;
         $idea->setIdUser($_SESSION["user"]->getId());
-        $idea->setDescription($_POST["description"]);
-        $idea->setReason($_POST["reason"]);
+        $idea->setDescription(strip_tags($_POST["description"]));
+        $idea->setReason(strip_tags($_POST["reason"]));
         $idea->save();
         
         $this->addPopup('success', 'Váš návrh byl úspěšně zaznamenán. Děkujeme!');
         redirectTo("/nastaveni");
+    }
+    
+    public function emailTokenChange($username, $token, $email){
+        $user = UserQuery::create()
+            ->filterByUsername($username)
+            ->filterByEmailChangeToken($token)
+            ->findOne();
+        
+        if(!$user){
+            $this->addPopup('danger', 'Uživatel se zadaným uživatelským jménem a kódem pro změnu emailu se v databázi nenachází.');
+            redirectTo('/');
+        }
+        
+        $user->setEmailChangeToken(NULL);
+        $user->setEmail($email);
+        $user->save();
+        
+        $this->addPopup('success', 'Váš email byl úspěšně změněn.');
+        redirectTo('/');
     }
 }

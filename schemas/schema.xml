@@ -14,6 +14,7 @@
         <column name="email" type="varchar" size="100" required="true"/>
         <column name="email_confirmed_at" type="timestamp"/>
         <column name="email_confirm_token" type="varchar" size="50"/>
+        <column name="email_change_token" type="varchar" size="50"/>
         <column name="password" type="varchar" size="50" required="true"/>
         <column name="password_reset_token" type="varchar" size="50"/>
         <column name="permissions" type="integer"/>

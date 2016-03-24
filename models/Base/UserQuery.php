@@ -28,6 +28,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery orderByEmail($order = Criteria::ASC) Order by the email column
  * @method     ChildUserQuery orderByEmailConfirmedAt($order = Criteria::ASC) Order by the email_confirmed_at column
  * @method     ChildUserQuery orderByEmailConfirmToken($order = Criteria::ASC) Order by the email_confirm_token column
+ * @method     ChildUserQuery orderByEmailChangeToken($order = Criteria::ASC) Order by the email_change_token column
  * @method     ChildUserQuery orderByPassword($order = Criteria::ASC) Order by the password column
  * @method     ChildUserQuery orderByPasswordResetToken($order = Criteria::ASC) Order by the password_reset_token column
  * @method     ChildUserQuery orderByPermissions($order = Criteria::ASC) Order by the permissions column
@@ -45,6 +46,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUserQuery groupByEmail() Group by the email column
  * @method     ChildUserQuery groupByEmailConfirmedAt() Group by the email_confirmed_at column
  * @method     ChildUserQuery groupByEmailConfirmToken() Group by the email_confirm_token column
+ * @method     ChildUserQuery groupByEmailChangeToken() Group by the email_change_token column
  * @method     ChildUserQuery groupByPassword() Group by the password column
  * @method     ChildUserQuery groupByPasswordResetToken() Group by the password_reset_token column
  * @method     ChildUserQuery groupByPermissions() Group by the permissions column
@@ -215,6 +217,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUser findOneByEmail(string $email) Return the first ChildUser filtered by the email column
  * @method     ChildUser findOneByEmailConfirmedAt(string $email_confirmed_at) Return the first ChildUser filtered by the email_confirmed_at column
  * @method     ChildUser findOneByEmailConfirmToken(string $email_confirm_token) Return the first ChildUser filtered by the email_confirm_token column
+ * @method     ChildUser findOneByEmailChangeToken(string $email_change_token) Return the first ChildUser filtered by the email_change_token column
  * @method     ChildUser findOneByPassword(string $password) Return the first ChildUser filtered by the password column
  * @method     ChildUser findOneByPasswordResetToken(string $password_reset_token) Return the first ChildUser filtered by the password_reset_token column
  * @method     ChildUser findOneByPermissions(int $permissions) Return the first ChildUser filtered by the permissions column
@@ -235,6 +238,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUser requireOneByEmail(string $email) Return the first ChildUser filtered by the email column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByEmailConfirmedAt(string $email_confirmed_at) Return the first ChildUser filtered by the email_confirmed_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByEmailConfirmToken(string $email_confirm_token) Return the first ChildUser filtered by the email_confirm_token column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByEmailChangeToken(string $email_change_token) Return the first ChildUser filtered by the email_change_token column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByPassword(string $password) Return the first ChildUser filtered by the password column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByPasswordResetToken(string $password_reset_token) Return the first ChildUser filtered by the password_reset_token column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOneByPermissions(int $permissions) Return the first ChildUser filtered by the permissions column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -253,6 +257,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUser[]|ObjectCollection findByEmail(string $email) Return ChildUser objects filtered by the email column
  * @method     ChildUser[]|ObjectCollection findByEmailConfirmedAt(string $email_confirmed_at) Return ChildUser objects filtered by the email_confirmed_at column
  * @method     ChildUser[]|ObjectCollection findByEmailConfirmToken(string $email_confirm_token) Return ChildUser objects filtered by the email_confirm_token column
+ * @method     ChildUser[]|ObjectCollection findByEmailChangeToken(string $email_change_token) Return ChildUser objects filtered by the email_change_token column
  * @method     ChildUser[]|ObjectCollection findByPassword(string $password) Return ChildUser objects filtered by the password column
  * @method     ChildUser[]|ObjectCollection findByPasswordResetToken(string $password_reset_token) Return ChildUser objects filtered by the password_reset_token column
  * @method     ChildUser[]|ObjectCollection findByPermissions(int $permissions) Return ChildUser objects filtered by the permissions column
@@ -353,7 +358,7 @@ abstract class UserQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, id_member, username, member_from, url, email, email_confirmed_at, email_confirm_token, password, password_reset_token, permissions, signin_count, id_image, last_signin_at, created_at, updated_at FROM users WHERE id = :p0';
+        $sql = 'SELECT id, id_member, username, member_from, url, email, email_confirmed_at, email_confirm_token, email_change_token, password, password_reset_token, permissions, signin_count, id_image, last_signin_at, created_at, updated_at FROM users WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -727,6 +732,35 @@ abstract class UserQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(UserTableMap::COL_EMAIL_CONFIRM_TOKEN, $emailConfirmToken, $comparison);
+    }
+
+    /**
+     * Filter the query on the email_change_token column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByEmailChangeToken('fooValue');   // WHERE email_change_token = 'fooValue'
+     * $query->filterByEmailChangeToken('%fooValue%'); // WHERE email_change_token LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $emailChangeToken The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildUserQuery The current query, for fluid interface
+     */
+    public function filterByEmailChangeToken($emailChangeToken = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($emailChangeToken)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $emailChangeToken)) {
+                $emailChangeToken = str_replace('*', '%', $emailChangeToken);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(UserTableMap::COL_EMAIL_CHANGE_TOKEN, $emailChangeToken, $comparison);
     }
 
     /**
