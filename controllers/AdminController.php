@@ -660,7 +660,7 @@ class AdminController extends Controller{
         
         if($ideas->isEmpty()){
             $this->addPopup('danger', 'Momentálně se v databázi nenachází žádné nepřijaté návrhy na zlepšení.');
-            redirecTo("/administrace");
+            redirectTo("/administrace");
         }
         
         $this->view('Admin/ideasPage', 'admin_template', [
@@ -680,7 +680,7 @@ class AdminController extends Controller{
         
         if($idea == NULL){
             $this->addPopup('danger', 'Návrh na zlepšení s tímto identifikačním číslem se v databázi nenachází.');
-            redirecTo("/administrace");
+            redirectTo("/administrace");
         }
         
         $this->view('Admin/singleIdeaPage', 'admin_template', [

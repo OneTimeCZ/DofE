@@ -70,7 +70,6 @@ if (isset($route->params['action'])){
 //Errors
 else{
 	$failure = $router->getFailedRoute();
-    //Do budoucna neechovat, viewovat error page
 	if ($failure->failedMethod()) {
 		header("HTTP/1.0 405 Method Not Allowed");
 		echo("405 Method Not Allowed");
