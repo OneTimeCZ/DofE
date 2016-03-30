@@ -59,7 +59,7 @@ class CommentTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 6;
+    const NUM_COLUMNS = 7;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class CommentTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 6;
+    const NUM_HYDRATE_COLUMNS = 7;
 
     /**
      * the column name for the id field
@@ -90,6 +90,11 @@ class CommentTableMap extends TableMap
      * the column name for the content field
      */
     const COL_CONTENT = 'comments.content';
+
+    /**
+     * the column name for the like_count field
+     */
+    const COL_LIKE_COUNT = 'comments.like_count';
 
     /**
      * the column name for the created_at field
@@ -113,11 +118,11 @@ class CommentTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'IdUser', 'IdArticle', 'Content', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_CAMELNAME     => array('id', 'idUser', 'idArticle', 'content', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(CommentTableMap::COL_ID, CommentTableMap::COL_ID_USER, CommentTableMap::COL_ID_ARTICLE, CommentTableMap::COL_CONTENT, CommentTableMap::COL_CREATED_AT, CommentTableMap::COL_UPDATED_AT, ),
-        self::TYPE_FIELDNAME     => array('id', 'id_user', 'id_article', 'content', 'created_at', 'updated_at', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
+        self::TYPE_PHPNAME       => array('Id', 'IdUser', 'IdArticle', 'Content', 'LikeCount', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_CAMELNAME     => array('id', 'idUser', 'idArticle', 'content', 'likeCount', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(CommentTableMap::COL_ID, CommentTableMap::COL_ID_USER, CommentTableMap::COL_ID_ARTICLE, CommentTableMap::COL_CONTENT, CommentTableMap::COL_LIKE_COUNT, CommentTableMap::COL_CREATED_AT, CommentTableMap::COL_UPDATED_AT, ),
+        self::TYPE_FIELDNAME     => array('id', 'id_user', 'id_article', 'content', 'like_count', 'created_at', 'updated_at', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
     );
 
     /**
@@ -127,11 +132,11 @@ class CommentTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'IdUser' => 1, 'IdArticle' => 2, 'Content' => 3, 'CreatedAt' => 4, 'UpdatedAt' => 5, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'idUser' => 1, 'idArticle' => 2, 'content' => 3, 'createdAt' => 4, 'updatedAt' => 5, ),
-        self::TYPE_COLNAME       => array(CommentTableMap::COL_ID => 0, CommentTableMap::COL_ID_USER => 1, CommentTableMap::COL_ID_ARTICLE => 2, CommentTableMap::COL_CONTENT => 3, CommentTableMap::COL_CREATED_AT => 4, CommentTableMap::COL_UPDATED_AT => 5, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'id_user' => 1, 'id_article' => 2, 'content' => 3, 'created_at' => 4, 'updated_at' => 5, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'IdUser' => 1, 'IdArticle' => 2, 'Content' => 3, 'LikeCount' => 4, 'CreatedAt' => 5, 'UpdatedAt' => 6, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'idUser' => 1, 'idArticle' => 2, 'content' => 3, 'likeCount' => 4, 'createdAt' => 5, 'updatedAt' => 6, ),
+        self::TYPE_COLNAME       => array(CommentTableMap::COL_ID => 0, CommentTableMap::COL_ID_USER => 1, CommentTableMap::COL_ID_ARTICLE => 2, CommentTableMap::COL_CONTENT => 3, CommentTableMap::COL_LIKE_COUNT => 4, CommentTableMap::COL_CREATED_AT => 5, CommentTableMap::COL_UPDATED_AT => 6, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'id_user' => 1, 'id_article' => 2, 'content' => 3, 'like_count' => 4, 'created_at' => 5, 'updated_at' => 6, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, )
     );
 
     /**
@@ -155,6 +160,7 @@ class CommentTableMap extends TableMap
         $this->addForeignKey('id_user', 'IdUser', 'INTEGER', 'users', 'id', true, null, null);
         $this->addForeignKey('id_article', 'IdArticle', 'INTEGER', 'articles', 'id', true, null, null);
         $this->addColumn('content', 'Content', 'VARCHAR', true, 500, null);
+        $this->addColumn('like_count', 'LikeCount', 'INTEGER', true, null, 0);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
     } // initialize()
@@ -345,6 +351,7 @@ class CommentTableMap extends TableMap
             $criteria->addSelectColumn(CommentTableMap::COL_ID_USER);
             $criteria->addSelectColumn(CommentTableMap::COL_ID_ARTICLE);
             $criteria->addSelectColumn(CommentTableMap::COL_CONTENT);
+            $criteria->addSelectColumn(CommentTableMap::COL_LIKE_COUNT);
             $criteria->addSelectColumn(CommentTableMap::COL_CREATED_AT);
             $criteria->addSelectColumn(CommentTableMap::COL_UPDATED_AT);
         } else {
@@ -352,6 +359,7 @@ class CommentTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.id_user');
             $criteria->addSelectColumn($alias . '.id_article');
             $criteria->addSelectColumn($alias . '.content');
+            $criteria->addSelectColumn($alias . '.like_count');
             $criteria->addSelectColumn($alias . '.created_at');
             $criteria->addSelectColumn($alias . '.updated_at');
         }

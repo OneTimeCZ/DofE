@@ -53,18 +53,65 @@ class ArticleController extends Controller{
             ->useUserQuery()
                 ->joinWith('Image')
             ->endUse()
-            ->leftJoinWith('Rating')
             ->orderByCreatedAt("desc")
             ->find();
+        
+        foreach ($comments as $c){
+            $cids[] = $c->getId();
+        }
+        
+        $uid = (isset($_SESSION["user"])) ? $_SESSION["user"]->getId() : 9999999;
+        
+        $l = RatingQuery::create()
+            ->filterByIdUser($uid)
+            ->filterByIdComment($cids)
+            ->find();
+        $likes = array();
+        
+        if(!$l->isEmpty()){
+            foreach ($l as $li){
+                $likes[] = $li->getIdComment();
+            }
+        }
         
         $this->view('Article/single', 'base_template', [
             'active' => 'blog',
             'title' => $post->getTitle(),
             'article' => $post,
             'comments' => $comments,
-            'recent' => ArticleQuery::recent()
+            'recent' => ArticleQuery::recent(),
+            'js' => array('scripts/ajax-like'),
+            'likes' => $likes
         ]);
+    }
+    
+    public function like($cid){
+        $ex = RatingQuery::create()->filterByIdUser($_SESSION["user"]->getId())->filterByIdComment($cid)->findOne();
+        $comment = CommentQuery::create()->findPk($cid);
+        if($ex == NULL){
+            $like = new Rating();
+            $like->setIdUser($_SESSION["user"]->getId());
+            $like->setIdComment($cid);
+            $like->save();
+            
+            $comment->setLikeCount($comment->getLikeCount() + 1);
+            $comment->save();
+        }
         
+        echo $comment->getLikeCount();
+    }
+    
+    public function removeLike($cid){
+        $ex = RatingQuery::create()->filterByIdUser($_SESSION["user"]->getId())->filterByIdComment($cid)->findOne();
+        $comment = CommentQuery::create()->findPk($cid);
+        if($ex != NULL){
+            $ex->delete();
+            
+            $comment->setLikeCount($comment->getLikeCount() - 1);
+            $comment->save();
+        }
+        
+        echo $comment->getLikeCount();
     }
     
     public function showByCategoryPage($category, $id){

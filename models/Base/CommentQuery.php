@@ -24,6 +24,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildCommentQuery orderByIdUser($order = Criteria::ASC) Order by the id_user column
  * @method     ChildCommentQuery orderByIdArticle($order = Criteria::ASC) Order by the id_article column
  * @method     ChildCommentQuery orderByContent($order = Criteria::ASC) Order by the content column
+ * @method     ChildCommentQuery orderByLikeCount($order = Criteria::ASC) Order by the like_count column
  * @method     ChildCommentQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildCommentQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  *
@@ -31,6 +32,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildCommentQuery groupByIdUser() Group by the id_user column
  * @method     ChildCommentQuery groupByIdArticle() Group by the id_article column
  * @method     ChildCommentQuery groupByContent() Group by the content column
+ * @method     ChildCommentQuery groupByLikeCount() Group by the like_count column
  * @method     ChildCommentQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildCommentQuery groupByUpdatedAt() Group by the updated_at column
  *
@@ -81,6 +83,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildComment findOneByIdUser(int $id_user) Return the first ChildComment filtered by the id_user column
  * @method     ChildComment findOneByIdArticle(int $id_article) Return the first ChildComment filtered by the id_article column
  * @method     ChildComment findOneByContent(string $content) Return the first ChildComment filtered by the content column
+ * @method     ChildComment findOneByLikeCount(int $like_count) Return the first ChildComment filtered by the like_count column
  * @method     ChildComment findOneByCreatedAt(string $created_at) Return the first ChildComment filtered by the created_at column
  * @method     ChildComment findOneByUpdatedAt(string $updated_at) Return the first ChildComment filtered by the updated_at column *
 
@@ -91,6 +94,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildComment requireOneByIdUser(int $id_user) Return the first ChildComment filtered by the id_user column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildComment requireOneByIdArticle(int $id_article) Return the first ChildComment filtered by the id_article column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildComment requireOneByContent(string $content) Return the first ChildComment filtered by the content column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildComment requireOneByLikeCount(int $like_count) Return the first ChildComment filtered by the like_count column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildComment requireOneByCreatedAt(string $created_at) Return the first ChildComment filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildComment requireOneByUpdatedAt(string $updated_at) Return the first ChildComment filtered by the updated_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
@@ -99,6 +103,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildComment[]|ObjectCollection findByIdUser(int $id_user) Return ChildComment objects filtered by the id_user column
  * @method     ChildComment[]|ObjectCollection findByIdArticle(int $id_article) Return ChildComment objects filtered by the id_article column
  * @method     ChildComment[]|ObjectCollection findByContent(string $content) Return ChildComment objects filtered by the content column
+ * @method     ChildComment[]|ObjectCollection findByLikeCount(int $like_count) Return ChildComment objects filtered by the like_count column
  * @method     ChildComment[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildComment objects filtered by the created_at column
  * @method     ChildComment[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildComment objects filtered by the updated_at column
  * @method     ChildComment[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
@@ -193,7 +198,7 @@ abstract class CommentQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, id_user, id_article, content, created_at, updated_at FROM comments WHERE id = :p0';
+        $sql = 'SELECT id, id_user, id_article, content, like_count, created_at, updated_at FROM comments WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -437,6 +442,47 @@ abstract class CommentQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CommentTableMap::COL_CONTENT, $content, $comparison);
+    }
+
+    /**
+     * Filter the query on the like_count column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByLikeCount(1234); // WHERE like_count = 1234
+     * $query->filterByLikeCount(array(12, 34)); // WHERE like_count IN (12, 34)
+     * $query->filterByLikeCount(array('min' => 12)); // WHERE like_count > 12
+     * </code>
+     *
+     * @param     mixed $likeCount The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildCommentQuery The current query, for fluid interface
+     */
+    public function filterByLikeCount($likeCount = null, $comparison = null)
+    {
+        if (is_array($likeCount)) {
+            $useMinMax = false;
+            if (isset($likeCount['min'])) {
+                $this->addUsingAlias(CommentTableMap::COL_LIKE_COUNT, $likeCount['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($likeCount['max'])) {
+                $this->addUsingAlias(CommentTableMap::COL_LIKE_COUNT, $likeCount['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(CommentTableMap::COL_LIKE_COUNT, $likeCount, $comparison);
     }
 
     /**

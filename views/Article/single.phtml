@@ -56,8 +56,7 @@
                             </a>
                             <p><?= $comment->getCreatedAt()->format("d.m.Y H:i:s") ?></p>
                             <p class="pull-right rating">
-                                <?php $likes = 0; foreach($comment->getRatings() as $rating){if($rating->getType() == 1)$likes++;} echo $likes; ?> <button class="rating like"><i class="fa fa-thumbs-up"></i></button>&nbsp;
-                                <?php $dislikes = 0; foreach($comment->getRatings() as $rating){if($rating->getType() == 0)$dislikes++;} echo $dislikes; ?> <button class="rating dislike"><i class="fa fa-thumbs-down"></i></button>
+                                <span class="like-count<?= $comment->getId() ?>"><?= $comment->getLikeCount() ?></span> <button comment-id="<?= $comment->getId() ?>" id="like" class="rating like <?php if(in_array($comment->getId(), $data["likes"])) echo "active" ?>"><i id="like" class="fa fa-thumbs-up"></i></button>
                             </p>
                         </div>
                         <div class="content_area">
@@ -68,6 +67,7 @@
 
                     <?php endforeach;
                     } if(isset($_SESSION["user"])): ?>
+                    <input type="hidden" user-logged="true">
                     <li class="comment_form">
                         <div class="comment_form">
                             <h3 class="heading">Sdílejte svůj názor</h3>
@@ -78,6 +78,7 @@
                         </div>
                     </li>
                     <?php else: ?>
+                    <input type="hidden" id="islogged" user-logged="false">
                     <li class="comment_help">
                         <h3>Pro okomentování tohoto příspěvku se prosíme přihlašte <a href="#" data-toggle="modal" data-target="#login_modal">zde</a>...</h3>
                     </li>

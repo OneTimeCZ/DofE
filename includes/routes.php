@@ -17,6 +17,16 @@
         ->setTokens([
             'id' => '[1-9]\d*',
         ]);
+    //like
+    $router->addGet('Article.like', '/clanek/komentar/{cid}/like')
+        ->setTokens([
+            'cid' => '[1-9]\d*'
+        ]);
+    //remove a like
+    $router->addGet('Article.removeLike', '/clanek/komentar/{cid}/remove-like')
+        ->setTokens([
+            'cid' => '[1-9]\d*'
+        ]);
 
 //---GALLERY---
     $router->addGet('Gallery.index', '/galerie');

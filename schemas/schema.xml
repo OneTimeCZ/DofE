@@ -77,6 +77,7 @@
         <column name="id_user" type="integer" required="true"/>
         <column name="id_article" type="integer" required="true"/>
         <column name="content" type="varchar" size="500" required="true"/>
+        <column name="like_count" type="integer" defaultValue="0" required="true"/>
         
         <behavior name="timestampable" />
         
@@ -94,7 +95,6 @@
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="id_user" type="integer" required="true"/>
         <column name="id_comment" type="integer" required="true"/>
-        <column name="type" type="boolean" required="true"/>
         
         <foreign-key foreignTable="users">
             <reference local="id_user" foreign="id"/>
